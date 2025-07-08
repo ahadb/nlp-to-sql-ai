@@ -88,4 +88,4 @@ class BaseSeeder:
             print(f"❌ Seeding failed: {e}")
             raise
         finally:
-            self.disconnect()
+            self.disconnect() 
