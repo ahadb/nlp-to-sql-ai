@@ -8,13 +8,13 @@ interface LayoutProps {
 export default function Layout({ leftChildren, rightChildren }: LayoutProps) {
   return (
     <>
-      <main className="lg:pl-20">
-        <div className="xl:grid xl:grid-cols-2 xl:gap-0">
-          <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-6 border-r border-gray-200">
+      <main className="lg:pl-20 h-screen">
+        <div className="xl:grid xl:grid-cols-2 xl:gap-0 h-full">
+          <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-6 border-r border-gray-200 h-full overflow-y-auto">
             {leftChildren}
           </div>
 
-          <aside className="hidden xl:block px-4 py-10 sm:px-6 lg:px-8 lg:py-6">
+          <aside className="hidden xl:block px-4 py-10 sm:px-6 lg:px-8 lg:py-6 bg-gray-50 h-full overflow-y-auto">
             {rightChildren || (
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-gray-900">

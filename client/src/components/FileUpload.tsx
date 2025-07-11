@@ -3,14 +3,22 @@ import {
   CloudArrowUpIcon,
   DocumentTextIcon,
   XMarkIcon,
+  FolderIcon,
 } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
+import StepTitle from "./StepTitle";
 
 interface FileUploadProps {
   onFileUpload: (file: File) => void;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
-export default function FileUpload({ onFileUpload }: FileUploadProps) {
+export default function FileUpload({
+  onFileUpload,
+  isSelected = false,
+  onSelect,
+}: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -92,21 +100,27 @@ export default function FileUpload({ onFileUpload }: FileUploadProps) {
   };
 
   return (
-    <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Upload SQL Schema
-        </h3>
-        <p className="text-sm text-gray-600">
-          Upload a SQL file to set up your database schema and data
-        </p>
+    <div
+      className={`w-full p-6 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+        isSelected
+          ? "border-blue-500 bg-blue-50 shadow-lg"
+          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+      }`}
+      onClick={onSelect}
+    >
+      <div className="mb-6 pb-3 border-b border-gray-200 -mx-6 px-6 bg-gray-50 -mt-6 pt-4 rounded-t-xl">
+        <StepTitle
+          title="Upload Schema"
+          description="Upload a SQL file to set up your database schema and data"
+          icon={DocumentTextIcon}
+        />
       </div>
 
       {/* Database Name Input */}
-      <div className="mb-6">
+      <div className="mb-6" onClick={(e) => e.stopPropagation()}>
         <label
           htmlFor="database-name"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-3"
         >
           Database Name
         </label>
@@ -115,76 +129,82 @@ export default function FileUpload({ onFileUpload }: FileUploadProps) {
           id="database-name"
           value={databaseName}
           onChange={(e) => setDatabaseName(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 bg-white"
           placeholder="Enter database name"
           disabled={isUploading}
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-gray-500">
           This will be the name of the database where your schema will be
           uploaded
         </p>
       </div>
 
-      {!selectedFile ? (
-        <div
-          className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-            isDragOver
-              ? "border-blue-400 bg-blue-50"
-              : "border-gray-300 hover:border-gray-400"
-          }`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={handleClick}
-        >
-          <CloudArrowUpIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-900">
-              Drop your SQL file here, or click to browse
-            </p>
-            <p className="text-xs text-gray-500">
-              Only .sql files are supported
-            </p>
-          </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".sql"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-        </div>
-      ) : (
-        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <DocumentTextIcon className="h-8 w-8 text-blue-500" />
-              <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {selectedFile.name}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {(selectedFile.size / 1024).toFixed(1)} KB
-                </p>
-              </div>
+      <div onClick={(e) => e.stopPropagation()}>
+        {!selectedFile ? (
+          <div
+            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+              isDragOver
+                ? "border-green-400 bg-green-50 shadow-lg scale-[1.02]"
+                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={handleClick}
+          >
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4">
+              <CloudArrowUpIcon className="h-8 w-8 text-green-600" />
             </div>
-            <button
-              onClick={handleRemoveFile}
-              className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              disabled={isUploading}
-            >
-              <XMarkIcon className="h-5 w-5" />
-            </button>
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-gray-900">
+                Drop your SQL file here, or click to browse
+              </p>
+              <p className="text-xs text-gray-500">
+                Only .sql files are supported
+              </p>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".sql"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="border border-gray-200 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <DocumentTextIcon className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {selectedFile.name}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {(selectedFile.size / 1024).toFixed(1)} KB
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleRemoveFile}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                disabled={isUploading}
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Upload Status */}
       {isUploading && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-          <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <p className="text-sm text-blue-800">
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="flex items-center space-x-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <p className="text-sm text-blue-800 font-medium">
               Uploading SQL file to database '{databaseName}'...
             </p>
           </div>
@@ -192,14 +212,28 @@ export default function FileUpload({ onFileUpload }: FileUploadProps) {
       )}
 
       {uploadStatus.type === "success" && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-          <p className="text-sm text-green-800">✓ {uploadStatus.message}</p>
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <p className="text-sm text-green-800 font-medium">
+              {uploadStatus.message}
+            </p>
+          </div>
         </div>
       )}
 
       {uploadStatus.type === "error" && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-sm text-red-800">✗ {uploadStatus.message}</p>
+        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <p className="text-sm text-red-800 font-medium">
+              {uploadStatus.message}
+            </p>
+          </div>
         </div>
       )}
     </div>
