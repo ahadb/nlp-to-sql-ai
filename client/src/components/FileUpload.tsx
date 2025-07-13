@@ -116,7 +116,7 @@ export default function FileUpload({
     >
       <div className="mb-6 pb-3 border-b border-gray-200 -mx-6 px-6 bg-gray-50 -mt-6 pt-4 rounded-t-xl">
         <StepTitle
-          title="Upload Schema"
+          title="Add Datasource"
           description="Upload a SQL file to set up your database schema and data"
           icon={DocumentTextIcon}
         />

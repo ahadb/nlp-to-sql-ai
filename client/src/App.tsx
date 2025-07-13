@@ -30,7 +30,7 @@ export default function App() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSection, setSelectedSection] = useState<
     "query" | "upload" | null
-  >(null);
+  >("upload");
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = async (text: string) => {
@@ -79,24 +79,24 @@ export default function App() {
         <Layout
           leftChildren={
             <div className="space-y-8">
-              {/* Natural Language to SQL Section */}
-              <div>
-                <QueryAnalyzer
-                  onAnalyze={handleSchemaAnalysis}
-                  isSelected={selectedSection === "query"}
-                  onSelect={() => setSelectedSection("query")}
-                />
-              </div>
-
-              {/* Divider */}
-              <div className="border-t border-gray-200 my-8 -mx-4 sm:-mx-6 lg:-mx-8"></div>
-
               {/* File Upload Section */}
               <div>
                 <FileUpload
                   onFileUpload={handleFileUpload}
                   isSelected={selectedSection === "upload"}
                   onSelect={() => setSelectedSection("upload")}
+                />
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-200 my-8 -mx-4 sm:-mx-6 lg:-mx-8"></div>
+
+              {/* Natural Language to SQL Section */}
+              <div>
+                <QueryAnalyzer
+                  onAnalyze={handleSchemaAnalysis}
+                  isSelected={selectedSection === "query"}
+                  onSelect={() => setSelectedSection("query")}
                 />
               </div>
             </div>
