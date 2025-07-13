@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { DocumentTextIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import {
+  DocumentTextIcon,
+  SparklesIcon,
+  ClipboardDocumentIcon,
+  CheckIcon,
+} from "@heroicons/react/24/outline";
+
 import {
   Sidebar,
   MobileSidebar,
@@ -9,6 +15,7 @@ import {
   QueryAnalyzer,
   StepIndicator,
 } from "./components";
+import HighlightedCode from "./components/CodeHighlighter";
 
 interface GeneratedSQL {
   question: string;
@@ -24,6 +31,18 @@ export default function App() {
   const [selectedSection, setSelectedSection] = useState<
     "query" | "upload" | null
   >(null);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // Hide after 2 seconds
+      // You could add a toast notification here
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
 
   const handleFileUpload = (file: File) => {
     console.log("File uploaded successfully:", file.name);
@@ -91,9 +110,9 @@ export default function App() {
               }}
             >
               {/* SQL Display Card */}
-              <div className="w-full p-6 rounded-xl border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 bg-white flex-1 flex flex-col">
+              <div className="w-full p-6 border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 bg-white flex-1 flex flex-col">
                 {/* Step Title with Border */}
-                <div className="mb-6 pb-3 border-b border-gray-200 -mx-6 px-6 bg-gray-50 -mt-6 pt-4 rounded-t-xl flex-shrink-0">
+                <div className="mb-6 pb-3 border-b border-gray-200 -mx-6 px-6 bg-gray-50 -mt-6 pt-4 flex-shrink-0">
                   <div className="mb-2">
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-600">
@@ -116,10 +135,31 @@ export default function App() {
                   {generatedSQL ? (
                     <div className="h-full flex flex-col">
                       {/* SQL Query */}
-                      <div className="flex-1 p-6 overflow-auto">
-                        <pre className="text-sm font-mono text-gray-800 leading-relaxed m-0 whitespace-pre-wrap">
-                          {generatedSQL.sql_query}
-                        </pre>
+                      <div className="flex-1 overflow-auto">
+                        <div className="flex justify-between items-start p-4 -mb-6">
+                          <h4 className="text-sm font-semibold text-gray-700">
+                            Generated SQL Query
+                          </h4>
+                          <button
+                            onClick={() =>
+                              copyToClipboard(generatedSQL.sql_query)
+                            }
+                            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                            title="Copy SQL to clipboard"
+                          >
+                            {isCopied ? (
+                              <CheckIcon className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <ClipboardDocumentIcon className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
+
+                        <HighlightedCode
+                          key={generatedSQL.sql_query}
+                          language="sql"
+                          code={generatedSQL.sql_query}
+                        />
                       </div>
 
                       {/* Schema Info */}

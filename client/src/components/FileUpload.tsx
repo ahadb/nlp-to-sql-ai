@@ -22,7 +22,7 @@ export default function FileUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [databaseName, setDatabaseName] = useState("northwind");
+  const [databaseName, setDatabaseName] = useState("my_database");
   const [uploadStatus, setUploadStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
@@ -75,6 +75,9 @@ export default function FileUpload({
 
     if (sqlFile) {
       setSelectedFile(sqlFile);
+      // Auto-detect database name from filename
+      const detectedName = sqlFile.name.replace(".sql", "").toLowerCase();
+      setDatabaseName(detectedName);
       uploadFileToBackend(sqlFile);
     }
   };
@@ -83,6 +86,9 @@ export default function FileUpload({
     const file = e.target.files?.[0];
     if (file && file.name.endsWith(".sql")) {
       setSelectedFile(file);
+      // Auto-detect database name from filename
+      const detectedName = file.name.replace(".sql", "").toLowerCase();
+      setDatabaseName(detectedName);
       uploadFileToBackend(file);
     }
   };
@@ -129,13 +135,14 @@ export default function FileUpload({
           id="database-name"
           value={databaseName}
           onChange={(e) => setDatabaseName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 bg-white"
+          className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 bg-white disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
           placeholder="Enter database name"
-          disabled={isUploading}
+          disabled={isUploading || selectedFile !== null}
         />
         <p className="mt-2 text-xs text-gray-500">
-          This will be the name of the database where your schema will be
-          uploaded
+          {selectedFile
+            ? `Database name automatically detected from your file. You can remove the file to enter a custom name.`
+            : "Database name will be automatically detected from your SQL file name, or you can enter a custom name"}
         </p>
       </div>
 
@@ -204,9 +211,14 @@ export default function FileUpload({
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-            <p className="text-sm text-blue-800 font-medium">
-              Uploading SQL file to database '{databaseName}'...
-            </p>
+            <div>
+              <p className="text-sm text-blue-800 font-medium">
+                Uploading SQL file to database '{databaseName}'...
+              </p>
+              <p className="text-xs text-blue-600">
+                File: {selectedFile?.name}
+              </p>
+            </div>
           </div>
         </div>
       )}

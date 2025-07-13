@@ -63,7 +63,7 @@ export default function QueryAnalyzer({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-3">
+        <div className="space-y-2">
           <label
             htmlFor="schema-query"
             className="block text-sm font-medium text-gray-700"
@@ -80,6 +80,29 @@ export default function QueryAnalyzer({
             disabled={isAnalyzing}
             onClick={(e) => e.stopPropagation()}
           />
+
+          {/* Inline example chips */}
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <span className="font-medium">Try:</span>
+            {[
+              "California customers",
+              "Orders >$1000",
+              "Sales by region",
+              "Top 10 customers",
+            ].map((example, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setQuery(example);
+                }}
+                className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md transition-colors duration-200 border border-blue-200 hover:border-blue-300 font-medium"
+              >
+                {example}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-end">
