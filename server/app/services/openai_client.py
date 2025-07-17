@@ -19,7 +19,7 @@ class OpenAIClient:
         if not api_key:
             raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY in .env file or pass as parameter.")
         
-        self.client = openai.OpenAI(api_key=api_key)
+        openai.api_key = api_key
         self.model = "gpt-3.5-turbo"  # Default model
     
     def generate_sql_query(self, user_question: str, schema: str) -> str:
@@ -45,7 +45,7 @@ class OpenAIClient:
             Return ONLY the SQL query, no explanations or additional text.
             """
             
-            response = self.client.chat.completions.create(
+            response = openai.ChatCompletion.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": "You are a SQL expert. Return only SQL queries, no explanations."},

@@ -162,7 +162,7 @@ async def run_sql(request: SQLRequest):
     """
 
     # Validate the SQL that will be executed
-    validation = validate_sql_safety(request.sql, include_select=True)
+    validation = validate_sql_safety(request.sql)
 
     if not validation["is_safe"]:
         return JSONResponse(content={"error": validation["message"]}, status_code=400)
