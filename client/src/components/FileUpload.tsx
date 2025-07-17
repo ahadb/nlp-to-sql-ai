@@ -107,14 +107,14 @@ export default function FileUpload({
 
   return (
     <div
-      className={`w-full p-6 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
         isSelected
           ? "border-blue-500 bg-blue-50 shadow-lg"
           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
       }`}
       onClick={onSelect}
     >
-      <div className="mb-6 pb-3 border-b border-gray-200 -mx-6 px-6 bg-gray-50 -mt-6 pt-4 rounded-t-xl">
+      <div className="mb-4 pb-2 border-b border-gray-200 -mx-4 px-4 bg-gray-50 -mt-4 pt-3 rounded-t-xl">
         <StepTitle
           title="Add Datasource"
           description="Upload a SQL file to set up your database schema and data"
@@ -123,10 +123,10 @@ export default function FileUpload({
       </div>
 
       {/* Database Name Input */}
-      <div className="mb-6" onClick={(e) => e.stopPropagation()}>
+      <div className="mb-4" onClick={(e) => e.stopPropagation()}>
         <label
           htmlFor="database-name"
-          className="block text-sm font-medium text-gray-700 mb-3"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Database Name
         </label>
@@ -149,7 +149,7 @@ export default function FileUpload({
       <div onClick={(e) => e.stopPropagation()}>
         {!selectedFile ? (
           <div
-            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+            className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
               isDragOver
                 ? "border-green-400 bg-green-50 shadow-lg scale-[1.02]"
                 : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
@@ -159,10 +159,10 @@ export default function FileUpload({
             onDrop={handleDrop}
             onClick={handleClick}
           >
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-4">
-              <CloudArrowUpIcon className="h-8 w-8 text-green-600" />
+            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-3">
+              <CloudArrowUpIcon className="h-6 w-6 text-green-600" />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <p className="text-sm font-semibold text-gray-900">
                 Drop your SQL file here, or click to browse
               </p>
@@ -208,7 +208,7 @@ export default function FileUpload({
 
       {/* Upload Status */}
       {isUploading && (
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
             <div>
@@ -224,7 +224,7 @@ export default function FileUpload({
       )}
 
       {uploadStatus.type === "success" && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full"></div>
@@ -237,7 +237,7 @@ export default function FileUpload({
       )}
 
       {uploadStatus.type === "error" && (
-        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full"></div>
