@@ -19,7 +19,7 @@ export default function StepTitle({
   const getVariantStyles = () => {
     return {
       circle: "bg-blue-600",
-      text: "text-gray-900",
+      text: "text-white",
     };
   };
 
@@ -37,7 +37,7 @@ export default function StepTitle({
           <h3 className={`text-base font-semibold ${styles.text} mb-0`}>
             {title}
           </h3>
-          <p className="text-xs text-gray-600 leading-none mt-0.5">
+          <p className="text-xs text-gray-300 leading-none mt-0.5">
             {description}
           </p>
         </div>

@@ -109,12 +109,12 @@ export default function FileUpload({
     <div
       className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
         isSelected
-          ? "border-blue-500 bg-blue-50 shadow-lg"
-          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+          ? "border-blue-500 bg-blue-900/20 shadow-lg"
+          : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
       }`}
       onClick={onSelect}
     >
-      <div className="mb-4 pb-2 border-b border-gray-200 -mx-4 px-4 bg-gray-50 -mt-4 pt-3 rounded-t-xl">
+      <div className="mb-4 pb-2 border-b border-gray-700 -mx-4 px-4 bg-gray-800 -mt-4 pt-3 rounded-t-xl">
         <StepTitle
           title="Add Datasource"
           description="Upload a SQL file to set up your database schema and data"
@@ -126,7 +126,7 @@ export default function FileUpload({
       <div className="mb-4" onClick={(e) => e.stopPropagation()}>
         <label
           htmlFor="database-name"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-300 mb-2"
         >
           Database Name
         </label>
@@ -135,11 +135,11 @@ export default function FileUpload({
           id="database-name"
           value={databaseName}
           onChange={(e) => setDatabaseName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-400 bg-white disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
+          className="w-full px-4 py-2 border border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed"
           placeholder="Enter database name"
           disabled={isUploading || selectedFile !== null}
         />
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-gray-400">
           {selectedFile
             ? `Database name automatically detected from your file. You can remove the file to enter a custom name.`
             : "Database name will be automatically detected from your SQL file name, or you can enter a custom name"}
@@ -151,22 +151,22 @@ export default function FileUpload({
           <div
             className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
               isDragOver
-                ? "border-green-400 bg-green-50 shadow-lg scale-[1.02]"
-                : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                ? "border-green-400 bg-green-900/20 shadow-lg scale-[1.02]"
+                : "border-gray-600 hover:border-gray-500 hover:bg-gray-800"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={handleClick}
           >
-            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mb-3">
-              <CloudArrowUpIcon className="h-6 w-6 text-green-600" />
+            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-900 to-emerald-900 rounded-full flex items-center justify-center mb-3">
+              <CloudArrowUpIcon className="h-6 w-6 text-green-400" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-gray-100">
                 Drop your SQL file here, or click to browse
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-400">
                 Only .sql files are supported
               </p>
             </div>
@@ -179,24 +179,24 @@ export default function FileUpload({
             />
           </div>
         ) : (
-          <div className="border border-gray-200 rounded-xl p-4 bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
+          <div className="border border-gray-600 rounded-xl p-4 bg-gradient-to-r from-green-900/20 to-emerald-900/20 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <DocumentTextIcon className="h-6 w-6 text-green-600" />
+                <div className="p-2 bg-green-900 rounded-lg">
+                  <DocumentTextIcon className="h-6 w-6 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-100">
                     {selectedFile.name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-400">
                     {(selectedFile.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
               </div>
               <button
                 onClick={handleRemoveFile}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700 rounded-lg transition-colors"
                 disabled={isUploading}
               >
                 <XMarkIcon className="h-5 w-5" />
@@ -208,14 +208,14 @@ export default function FileUpload({
 
       {/* Upload Status */}
       {isUploading && (
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+        <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded-xl">
           <div className="flex items-center space-x-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-400"></div>
             <div>
-              <p className="text-sm text-blue-800 font-medium">
+              <p className="text-sm text-blue-300 font-medium">
                 Uploading SQL file to database '{databaseName}'...
               </p>
-              <p className="text-xs text-blue-600">
+              <p className="text-xs text-blue-400">
                 File: {selectedFile?.name}
               </p>
             </div>
@@ -224,12 +224,12 @@ export default function FileUpload({
       )}
 
       {uploadStatus.type === "success" && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-xl">
+        <div className="mt-4 p-3 bg-green-900/20 border border-green-700 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full"></div>
             </div>
-            <p className="text-sm text-green-800 font-medium">
+            <p className="text-sm text-green-300 font-medium">
               {uploadStatus.message}
             </p>
           </div>
@@ -237,12 +237,12 @@ export default function FileUpload({
       )}
 
       {uploadStatus.type === "error" && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+        <div className="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-xl">
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
               <div className="w-2 h-2 bg-white rounded-full"></div>
             </div>
-            <p className="text-sm text-red-800 font-medium">
+            <p className="text-sm text-red-300 font-medium">
               {uploadStatus.message}
             </p>
           </div>

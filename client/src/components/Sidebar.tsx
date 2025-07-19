@@ -41,12 +41,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-200 lg:pb-4 border-r border-gray-300">
+    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-800 lg:pb-4 border-r border-gray-700">
       <div className="flex h-16 shrink-0 items-center px-4">
-        <div className="p-2 border-2 border-blue-600 rounded-full bg-white">
-          <ServerIcon className="h-6 w-6 text-blue-600" />
+        <div className="p-2 border-2 border-blue-500 rounded-full bg-gray-700">
+          <ServerIcon className="h-6 w-6 text-blue-400" />
         </div>
-        <span className="text-lg font-bold text-gray-800 ml-3">SQL AI</span>
+        <span className="text-lg font-bold text-gray-100 ml-3">SQL AI</span>
       </div>
 
       <nav className="mt-8 px-3">
@@ -58,7 +58,7 @@ export default function Sidebar() {
                 className={classNames(
                   item.current
                     ? "bg-blue-600 text-white"
-                    : "text-gray-400 hover:bg-gray-300 hover:text-gray-700",
+                    : "text-gray-300 hover:bg-gray-700 hover:text-gray-100",
                   "group flex items-center gap-x-3 rounded-md p-2 text-sm/6 font-semibold transition-colors duration-200 h-8"
                 )}
               >
@@ -75,8 +75,8 @@ export default function Sidebar() {
       {/* Recent Queries Section */}
       <div className="mt-8 px-3">
         <div className="flex items-center gap-2 mb-3">
-          <ClockIcon className="h-4 w-4 text-gray-600" />
-          <h3 className="text-sm font-semibold text-gray-800">
+          <ClockIcon className="h-4 w-4 text-gray-400" />
+          <h3 className="text-sm font-semibold text-gray-200">
             Recent Queries
           </h3>
         </div>
@@ -84,17 +84,17 @@ export default function Sidebar() {
           {recentQueries.map((query) => (
             <div
               key={query.id}
-              className="group p-2 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200 cursor-pointer"
+              className="group p-2 bg-gray-700 rounded-lg border border-gray-600 hover:border-blue-500 hover:shadow-sm transition-all duration-200 cursor-pointer"
             >
               <div className="flex items-center gap-1.5 min-w-0 mb-1">
-                <MagnifyingGlassIcon className="h-3 w-3 text-blue-500 flex-shrink-0" />
-                <span className="text-xs font-medium text-gray-700 truncate">
+                <MagnifyingGlassIcon className="h-3 w-3 text-blue-400 flex-shrink-0" />
+                <span className="text-xs font-medium text-gray-300 truncate">
                   {query.question}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500">{query.timestamp}</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-100 text-blue-700 rounded-full font-medium">
+                <span className="text-xs text-gray-400">{query.timestamp}</span>
+                <span className="text-xs px-1 py-0.5 bg-blue-900 text-blue-300 rounded-full font-medium">
                   {query.resultCount} results
                 </span>
               </div>
