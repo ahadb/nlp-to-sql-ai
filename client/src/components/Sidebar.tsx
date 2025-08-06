@@ -43,10 +43,22 @@ export default function Sidebar() {
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-800 lg:pb-4 border-r border-gray-700">
       <div className="flex h-16 shrink-0 items-center px-4">
-        <div className="p-2 border-2 border-blue-500 rounded-full bg-gray-700">
-          <ServerIcon className="h-6 w-6 text-blue-400" />
+        <div className="flex items-center">
+          <div className="relative">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
+                <span className="text-xs font-bold text-blue-600">SQL</span>
+              </div>
+            </div>
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
+          <div className="ml-3">
+            <div className="text-lg font-bold text-gray-100">SQL AI</div>
+            <div className="text-xs text-gray-400 font-medium">Assistant</div>
+          </div>
         </div>
-        <span className="text-lg font-bold text-gray-100 ml-3">SQL AI</span>
       </div>
 
       <nav className="mt-8 px-3">

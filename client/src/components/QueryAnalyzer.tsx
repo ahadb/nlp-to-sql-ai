@@ -49,7 +49,7 @@ export default function QueryAnalyzer({
     <div
       className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
         isSelected
-          ? "border-blue-500 bg-blue-900/20 shadow-lg"
+          ? "border-blue-900 bg-blue-900/20 shadow-lg"
           : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
       }`}
       onClick={onSelect}
@@ -142,7 +142,7 @@ export default function QueryAnalyzer({
                       {template.category}
                     </span>
                   </div>
-                  <p className="text-xs text-blue-400 leading-tight">
+                  <p className="text-xs text-gray-400 leading-tight">
                     {template.query.length > 45
                       ? template.query.substring(0, 45) + "..."
                       : template.query}

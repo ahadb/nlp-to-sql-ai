@@ -109,7 +109,7 @@ export default function FileUpload({
     <div
       className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
         isSelected
-          ? "border-blue-500 bg-blue-900/20 shadow-lg"
+          ? "border-blue-900 bg-blue-900/20 shadow-lg"
           : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
       }`}
       onClick={onSelect}

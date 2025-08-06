@@ -9,19 +9,31 @@ from app.services.openai_client import OpenAIClient
 from app.db.get_db_schema import get_db_schema
 from app.db.connection import get_connection
 from app.utils.utils import validate_sql_safety
+from config.settings import settings
+
+# Validate settings on startup
+try:
+    settings.validate()
+except ValueError as e:
+    print(f"Configuration error: {e}")
+    exit(1)
 
 # In-memory storage for user database mappings (in production, use a proper database)
 user_databases = {}
 
-app = FastAPI()
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.VERSION,
+    debug=settings.DEBUG
+)
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # React dev servers
+    allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class QueryRequest(BaseModel):

@@ -30,6 +30,8 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Project specific
+
 # PyInstaller
 *.manifest
 *.spec
