@@ -16,7 +16,6 @@ import {
   CircleStackIcon,
   ChartBarIcon,
   CodeBracketIcon,
-  LightBulbIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -26,7 +25,6 @@ import {
   Layout,
   FileUpload,
   QueryAnalyzer,
-  StepIndicator,
 } from "./components";
 import HighlightedCode from "./components/CodeHighlighter";
 import { api } from "./services/api";
@@ -268,8 +266,8 @@ function LandingPage() {
 function MainApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [generatedSQL, setGeneratedSQL] = useState<GeneratedSQL | null>(null);
-  const [hasUploadedSchema, setHasUploadedSchema] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+  // const [hasUploadedSchema, setHasUploadedSchema] = useState(false);
+  // const [currentStep, setCurrentStep] = useState(1);
   const [selectedSection, setSelectedSection] = useState<
     "query" | "upload" | null
   >("upload");
@@ -293,8 +291,8 @@ function MainApp() {
 
   const handleFileUpload = (file: File) => {
     console.log("File uploaded successfully:", file.name);
-    setHasUploadedSchema(true);
-    setCurrentStep(2);
+    // setHasUploadedSchema(true);
+    // setCurrentStep(2);
   };
 
   const handleSchemaAnalysis = (query: string, sqlData?: GeneratedSQL) => {

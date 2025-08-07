@@ -1,7 +1,4 @@
-import {
-  DocumentTextIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 interface StepTitleProps {
   title: string;
@@ -14,7 +11,6 @@ export default function StepTitle({
   title,
   description,
   icon: Icon = DocumentTextIcon,
-  variant = "primary",
 }: StepTitleProps) {
   const getVariantStyles = () => {
     return {

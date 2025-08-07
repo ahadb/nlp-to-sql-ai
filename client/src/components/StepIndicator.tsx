@@ -1,8 +1,5 @@
 import { CheckIcon } from "@heroicons/react/24/solid";
-import {
-  DocumentTextIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -25,11 +22,11 @@ export default function StepIndicator({
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
-        {steps.map((step, stepIdx) => {
+        {steps.map((step) => {
           const isCurrentStep = currentStep === step.id;
           const isCompleted =
             (hasUploadedSchema && step.id === 1) || currentStep > step.id;
-          const isUpcoming = currentStep < step.id;
+          //const isUpcoming = currentStep < step.id;
 
           return (
             <div key={step.id} className="flex items-center">

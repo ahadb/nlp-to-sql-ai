@@ -1,9 +1,5 @@
 import { navigation, classNames } from "./navigation";
-import {
-  ServerIcon,
-  ClockIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { ClockIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function Sidebar() {
   // Mock data for recent queries

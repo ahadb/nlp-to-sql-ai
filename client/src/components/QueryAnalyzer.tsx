@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
 import StepTitle from "./StepTitle";
 
