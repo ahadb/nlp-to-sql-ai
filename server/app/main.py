@@ -51,6 +51,10 @@ def get_connection_to_db(database_name: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection failed: {str(e)}")
 
+@app.get("/health-check")
+async def health_check():
+    return {"status": "healthy"}
+
 @app.post("/upload-schema")
 async def upload_schema(
     file: UploadFile = File(..., content_type="text/x-sql"),
