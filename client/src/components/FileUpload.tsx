@@ -3,6 +3,7 @@ import {
   CloudArrowUpIcon,
   DocumentTextIcon,
   XMarkIcon,
+  TableCellsIcon,
 } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
 import StepTitle from "./StepTitle";
@@ -21,7 +22,8 @@ export default function FileUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [databaseName, setDatabaseName] = useState("my_database");
+  const [fileType, setFileType] = useState<"sql" | "csv" | null>(null);
+  const databaseName = "nlp_sql_db"; // Fixed database name
   const [uploadStatus, setUploadStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
@@ -70,25 +72,37 @@ export default function FileUpload({
     setIsDragOver(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const sqlFile = files.find((file) => file.name.endsWith(".sql"));
+    const supportedFile = files.find(
+      (file) => file.name.endsWith(".sql") || file.name.endsWith(".csv")
+    );
 
-    if (sqlFile) {
-      setSelectedFile(sqlFile);
-      // Auto-detect database name from filename
-      const detectedName = sqlFile.name.replace(".sql", "").toLowerCase();
-      setDatabaseName(detectedName);
-      uploadFileToBackend(sqlFile);
+    if (supportedFile) {
+      setSelectedFile(supportedFile);
+
+      // Set file type
+      const isCSV = supportedFile.name.endsWith(".csv");
+      setFileType(isCSV ? "csv" : "sql");
+
+      uploadFileToBackend(supportedFile);
+
+      // Select this section when file is dropped
+      onSelect?.();
     }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.name.endsWith(".sql")) {
+    if (file && (file.name.endsWith(".sql") || file.name.endsWith(".csv"))) {
       setSelectedFile(file);
-      // Auto-detect database name from filename
-      const detectedName = file.name.replace(".sql", "").toLowerCase();
-      setDatabaseName(detectedName);
+
+      // Set file type
+      const isCSV = file.name.endsWith(".csv");
+      setFileType(isCSV ? "csv" : "sql");
+
       uploadFileToBackend(file);
+
+      // Select this section when file is selected
+      onSelect?.();
     }
   };
 
@@ -116,7 +130,7 @@ export default function FileUpload({
       <div className="mb-4 pb-2 border-b border-gray-700 -mx-4 px-4 bg-gray-800 -mt-4 pt-3 rounded-t-xl">
         <StepTitle
           title="Add Datasource"
-          description="Upload a SQL file to set up your database schema and data"
+          description="Upload SQL schema files or CSV data files to add tables to your database"
           icon={DocumentTextIcon}
         />
       </div>
@@ -133,16 +147,10 @@ export default function FileUpload({
           type="text"
           id="database-name"
           value={databaseName}
-          onChange={(e) => setDatabaseName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed"
-          placeholder="Enter database name"
-          disabled={isUploading || selectedFile !== null}
+          className="w-full px-3 py-1.5 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-sm"
+          placeholder="Database: nlp_sql_db"
+          disabled={true}
         />
-        <p className="mt-2 text-xs text-gray-400">
-          {selectedFile
-            ? `Database name automatically detected from your file. You can remove the file to enter a custom name.`
-            : "Database name will be automatically detected from your SQL file name, or you can enter a custom name"}
-        </p>
       </div>
 
       <div onClick={(e) => e.stopPropagation()}>
@@ -163,16 +171,16 @@ export default function FileUpload({
             </div>
             <div className="space-y-2">
               <p className="text-sm font-semibold text-gray-100">
-                Drop your SQL file here, or click to browse
+                Drop your SQL or CSV file here, or click to browse
               </p>
               <p className="text-xs text-gray-400">
-                Only .sql files are supported
+                Supported formats: .sql (schema + data) • .csv (data only)
               </p>
             </div>
             <input
               ref={fileInputRef}
               type="file"
-              accept=".sql"
+              accept=".sql,.csv"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -181,14 +189,23 @@ export default function FileUpload({
           <div className="border border-gray-600 rounded-xl p-4 bg-gradient-to-r from-green-900/20 to-emerald-900/20 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-900 rounded-lg">
-                  <DocumentTextIcon className="h-6 w-6 text-green-400" />
+                <div
+                  className={`p-2 rounded-lg ${
+                    fileType === "csv" ? "bg-blue-900" : "bg-green-900"
+                  }`}
+                >
+                  {fileType === "csv" ? (
+                    <TableCellsIcon className="h-6 w-6 text-blue-400" />
+                  ) : (
+                    <DocumentTextIcon className="h-6 w-6 text-green-400" />
+                  )}
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-100">
                     {selectedFile.name}
                   </p>
                   <p className="text-xs text-gray-400">
+                    {fileType === "csv" ? "CSV Data File" : "SQL Schema File"} •{" "}
                     {(selectedFile.size / 1024).toFixed(1)} KB
                   </p>
                 </div>
@@ -212,10 +229,12 @@ export default function FileUpload({
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-400"></div>
             <div>
               <p className="text-sm text-blue-300 font-medium">
-                Uploading SQL file to database '{databaseName}'...
+                {fileType === "csv"
+                  ? `Processing CSV data for database '${databaseName}'...`
+                  : `Uploading SQL schema to database '${databaseName}'...`}
               </p>
               <p className="text-xs text-blue-400">
-                File: {selectedFile?.name}
+                File: {selectedFile?.name} ({fileType?.toUpperCase()})
               </p>
             </div>
           </div>

@@ -17,6 +17,15 @@ export interface QueryResponse {
   };
 }
 
+export interface DatabaseResponse {
+  database: string;
+  file_type?: string;
+  available_databases?: {
+    sql: string;
+    csv: string;
+  };
+}
+
 export const api = {
   async uploadSchema(
     file: File,
@@ -70,6 +79,32 @@ export const api = {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Failed to run SQL");
+    }
+
+    return response.json();
+  },
+
+  async getCurrentDatabase(): Promise<DatabaseResponse> {
+    const response = await fetch(`${API_BASE_URL}/current-database`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get current database");
+    }
+
+    return response.json();
+  },
+
+  async getSchemaDetails(): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/debug/schema-details`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get schema details");
     }
 
     return response.json();

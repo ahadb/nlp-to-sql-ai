@@ -49,9 +49,7 @@ def get_db_schema(database_name: str = None) -> str:
                 f"{table}({', '.join(columns)})" for table, columns in schema_dict.items()
             )
             
-            # Add database name header
-            db_header = f"Database: {database_name or original_db_name}\n"
-            return db_header + schema_str
+            return schema_str
             
         finally:
             cur.close()

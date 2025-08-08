@@ -42,6 +42,9 @@ class OpenAIClient:
             Convert this natural language question to SQL:
             "{user_question}"
             
+            Important: Do NOT include database names or schema prefixes in the SQL. 
+            Use only table names directly (e.g., "SELECT * FROM sales_data" not "SELECT * FROM csv_database.sales_data").
+            
             Return ONLY the SQL query, no explanations or additional text.
             """
             

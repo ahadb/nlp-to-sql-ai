@@ -1,40 +1,26 @@
 import { navigation, classNames } from "./navigation";
-import { ClockIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import QueryHistory from "./QueryHistory";
+import { useQueryHistory } from "../contexts/QueryHistoryContext";
+import { useApp } from "../contexts/AppContext";
+import { type QueryHistoryItem } from "../types/query";
 
 export default function Sidebar() {
-  // Mock data for recent queries
-  const recentQueries = [
-    {
-      id: 1,
-      question: "Show me top 10 customers by order value",
-      timestamp: "2 hours ago",
-      resultCount: 10,
-    },
-    {
-      id: 2,
-      question: "Which products have highest sales volume?",
-      timestamp: "4 hours ago",
-      resultCount: 25,
-    },
-    {
-      id: 3,
-      question: "Break down sales by region and country",
-      timestamp: "1 day ago",
-      resultCount: 15,
-    },
-    {
-      id: 4,
-      question: "Employee performance with total sales",
-      timestamp: "2 days ago",
-      resultCount: 8,
-    },
-    {
-      id: 5,
-      question: "Monthly order trends for last 2 years",
-      timestamp: "3 days ago",
-      resultCount: 24,
-    },
-  ];
+  const { state, clearHistory } = useQueryHistory();
+  const { populateQueryInput } = useApp();
+
+  const handleQuerySelect = (query: QueryHistoryItem) => {
+    populateQueryInput(query);
+  };
+
+  const handleReRunQuery = (sql: string) => {
+    // This will be handled by the parent component
+    console.log("Re-run query requested:", sql);
+  };
+
+  const handleClearHistory = () => {
+    localStorage.removeItem("queryHistory");
+    clearHistory();
+  };
 
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-800 lg:pb-4 border-r border-gray-700">
@@ -82,33 +68,23 @@ export default function Sidebar() {
 
       {/* Recent Queries Section */}
       <div className="mt-8 px-3">
-        <div className="flex items-center gap-2 mb-3">
-          <ClockIcon className="h-4 w-4 text-gray-400" />
-          <h3 className="text-sm font-semibold text-gray-200">
-            Recent Queries
-          </h3>
-        </div>
-        <div className="space-y-2">
-          {recentQueries.map((query) => (
-            <div
-              key={query.id}
-              className="group p-2 bg-gray-700 rounded-lg border border-gray-600 hover:border-blue-500 hover:shadow-sm transition-all duration-200 cursor-pointer"
+        <QueryHistory
+          queries={state.queries}
+          onQuerySelect={handleQuerySelect}
+          onReRunQuery={handleReRunQuery}
+        />
+
+        {/* Clear History Button */}
+        {state.queries.length > 0 && (
+          <div className="mt-4">
+            <button
+              onClick={handleClearHistory}
+              className="w-full px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-md transition-colors duration-200 border border-red-800/30 hover:border-red-700/50"
             >
-              <div className="flex items-center gap-1.5 min-w-0 mb-1">
-                <MagnifyingGlassIcon className="h-3 w-3 text-blue-400 flex-shrink-0" />
-                <span className="text-xs font-medium text-gray-300 truncate">
-                  {query.question}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">{query.timestamp}</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-900 text-blue-300 rounded-full font-medium">
-                  {query.resultCount} results
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+              Clear History
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

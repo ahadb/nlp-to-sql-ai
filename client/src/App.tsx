@@ -4,7 +4,7 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   DocumentTextIcon,
   SparklesIcon,
@@ -28,6 +28,11 @@ import {
 } from "./components";
 import HighlightedCode from "./components/CodeHighlighter";
 import { api } from "./services/api";
+import {
+  QueryHistoryProvider,
+  useQueryHistory,
+} from "./contexts/QueryHistoryContext";
+import { AppProvider, useApp } from "./contexts/AppContext";
 
 interface GeneratedSQL {
   question: string;
@@ -278,6 +283,43 @@ function MainApp() {
   const [isExplainOpen, setIsExplainOpen] = useState(false);
   const [explanation, setExplanation] = useState<string | null>(null);
   const [lastNLQuery, setLastNLQuery] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { addQuery, clearHistory } = useQueryHistory();
+
+  // Manual clear history function
+  const handleClearHistory = () => {
+    localStorage.removeItem("queryHistory");
+    clearHistory();
+  };
+
+  // Handle re-running queries from history
+  const handleReRunQuery = useCallback(
+    async (sql: string) => {
+      setIsRunningQuery(true);
+      try {
+        console.log("Re-running query:", sql);
+        const response = await api.runSQL(sql);
+        console.log("API Response:", response);
+        const results = response.data || [];
+        setQueryResults(results);
+        setIsModalOpen(true);
+
+        // Add successful query execution to history
+        addQuery("Re-run query", sql, "success", results);
+      } catch (error) {
+        console.error("Error re-running query:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        alert(`Error re-running query: ${errorMessage}`);
+
+        // Add failed query execution to history
+        addQuery("Re-run query", sql, "error");
+      } finally {
+        setIsRunningQuery(false);
+      }
+    },
+    [addQuery]
+  );
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -291,6 +333,8 @@ function MainApp() {
 
   const handleFileUpload = (file: File) => {
     console.log("File uploaded successfully:", file.name);
+    // Trigger refresh of database context
+    setRefreshTrigger((prev) => prev + 1);
     // setHasUploadedSchema(true);
     // setCurrentStep(2);
   };
@@ -311,14 +355,28 @@ function MainApp() {
       console.log("Running query:", generatedSQL.sql_query);
       const response = await api.runSQL(generatedSQL.sql_query);
       console.log("API Response:", response);
-      setQueryResults(response.data || []);
+      const results = response.data || [];
+      setQueryResults(results);
       setIsModalOpen(true);
+
+      // Add successful query execution to history
+      addQuery(
+        lastNLQuery || "Custom SQL query",
+        generatedSQL.sql_query,
+        "success",
+        results
+      );
     } catch (error) {
       console.error("Error running query:", error);
-      alert(
-        `Error running query: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      alert(`Error running query: ${errorMessage}`);
+
+      // Add failed query execution to history
+      addQuery(
+        lastNLQuery || "Custom SQL query",
+        generatedSQL.sql_query,
+        "error"
       );
     } finally {
       setIsRunningQuery(false);
@@ -385,6 +443,7 @@ function MainApp() {
                 onAnalyze={handleSchemaAnalysis}
                 isSelected={selectedSection === "query"}
                 onSelect={() => setSelectedSection("query")}
+                refreshTrigger={refreshTrigger}
               />
             </div>
           </div>
@@ -653,11 +712,15 @@ function MainApp() {
 // Main App Router
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/app" element={<MainApp />} />
-      </Routes>
-    </Router>
+    <AppProvider>
+      <QueryHistoryProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<MainApp />} />
+          </Routes>
+        </Router>
+      </QueryHistoryProvider>
+    </AppProvider>
   );
 }
