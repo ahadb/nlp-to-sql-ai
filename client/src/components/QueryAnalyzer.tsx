@@ -312,74 +312,40 @@ export default function QueryAnalyzer({
           )}
 
           {/* Dynamic Query Templates */}
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs text-gray-400">
-              <span className="font-medium">
-                {schemaDetails ? "Smart Templates:" : "Quick Templates:"}
-              </span>
+          {schemaDetails && (
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="font-medium">Smart Templates:</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                {generateDynamicTemplates().map((template, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuery(template.query);
+                    }}
+                    className="text-left p-2 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 hover:from-blue-900/30 hover:to-indigo-900/30 border border-gray-600 hover:border-gray-500 rounded-md transition-all duration-200 group"
+                  >
+                    <div className="flex items-start justify-between mb-0.5">
+                      <span className="text-xs font-semibold text-gray-300 group-hover:text-gray-200">
+                        {template.title}
+                      </span>
+                      <span className="text-[10px] px-2 py-1 bg-blue-600 text-white rounded-full font-medium">
+                        {template.category}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 leading-tight">
+                      {template.query.length > 45
+                        ? template.query.substring(0, 45) + "..."
+                        : template.query}
+                    </p>
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-              {(schemaDetails
-                ? generateDynamicTemplates()
-                : [
-                    {
-                      title: "Explore Data",
-                      query: "Show me the first 10 rows of data",
-                      category: "Data Exploration",
-                    },
-                    {
-                      title: "Count Records",
-                      query: "How many records are in the database?",
-                      category: "Aggregation",
-                    },
-                    {
-                      title: "Recent Data",
-                      query: "Show me the most recent records",
-                      category: "Time-based",
-                    },
-                    {
-                      title: "Total Amount",
-                      query: "What's the total amount or value?",
-                      category: "Financial",
-                    },
-                    {
-                      title: "All Names",
-                      query: "Show me all the names or titles",
-                      category: "Listing",
-                    },
-                    {
-                      title: "Custom Query",
-                      query: "Ask me anything about your data",
-                      category: "Custom",
-                    },
-                  ]
-              ).map((template, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setQuery(template.query);
-                  }}
-                  className="text-left p-2 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 hover:from-blue-900/30 hover:to-indigo-900/30 border border-gray-600 hover:border-gray-500 rounded-md transition-all duration-200 group"
-                >
-                  <div className="flex items-start justify-between mb-0.5">
-                    <span className="text-xs font-semibold text-gray-300 group-hover:text-gray-200">
-                      {template.title}
-                    </span>
-                    <span className="text-[10px] px-2 py-1 bg-blue-600 text-white rounded-full font-medium">
-                      {template.category}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 leading-tight">
-                    {template.query.length > 45
-                      ? template.query.substring(0, 45) + "..."
-                      : template.query}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="flex justify-end">

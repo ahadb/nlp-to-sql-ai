@@ -102,7 +102,7 @@ const QueryHistory: React.FC<QueryHistoryProps> = ({
                       >
                         {query.status}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-gray-400 whitespace-nowrap">
                         {formatTimeAgo(query.timestamp)}
                       </span>
                     </div>
