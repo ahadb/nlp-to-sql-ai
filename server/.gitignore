@@ -54,4 +54,10 @@ logs/
 *.temp
 
 # Project
-/lambda-app/
+/lambda-app/layers
+/lambda-app/template.yaml
+/lambda-app/stack
+/lambda-app/events
+/lambda-app/env.local.json
+/lambda-app/samconfig.toml
+/lambda-app/.aws-sam/
