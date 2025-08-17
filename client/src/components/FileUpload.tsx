@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
 import StepTitle from "./StepTitle";
+import { useApp } from "../contexts/AppContext";
 
 interface FileUploadProps {
   onFileUpload: (file: File) => void;
@@ -19,11 +20,11 @@ export default function FileUpload({
   isSelected = false,
   onSelect,
 }: FileUploadProps) {
+  const { setCurrentSchema } = useApp();
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [fileType, setFileType] = useState<"sql" | "csv" | null>(null);
-  const databaseName = "nlp_sql_db"; // Fixed database name
   const [uploadStatus, setUploadStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
@@ -35,7 +36,18 @@ export default function FileUpload({
     setUploadStatus({ type: null, message: "" });
 
     try {
-      const data = await api.uploadSchema(file, databaseName);
+      const data = await api.uploadSchema(file);
+
+      // Extract schema from upload response and set in context
+      if (data.schema) {
+        const schemaMatch = data.schema.match(/^schema_(.+)$/);
+        if (schemaMatch) {
+          const extractedSchema = schemaMatch[1]; // e.g., "csv" from "schema_csv"
+          setCurrentSchema(extractedSchema);
+          console.log("Schema extracted and set:", extractedSchema);
+        }
+      }
+
       setUploadStatus({
         type: "success",
         message: data.message || "File uploaded successfully!",
@@ -135,24 +147,6 @@ export default function FileUpload({
         />
       </div>
 
-      {/* Database Name Input */}
-      <div className="mb-4" onClick={(e) => e.stopPropagation()}>
-        <label
-          htmlFor="database-name"
-          className="block text-sm font-medium text-gray-300 mb-2"
-        >
-          Database Name
-        </label>
-        <input
-          type="text"
-          id="database-name"
-          value={databaseName}
-          className="w-full px-3 py-1.5 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-sm"
-          placeholder="Database: nlp_sql_db"
-          disabled={true}
-        />
-      </div>
-
       <div onClick={(e) => e.stopPropagation()}>
         {!selectedFile ? (
           <div
@@ -230,8 +224,8 @@ export default function FileUpload({
             <div>
               <p className="text-sm text-blue-300 font-medium">
                 {fileType === "csv"
-                  ? `Processing CSV data for database '${databaseName}'...`
-                  : `Uploading SQL schema to database '${databaseName}'...`}
+                  ? "Processing CSV data in the cloud..."
+                  : "Uploading SQL schema to the cloud..."}
               </p>
               <p className="text-xs text-blue-400">
                 File: {selectedFile?.name} ({fileType?.toUpperCase()})
