@@ -4,7 +4,7 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import {
   DocumentTextIcon,
   SparklesIcon,
@@ -12,7 +12,6 @@ import {
   CheckIcon,
   PlayIcon,
   ArrowDownTrayIcon,
-  ArrowRightIcon,
   CircleStackIcon,
   ChartBarIcon,
   CodeBracketIcon,
@@ -25,6 +24,7 @@ import {
   Layout,
   FileUpload,
   QueryAnalyzer,
+  LoginForm,
 } from "./components";
 import HighlightedCode from "./components/CodeHighlighter";
 import { api } from "./services/api";
@@ -43,223 +43,153 @@ interface GeneratedSQL {
 // Landing Page Component
 function LandingPage() {
   const navigate = useNavigate();
+  const [, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleGetStarted = () => {
+  const handleLogin = async () => {
+    setIsLoading(true);
+
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setIsAuthenticated(true);
+    setIsLoading(false);
+
+    // Navigate to app after successful login
     navigate("/app");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
-      {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-2xl">
-                  <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center">
-                    <span className="text-lg font-bold text-blue-600">SQL</span>
-                  </div>
-                </div>
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-white rounded-full"></div>
-                </div>
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              SQL AI Assistant
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Transform your natural language questions into powerful SQL
-              queries. No coding required - just ask what you want to know about
-              your data.
-            </p>
-            <button
-              onClick={handleGetStarted}
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-2xl"
-            >
-              Get Started
-              <ArrowRightIcon className="ml-2 h-5 w-5" />
-            </button>
-          </div>
-        </div>
+    <div className="h-screen w-screen bg-gradient-to-br from-blue-900 via-purple-900 to-blue-800 overflow-hidden relative">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-blue-600/10"></div>
       </div>
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <CodeBracketIcon className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Natural Language to SQL
-            </h3>
-            <p className="text-gray-400">
-              Ask questions in plain English and get accurate SQL queries
-              instantly
-            </p>
-          </div>
-          <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700">
-            <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <CircleStackIcon className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Multiple Database Support
-            </h3>
-            <p className="text-gray-400">
-              Works with Northwind, Netflix, Chinook, and custom database
-              schemas
-            </p>
-          </div>
-          <div className="text-center p-6 bg-gray-800/50 rounded-xl border border-gray-700">
-            <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <ChartBarIcon className="h-6 w-6 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Instant Results
-            </h3>
-            <p className="text-gray-400">
-              Execute queries and visualize results with export capabilities
-            </p>
+      {/* Side-by-Side Layout */}
+      <div className="flex h-full w-full relative z-10">
+        {/* Left Side - Login Form */}
+        <div className="w-2/5 flex items-center justify-center p-8 border-r border-slate-600">
+          <div className="w-full max-w-md">
+            <LoginForm onLogin={handleLogin} isLoading={isLoading} />
           </div>
         </div>
 
-        {/* Available Databases */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            Available Databases
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                name: "Northwind",
-                description:
-                  "Classic business database with customers, orders, products, and suppliers",
-                icon: "🏢",
-                features: [
-                  "Sales Analytics",
-                  "Customer Insights",
-                  "Inventory Management",
-                ],
-              },
-              {
-                name: "Netflix",
-                description:
-                  "Streaming platform data with movies, shows, and user preferences",
-                icon: "🎬",
-                features: [
-                  "Content Analysis",
-                  "Viewing Patterns",
-                  "Genre Trends",
-                ],
-              },
-              {
-                name: "Chinook",
-                description:
-                  "Music store database with artists, albums, tracks, and sales",
-                icon: "🎵",
-                features: [
-                  "Music Analytics",
-                  "Artist Performance",
-                  "Sales Tracking",
-                ],
-              },
-              {
-                name: "Custom Schema",
-                description:
-                  "Upload your own database schema for personalized queries",
-                icon: "⚙️",
-                features: [
-                  "Schema Upload",
-                  "Custom Tables",
-                  "Flexible Queries",
-                ],
-              },
-            ].map((db, index) => (
-              <div
-                key={index}
-                className="bg-gray-800/50 rounded-xl border border-gray-700 p-6 hover:border-blue-500 transition-all duration-200"
-              >
-                <div className="text-4xl mb-4">{db.icon}</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {db.name}
-                </h3>
-                <p className="text-gray-400 text-sm mb-4">{db.description}</p>
-                <div className="space-y-1">
-                  {db.features.map((feature, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center text-xs text-gray-300"
-                    >
-                      <CheckIcon className="h-3 w-3 text-green-400 mr-2 flex-shrink-0" />
-                      {feature}
+        {/* Right Side - App Description */}
+        <div className="w-3/5 flex flex-col justify-center pl-8 pr-20 py-12">
+          <div className="w-full">
+            {/* Logo and Title */}
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl">
+                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+                      <span className="text-base font-bold text-blue-600">
+                        SQL
+                      </span>
                     </div>
-                  ))}
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+              <h1 className="text-3xl font-bold text-white mb-4 leading-tight">
+                SQL AI Assistant
+              </h1>
+              <p className="text-base text-gray-300 max-w-lg mx-auto leading-relaxed">
+                Transform your natural language questions into powerful SQL
+                queries. No coding required - just ask what you want to know
+                about your data.
+              </p>
+            </div>
 
-        {/* How It Works */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">
-            How It Works
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                1
+            {/* Features Section - One Row */}
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-white text-center mb-6">
+                Powerful Features
+              </h2>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <CodeBracketIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Natural Language to SQL
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Ask questions in plain English and get accurate SQL queries
+                    instantly
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <CircleStackIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Multiple Database Support
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Works with popular databases and custom schemas for maximum
+                    flexibility
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <ChartBarIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Instant Results
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Execute queries and visualize results with powerful export
+                    capabilities
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Upload Schema
-              </h3>
-              <p className="text-gray-400">
-                Choose from pre-built databases or upload your own schema file
-              </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                2
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Ask Questions
-              </h3>
-              <p className="text-gray-400">
-                Type your question in natural language or use quick templates
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
-                3
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Get Results
-              </h3>
-              <p className="text-gray-400">
-                Review the generated SQL, run it, and export your results
-              </p>
-            </div>
-          </div>
-        </div>
 
-        {/* CTA Section */}
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl p-8 border border-blue-500/30">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to Transform Your Data Queries?
-            </h2>
-            <p className="text-gray-300 mb-6">
-              Start asking questions about your data in plain English today
-            </p>
-            <button
-              onClick={handleGetStarted}
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-2xl"
-            >
-              Start Querying Now
-              <ArrowRightIcon className="ml-2 h-5 w-5" />
-            </button>
+            {/* How It Works - One Row */}
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-white text-center mb-6">
+                How It Works
+              </h2>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
+                    1
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Upload Schema
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Upload your database schema or use pre-built templates
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
+                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
+                    2
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Ask Questions
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Type your question in natural language and get SQL instantly
+                  </p>
+                </div>
+                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
+                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
+                    3
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">
+                    Get Results
+                  </h3>
+                  <p className="text-gray-400 text-xs">
+                    Execute queries and export your results in multiple formats
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -284,42 +214,8 @@ function MainApp() {
   const [explanation, setExplanation] = useState<string | null>(null);
   const [lastNLQuery, setLastNLQuery] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const { addQuery, clearHistory } = useQueryHistory();
-
-  // Manual clear history function
-  const handleClearHistory = () => {
-    localStorage.removeItem("queryHistory");
-    clearHistory();
-  };
-
-  // Handle re-running queries from history
-  const handleReRunQuery = useCallback(
-    async (sql: string) => {
-      setIsRunningQuery(true);
-      try {
-        console.log("Re-running query:", sql);
-        const response = await api.runSQL(sql);
-        console.log("API Response:", response);
-        const results = response.data || [];
-        setQueryResults(results);
-        setIsModalOpen(true);
-
-        // Add successful query execution to history
-        addQuery("Re-run query", sql, "success", results);
-      } catch (error) {
-        console.error("Error re-running query:", error);
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
-        alert(`Error re-running query: ${errorMessage}`);
-
-        // Add failed query execution to history
-        addQuery("Re-run query", sql, "error");
-      } finally {
-        setIsRunningQuery(false);
-      }
-    },
-    [addQuery]
-  );
+  const { addQuery } = useQueryHistory();
+  const { currentSchema } = useApp();
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -353,7 +249,10 @@ function MainApp() {
     setIsRunningQuery(true);
     try {
       console.log("Running query:", generatedSQL.sql_query);
-      const response = await api.runSQL(generatedSQL.sql_query);
+      const response = await api.runSQL(
+        generatedSQL.sql_query,
+        currentSchema || undefined
+      );
       console.log("API Response:", response);
       const results = response.data || [];
       setQueryResults(results);

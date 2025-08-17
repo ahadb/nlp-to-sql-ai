@@ -34,7 +34,13 @@ export default function QueryAnalyzer({
   const [schemaDetails, setSchemaDetails] = useState<any>(null);
   const [isLoadingDatabase, setIsLoadingDatabase] = useState(true); // Start as true to show loading initially
   const { addQuery } = useQueryHistory();
-  const { selectedQuery, setSelectedQuery } = useApp();
+  const {
+    selectedQuery,
+    setSelectedQuery,
+    currentSchema,
+    currentTable,
+    setCurrentGeneratedSQL,
+  } = useApp();
 
   // Populate query input when a query is selected from history
   useEffect(() => {
@@ -193,8 +199,16 @@ export default function QueryAnalyzer({
     setError(null);
 
     try {
-      const response = await api.generateSQL(query);
+      const response = await api.generateSQL(
+        query,
+        currentSchema || undefined,
+        currentTable || undefined
+      );
       const sqlData = response.data;
+
+      // Store the generated SQL in AppContext
+      setCurrentGeneratedSQL(sqlData.sql_query);
+      console.log("Generated SQL stored in context:", sqlData.sql_query);
 
       // Add successful query to history
       addQuery(query, sqlData.sql_query, "success");

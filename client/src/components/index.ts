@@ -6,4 +6,5 @@ export { default as FileUpload } from "./FileUpload";
 export { default as QueryAnalyzer } from "./QueryAnalyzer";
 export { default as StepIndicator } from "./StepIndicator";
 export { default as StepTitle } from "./StepTitle";
+export { default as LoginForm } from "./LoginForm";
 export { navigation, classNames } from "./navigation";
