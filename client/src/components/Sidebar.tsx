@@ -23,17 +23,14 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-800 lg:pb-4 border-r border-gray-700">
+    <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-gray-900 lg:pb-4 border-r border-gray-700" style={{boxShadow: '4px 0 15px rgba(0, 0, 0, 0.3)'}}>
       <div className="flex h-16 shrink-0 items-center px-4">
         <div className="flex items-center">
           <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg">
-              <div className="w-6 h-6 bg-white rounded-sm flex items-center justify-center">
-                <span className="text-xs font-bold text-blue-600">SQL</span>
-              </div>
-            </div>
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full"></div>
+            <div className="w-10 h-10 bg-blue-600 border-2 border-blue-400 flex items-center justify-center shadow-lg">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
             </div>
           </div>
           <div className="ml-3">

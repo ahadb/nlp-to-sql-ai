@@ -60,134 +60,103 @@ function LandingPage() {
   };
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-blue-900 via-purple-900 to-blue-800 overflow-hidden relative">
+    <div className="h-screen w-screen bg-gray-900 overflow-hidden relative">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-40">
+      <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-blue-600/10"></div>
       </div>
 
       {/* Side-by-Side Layout */}
-      <div className="flex h-full w-full relative z-10">
-        {/* Left Side - Login Form */}
-        <div className="w-2/5 flex items-center justify-center p-8 border-r border-slate-600">
-          <div className="w-full max-w-md">
-            <LoginForm onLogin={handleLogin} isLoading={isLoading} />
-          </div>
-        </div>
-
-        {/* Right Side - App Description */}
-        <div className="w-3/5 flex flex-col justify-center pl-8 pr-20 py-12">
-          <div className="w-full">
-            {/* Logo and Title */}
-            <div className="text-center mb-8">
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                      <span className="text-base font-bold text-blue-600">
-                        SQL
-                      </span>
+      <div className="flex h-full w-full relative z-10 justify-center">
+        <div className="flex w-full max-w-7xl">
+          {/* Left Section - App Description & Features */}
+          <div className="w-2/5 flex flex-col justify-center px-8 py-12">
+            <div className="w-full max-w-lg">
+              {/* Logo and Title */}
+              <div className="mb-12">
+                <div className="flex items-center mb-8">
+                  <div className="relative mr-4">
+                    <div className="w-12 h-12 bg-blue-600 border-2 border-blue-400 flex items-center justify-center shadow-lg">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                      </svg>
                     </div>
                   </div>
-                  <div className="absolute -top-2 -right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <h1 className="text-3xl font-bold text-white">
+                    SQL AI Assistant
+                  </h1>
+                </div>
+              </div>
+
+              {/* Features Section */}
+              <div className="space-y-8">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center mr-4 mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">
+                      Transform natural language to SQL instantly
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      No coding required - just ask what you want to know about your data in plain English.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center mr-4 mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">
+                      Start analyzing data immediately
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Upload your database schema and start asking questions right away with our intuitive interface.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 bg-orange-400 rounded-full flex items-center justify-center mr-4 mt-0.5">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">
+                      Trusted by data professionals
+                    </h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      Join analysts, developers, and business users who rely on our AI-powered SQL generation.
+                    </p>
                   </div>
                 </div>
               </div>
-              <h1 className="text-3xl font-bold text-white mb-4 leading-tight">
-                SQL AI Assistant
-              </h1>
-              <p className="text-base text-gray-300 max-w-lg mx-auto leading-relaxed">
-                Transform your natural language questions into powerful SQL
-                queries. No coding required - just ask what you want to know
-                about your data.
-              </p>
-            </div>
 
-            {/* Features Section - One Row */}
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-white text-center mb-6">
-                Powerful Features
-              </h2>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <CodeBracketIcon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Natural Language to SQL
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Ask questions in plain English and get accurate SQL queries
-                    instantly
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <CircleStackIcon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Multiple Database Support
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Works with popular databases and custom schemas for maximum
-                    flexibility
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                  <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <ChartBarIcon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Instant Results
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Execute queries and visualize results with powerful export
-                    capabilities
-                  </p>
-                </div>
+              {/* Info Box */}
+              <div className="mt-12 p-4 border border-orange-400/30 rounded-lg bg-orange-400/10">
+                <p className="text-orange-300 text-sm">
+                  <span className="font-medium">Did you know?</span> Our AI understands complex database schemas and generates optimized SQL queries for better performance.
+                </p>
               </div>
             </div>
+          </div>
 
-            {/* How It Works - One Row */}
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-white text-center mb-6">
-                How It Works
-              </h2>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
-                    1
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Upload Schema
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Upload your database schema or use pre-built templates
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
-                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
-                    2
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Ask Questions
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Type your question in natural language and get SQL instantly
-                  </p>
-                </div>
-                <div className="text-center p-4 bg-slate-800/30 rounded-lg">
-                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold text-base">
-                    3
-                  </div>
-                  <h3 className="text-sm font-semibold text-white mb-2">
-                    Get Results
-                  </h3>
-                  <p className="text-gray-400 text-xs">
-                    Execute queries and export your results in multiple formats
-                  </p>
-                </div>
+          {/* Right Section - Sign In Form Card */}
+          <div className="w-3/5 flex items-center justify-center px-8 py-12">
+            <div className="w-full max-w-md flex justify-center">
+              <div className="bg-white shadow-2xl p-8 w-full">
+                <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+                  Sign In
+                </h2>
+
+                <LoginForm onLogin={handleLogin} isLoading={isLoading} />
               </div>
             </div>
           </div>
@@ -214,6 +183,8 @@ function MainApp() {
   const [explanation, setExplanation] = useState<string | null>(null);
   const [lastNLQuery, setLastNLQuery] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [currentDatabase, setCurrentDatabase] = useState<string | null>(null);
+  const [selectedDatabase, setSelectedDatabase] = useState<"sql" | "csv" | null>(null);
   const { addQuery } = useQueryHistory();
   const { currentSchema } = useApp();
 
@@ -229,10 +200,17 @@ function MainApp() {
 
   const handleFileUpload = (file: File) => {
     console.log("File uploaded successfully:", file.name);
-    // Trigger refresh of database context
+    
+    // Determine file type from extension
+    const fileType = file.name.toLowerCase().endsWith('.csv') ? 'csv' : 'sql';
+    console.log("Detected file type:", fileType);
+    
+    // Update the database state directly
+    setCurrentDatabase(file.name);
+    setSelectedDatabase(fileType);
+    
+    // Also trigger refresh for API calls
     setRefreshTrigger((prev) => prev + 1);
-    // setHasUploadedSchema(true);
-    // setCurrentStep(2);
   };
 
   const handleSchemaAnalysis = (query: string, sqlData?: GeneratedSQL) => {
@@ -314,7 +292,15 @@ function MainApp() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen">
+    <div className="bg-gray-900 min-h-screen relative">
+      {/* Dotted Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle, #4B5563 1px, transparent 1px)`,
+          backgroundSize: '20px 20px'
+        }}></div>
+      </div>
+      
       <MobileSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
@@ -323,7 +309,7 @@ function MainApp() {
       <TopBar setSidebarOpen={setSidebarOpen} />
       <Layout
         leftChildren={
-          <div className="space-y-8">
+          <div className="space-y-12 relative z-10">
             {/* File Upload Section */}
             <div>
               <FileUpload
@@ -333,8 +319,7 @@ function MainApp() {
               />
             </div>
 
-            {/* Divider */}
-            <div className="border-t border-gray-700 my-8 -mx-4 sm:-mx-6 lg:-mx-8"></div>
+
 
             {/* Natural Language to SQL Section */}
             <div>
@@ -343,48 +328,72 @@ function MainApp() {
                 isSelected={selectedSection === "query"}
                 onSelect={() => setSelectedSection("query")}
                 refreshTrigger={refreshTrigger}
+                currentDatabase={currentDatabase}
+                selectedDatabase={selectedDatabase}
+                setSelectedDatabase={setSelectedDatabase}
               />
             </div>
           </div>
         }
         rightChildren={
-          <div className="h-full flex flex-col space-y-8 bg-black">
-            {/* SQL Display Card */}
-            <div className="w-full p-6 border-2 border-gray-700 hover:border-gray-600 hover:bg-gray-800 transition-all duration-200 bg-gray-900 flex-1 flex flex-col">
-              {/* Step Title with Border */}
-              <div className="mb-6 pb-3 border-b border-gray-700 -mx-6 px-6 bg-gray-900 -mt-6 pt-4 flex-shrink-0">
-                <div className="mb-2">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-600">
-                      <DocumentTextIcon className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-gray-100 mb-0">
-                        Generated SQL
-                      </h3>
-                      <p className="text-xs text-gray-400 leading-none mt-0.5">
-                        Your generated SQL query will appear here
-                      </p>
-                    </div>
+          <div className="h-full flex flex-col">
+            {/* Railway-Style Fixed Panel */}
+            <div className="w-full h-full bg-gray-900 rounded-t-xl shadow-2xl border border-gray-700 border-b-0 overflow-hidden flex flex-col relative z-20" style={{ backgroundColor: '#111827' }}>
+              {/* Panel Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gray-800">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                    <DocumentTextIcon className="h-5 w-5 text-white" />
                   </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-100">
+                      SQL Query Engine
+                    </h2>
+                    <p className="text-sm text-gray-400">
+                      Natural language to SQL conversion
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded-lg transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
-              {/* SQL Content */}
-              <div className="flex-1 bg-gray-900 rounded-xl border border-gray-700 overflow-hidden min-h-0">
+              {/* Panel Tabs */}
+              <div className="flex border-b border-gray-700 bg-gray-800">
+                <button className="px-6 py-3 text-sm font-medium text-blue-400 border-b-2 border-blue-500 bg-gray-800">
+                  Generated SQL
+                </button>
+                <button className="px-6 py-3 text-sm font-medium text-gray-400 hover:text-gray-300 hover:bg-gray-700 transition-colors">
+                  Schema
+                </button>
+                <button className="px-6 py-3 text-sm font-medium text-gray-400 hover:text-gray-300 hover:bg-gray-700 transition-colors">
+                  History
+                </button>
+              </div>
+
+              {/* Panel Content */}
+              <div className="flex-1 bg-gray-900 overflow-hidden relative z-10">
                 {generatedSQL ? (
                   <div className="h-full flex flex-col">
-                    {/* SQL Query */}
-                    <div className="flex-1 overflow-auto">
-                      <div className="flex justify-between items-start p-4 -mb-6">
-                        <h4 className="text-sm font-semibold text-gray-300">
-                          Generated SQL Query
-                        </h4>
+                    {/* SQL Query Header */}
+                    <div className="p-6 border-b border-gray-700">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          <h4 className="text-base font-semibold text-gray-200">
+                            Active Query
+                          </h4>
+                        </div>
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={handleRunQuery}
                             disabled={isRunningQuery}
-                            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400 rounded-lg transition-colors duration-200"
+                            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                           >
                             {isRunningQuery ? (
                               <>
@@ -411,7 +420,6 @@ function MainApp() {
                               <ClipboardDocumentIcon className="h-5 w-5" />
                             )}
                           </button>
-                          {/* Explain SQL Button */}
                           <button
                             onClick={() => {
                               setExplanation(
@@ -425,39 +433,46 @@ function MainApp() {
                             title="Explain SQL"
                           >
                             <DocumentTextIcon className="h-5 w-5 mr-1" />
-                            Explain SQL
+                            Explain
                           </button>
                         </div>
                       </div>
-
-                      <HighlightedCode
-                        key={generatedSQL.sql_query}
-                        language="sql"
-                        code={generatedSQL.sql_query}
-                      />
+                      
+                      {/* SQL Query Display */}
+                      <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                        <HighlightedCode
+                          key={generatedSQL.sql_query}
+                          language="sql"
+                          code={generatedSQL.sql_query}
+                        />
+                      </div>
                     </div>
 
                     {/* Schema Info */}
-                    <div className="border-t border-gray-700 bg-gray-800 p-4">
-                      <div className="text-xs text-gray-400 mb-2">
-                        Database Schema Used:
-                      </div>
-                      <div className="text-xs font-mono text-gray-300 bg-gray-900 p-3 rounded border max-h-20 overflow-y-auto">
-                        {generatedSQL.schema}
+                    <div className="flex-1 p-6">
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-gray-300 mb-2">
+                          Database Schema
+                        </h5>
+                        <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 max-h-32 overflow-y-auto">
+                          <div className="text-xs font-mono text-gray-300">
+                            {generatedSQL.schema}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center">
+                  <div className="h-full flex items-center justify-center p-6">
                     <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                         <SparklesIcon className="h-8 w-8 text-white" />
                       </div>
-                      <p className="text-gray-400 mb-2">
-                        Your generated SQL will appear here
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Type a question in the left panel to get started
+                      <h3 className="text-lg font-medium text-gray-200 mb-2">
+                        Ready to Generate SQL
+                      </h3>
+                      <p className="text-sm text-gray-400 leading-relaxed">
+                        Type your question in the left panel to convert natural language to SQL
                       </p>
                     </div>
                   </div>
@@ -471,13 +486,13 @@ function MainApp() {
       {/* Results Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-900/75 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full min-h-[900px] max-h-[90vh] flex flex-col border border-gray-700 overflow-hidden">
+          <div className="bg-gray-900 rounded-xl shadow-2xl max-w-6xl w-full min-h-[900px] max-h-[90vh] flex flex-col border border-gray-700 overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-900">
+            <div className="flex items-center justify-between p-6 border-b border-gray-700 bg-gray-800">
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 rounded-full bg-green-900 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center">
                   <svg
-                    className="w-4 h-4 text-green-400"
+                    className="w-4 h-4 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -502,7 +517,7 @@ function MainApp() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={exportToExcel}
-                  className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                  className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm hover:shadow-md"
                 >
                   <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
                   Export CSV
@@ -529,7 +544,7 @@ function MainApp() {
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 p-4 min-h-0 flex flex-col opacity-100 overflow-hidden">
+            <div className="flex-1 p-6 min-h-0 flex flex-col opacity-100 overflow-hidden bg-gray-900">
               {queryResults.length > 0 ? (
                 <div className="flex-1 overflow-auto">
                   <table className="min-w-full divide-y divide-gray-700">

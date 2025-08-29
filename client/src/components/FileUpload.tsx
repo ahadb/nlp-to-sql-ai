@@ -132,7 +132,8 @@ export default function FileUpload({
 
   return (
     <div
-      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+    // all card
+      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer relative z-10 bg-gray-800 ${
         isSelected
           ? "border-blue-900 bg-blue-900/20 shadow-lg"
           : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
@@ -150,7 +151,7 @@ export default function FileUpload({
       <div onClick={(e) => e.stopPropagation()}>
         {!selectedFile ? (
           <div
-            className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
+            className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 bg-gray-900 ${
               isDragOver
                 ? "border-green-400 bg-green-900/20 shadow-lg scale-[1.02]"
                 : "border-gray-600 hover:border-gray-500 hover:bg-gray-800"
@@ -160,7 +161,7 @@ export default function FileUpload({
             onDrop={handleDrop}
             onClick={handleClick}
           >
-            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-900 to-emerald-900 rounded-full flex items-center justify-center mb-3">
+            <div className="mx-auto w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-3">
               <CloudArrowUpIcon className="h-6 w-6 text-green-400" />
             </div>
             <div className="space-y-2">
@@ -180,7 +181,7 @@ export default function FileUpload({
             />
           </div>
         ) : (
-          <div className="border border-gray-600 rounded-xl p-4 bg-gradient-to-r from-green-900/20 to-emerald-900/20 shadow-sm">
+          <div className="border border-gray-600 rounded-xl p-4 bg-green-900/20 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div

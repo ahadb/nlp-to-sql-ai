@@ -10,11 +10,11 @@ export default function Layout({ leftChildren, rightChildren }: LayoutProps) {
     <>
       <main className="lg:pl-52 h-screen">
         <div className="xl:grid xl:grid-cols-2 xl:gap-0 h-full">
-          <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-6 border-r border-gray-600 h-full overflow-y-auto">
+          <div className="px-4 py-10 sm:px-6 lg:px-8 lg:py-6 h-full overflow-y-auto">
             {leftChildren}
           </div>
 
-          <aside className="hidden xl:block px-4 py-10 sm:px-6 lg:px-8 lg:py-6 bg-gray-800 h-full overflow-y-auto">
+          <aside className="hidden xl:block px-4 pt-10 pb-0 sm:px-6 lg:px-8 lg:pt-6 lg:pb-0 bg-gray-900 h-full overflow-y-auto">
             {rightChildren || (
               <div className="text-center">
                 <h2 className="text-xl font-semibold text-gray-900">

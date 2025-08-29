@@ -10,6 +10,9 @@ interface QueryAnalyzerProps {
   isSelected?: boolean;
   onSelect?: () => void;
   refreshTrigger?: number; // Add this to trigger refresh
+  currentDatabase?: string | null;
+  selectedDatabase?: "sql" | "csv" | null;
+  setSelectedDatabase?: (type: "sql" | "csv" | null) => void;
 }
 
 interface GeneratedSQL {
@@ -23,14 +26,22 @@ export default function QueryAnalyzer({
   isSelected = false,
   onSelect,
   refreshTrigger,
+  currentDatabase: propCurrentDatabase,
+  selectedDatabase: propSelectedDatabase,
+  setSelectedDatabase: propSetSelectedDatabase,
 }: QueryAnalyzerProps) {
   const [query, setQuery] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedDatabase, setSelectedDatabase] = useState<"sql" | "csv">(
-    "sql"
+  const [selectedDatabase, setSelectedDatabase] = useState<"sql" | "csv" | null>(
+    null
   );
   const [currentDatabase, setCurrentDatabase] = useState<string | null>(null);
+  
+  // Use props if available, otherwise use internal state
+  const displaySelectedDatabase = propSelectedDatabase ?? selectedDatabase;
+  const displayCurrentDatabase = propCurrentDatabase ?? currentDatabase;
+  const updateSelectedDatabase = propSetSelectedDatabase ?? setSelectedDatabase;
   const [schemaDetails, setSchemaDetails] = useState<any>(null);
   const [isLoadingDatabase, setIsLoadingDatabase] = useState(true); // Start as true to show loading initially
   const { addQuery } = useQueryHistory();
@@ -54,9 +65,11 @@ export default function QueryAnalyzer({
   useEffect(() => {
     const fetchCurrentDatabase = async () => {
       setIsLoadingDatabase(true);
+      console.log("🔄 Fetching database, refreshTrigger:", refreshTrigger);
 
       // Add a small delay to ensure backend has processed any recent uploads
       if (refreshTrigger && refreshTrigger > 0) {
+        console.log("⏳ Waiting for backend to process upload...");
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
 
@@ -74,13 +87,16 @@ export default function QueryAnalyzer({
 
         // Simple check - if we have a database, use it
         if (response.database) {
+          const fileType = response.file_type?.toLowerCase();
+          console.log("📁 File type detected:", fileType);
+          
           setCurrentDatabase(response.database);
-          setSelectedDatabase((response.file_type as "sql" | "csv") || "sql");
+          setSelectedDatabase(fileType === "csv" || fileType === "sql" ? fileType : "sql");
           console.log(
-            "Setting database:",
+            "✅ Setting database:",
             response.database,
             "Type:",
-            response.file_type
+            fileType
           );
 
           // Get schema details for templates
@@ -93,15 +109,15 @@ export default function QueryAnalyzer({
           }
         } else {
           setCurrentDatabase(null);
-          setSelectedDatabase("sql");
+          setSelectedDatabase(null);
           setSchemaDetails(null);
-          console.log("No database found");
+          console.log("❌ No database found in response");
         }
       } catch (error: any) {
         console.log("No database context available yet:", error);
         // This is expected on initial load - no database uploaded yet
         setCurrentDatabase(null);
-        setSelectedDatabase("sql");
+        setSelectedDatabase(null);
         setSchemaDetails(null);
         console.log("Setting initial state: NO DATABASE ADDED");
       } finally {
@@ -231,7 +247,7 @@ export default function QueryAnalyzer({
 
   return (
     <div
-      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer relative z-10 bg-gray-800 ${
         isSelected
           ? "border-blue-900 bg-blue-900/20 shadow-lg"
           : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
@@ -259,7 +275,7 @@ export default function QueryAnalyzer({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="e.g., Show me all customers from the USA who have placed more than 5 orders since 2023, sorted by total spending..."
-            className="w-full px-3 py-2 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400"
+            className="w-full bg-gray-900 px-3 py-2 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 text-sm"
             rows={2}
             disabled={isAnalyzing}
             onClick={(e) => {
@@ -292,20 +308,26 @@ export default function QueryAnalyzer({
               </div>
             </div>
           ) : !isLoadingDatabase ? (
-            <div className="p-2 bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/50 rounded-md">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-                  <div>
-                    <span className="text-xs font-medium text-gray-300">
-                      NO DATABASE ADDED
-                    </span>
+            <div className="p-2 bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/50 rounded-md bg-gray-900">
+                              <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    {displaySelectedDatabase ? (
+                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+                    )}
+                    <div>
+                      <span className="text-xs font-medium text-gray-300">
+                        {displaySelectedDatabase === "csv" ? "CSV Added" : displaySelectedDatabase === "sql" ? "SQL Added" : "NO DATA SOURCE ADDED"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-[10px] text-gray-400 bg-gray-800/30 px-1.5 py-0.5 rounded-full">
+                    {displaySelectedDatabase ? "READY" : "UPLOAD"}
                   </div>
                 </div>
-                <div className="text-[10px] text-gray-400 bg-gray-800/30 px-1.5 py-0.5 rounded-full">
-                  UPLOAD
-                </div>
-              </div>
             </div>
           ) : (
             <div className="p-2 bg-gradient-to-r from-gray-600/20 to-gray-700/20 border border-gray-500/50 rounded-md">
@@ -366,7 +388,7 @@ export default function QueryAnalyzer({
           <button
             type="submit"
             disabled={!query.trim() || isAnalyzing}
-            className="flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
+            className="flex items-center justify-center px-4 py-2 border-2 border-gray-600 text-sm font-semibold rounded text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             {isAnalyzing ? (

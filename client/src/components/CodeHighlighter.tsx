@@ -11,7 +11,7 @@ const HighlightedCode = ({ code, language }: Props) => {
   const highlightedCode = hljs.highlight(code, { language }).value;
 
   return (
-    <pre className="m-0 p-4 text-gray-200">
+    <pre className="m-0 p-4 text-gray-200 whitespace-pre-wrap break-words">
       <code
         className={`language-${language}`}
         style={{ backgroundColor: "transparent", color: "#e5e7eb" }}
