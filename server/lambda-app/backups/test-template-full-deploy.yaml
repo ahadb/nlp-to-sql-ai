@@ -1,0 +1,313 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: NLP-to-SQL Lambdas with shared deps layer
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 512
+
+# ---------------- FRONTEND + CORS PARAMS ----------------
+Parameters:
+  FrontendCorsOrigin: # <<< ADDED: allow your SPA origin; start with "*" then tighten
+    Type: String
+    Default: "*"
+
+Resources:
+  PyDepsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: pydeps-openai
+      ContentUri: layers/pydeps
+      CompatibleRuntimes:
+        - python3.12
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: python3.12
+      BuildProperties:
+        RequirementsFile: requirements.txt
+
+  # === S3 bucket to store schema text (unchanged) ===
+  SchemaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-schema-${AWS::AccountId}"
+      VersioningConfiguration: { Status: Enabled }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+    DeletionPolicy: Retain
+
+  # === NEW: S3 bucket for raw CSV/SQL uploads ===
+  DataUploadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-uploads-${AWS::AccountId}"
+      VersioningConfiguration: { Status: Enabled }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+    DeletionPolicy: Retain
+
+  # ---------------- HTTP API (EXPLICIT) ----------------
+  Api: # <<< ADDED: explicit HttpApi so we can set CORS
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: [!Ref FrontendCorsOrigin] # <<< ADDED
+        AllowMethods: ["GET", "POST", "OPTIONS"] # <<< ADDED
+        AllowHeaders: ["*"] # <<< ADDED
+
+  # === Existing generate/query function (kept as-is) ===
+  QueryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      CodeUri: src/generate_lambda
+      Layers: [!Ref PyDepsLayer]
+      Environment:
+        Variables:
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          DB_NAME: postgres
+          # OPENAI_API_KEY: sk-... (REDACTED)             # <<< UPDATED: don't store plaintext
+          OPENAI_API_KEY: "{{resolve:secretsmanager:openai-api-key}}" # <<< UPDATED: use Secrets Manager or your method
+          SQL_SCHEMA: schema_sql
+          CSV_SCHEMA: schema_csv
+          TABLE_NAME: data_table
+          ROW_LIMIT: "100"
+          OPENAI_MODEL: gpt-4o-mini
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: RdsData
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BatchExecuteStatement
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+      Events:
+        PostGenerate:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api # <<< UPDATED: bind to explicit Api (adds CORS)
+            Path: /generate
+            Method: POST
+        GetGenerateHealth:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api # <<< UPDATED
+            Path: /generate/health
+            Method: GET
+
+  # === NEW: /upload Lambda (CSV/SQL -> S3 -> RDS) ===
+  UploadSchemaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      CodeUri: src/upload_lambda
+      Layers: [!Ref PyDepsLayer]
+      Timeout: 900 # bump for CSV loading
+      MemorySize: 1024 # pandas needs RAM
+      Environment:
+        Variables:
+          S3_BUCKET: nlp2sql-ingest-bucket
+          # If using direct psycopg2 to RDS, provide host creds (or decrypt from Secrets Manager in code)
+          DB_NAME: postgres
+          DB_HOST: nlp-to-sql-cluster.cluster-ce5a66gkwety.us-east-1.rds.amazonaws.com
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          # If you need two fixed schemas:
+          CSV_SCHEMA: schema_csv
+          SQL_SCHEMA: schema_sql
+          TABLE_NAME: data_table
+          MAX_UPLOAD_BYTES: "26214400"
+      # If connecting to a VPC-based RDS with psycopg2, uncomment VpcConfig:
+      # VpcConfig:
+      #   SecurityGroupIds: [ sg-xxxxxxxx ]
+      #   SubnetIds: [ subnet-aaaaaaa, subnet-bbbbbbb ]
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: PutGetUploads
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+                - s3:HeadObject
+              Resource: arn:aws:s3:::nlp2sql-ingest-bucket/*
+            - Sid: RdsDataApi
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:RollbackTransaction
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+      Events:
+        PostUpload:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api # <<< UPDATED: bind to explicit Api (adds CORS)
+            Path: /upload
+            Method: POST
+
+  SqlQueryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/sql_query_lambda
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 512
+      Environment:
+        Variables:
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          DB_NAME: postgres
+          SQL_SCHEMA: schema_sql
+          CSV_SCHEMA: schema_csv
+          MAX_RESULT_ROWS: "200"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: RdsDataApi
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:RollbackTransaction
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:DescribeSecret
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-*
+      Events:
+        PostQuery:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api # <<< UPDATED: bind to explicit Api (adds CORS)
+            Path: /query
+            Method: POST
+
+  # === (Optional) health for upload ===
+  UploadHealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/upload_health.lambda_handler
+      InlineCode: |
+        def lambda_handler(event, context):
+            return {"statusCode": 200, "body": "ok"}
+      Events:
+        GetUploadHealth:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Api # <<< UPDATED
+            Path: /upload/health
+            Method: GET
+
+  # ---------------- FRONTEND HOSTING (S3 + CF) ----------------
+  SiteBucket: # <<< ADDED: private bucket for SPA assets behind CloudFront
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  OAI: # <<< ADDED: Origin Access Identity for CloudFront -> S3
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub "OAI for ${AWS::StackName}"
+
+  BucketPolicy: # <<< ADDED: allow CloudFront to read from the bucket
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt OAI.S3CanonicalUserId
+            Action: "s3:GetObject"
+            Resource: !Sub "${SiteBucket.Arn}/*"
+
+  SiteDistribution: # <<< ADDED: CloudFront distribution for SPA
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: SiteOrigin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${OAI}
+        DefaultCacheBehavior:
+          TargetOriginId: SiteOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        # SPA-friendly: send 404s to index.html so client-side router works
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+
+Outputs:
+  FunctionName:
+    Value: !Ref QueryFunction
+  LayerName:
+    Value: !Ref PyDepsLayer
+
+  # ---------- API + FRONTEND OUTPUTS ----------
+  ApiInvokeUrl: # <<< ADDED: explicit HttpApi URL
+    Description: "HTTP API base endpoint"
+    Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com"
+
+  CdnDomainName: # <<< ADDED: CloudFront default domain for your SPA
+    Description: "CloudFront domain (temporary AWS URL)"
+    Value: !GetAtt SiteDistribution.DomainName
+
+  DistributionId: # <<< ADDED: for cache invalidations
+    Description: "CloudFront Distribution Id"
+    Value: !Ref SiteDistribution
+
+  SiteBucketName: # <<< ADDED: upload your built frontend here
+    Description: "S3 bucket for the built frontend"
+    Value: !Ref SiteBucket
+
+  SchemaBucketName:
+    Description: "Schema Bucket"
+    Value: !Ref SchemaBucket
+  DataUploadsBucketName:
+    Description: "Uploads Bucket"
+    Value: !Ref DataUploadsBucket
+  UploadSchemaFunctionName:
+    Description: "Logical name of the schema upload function"
+    Value: !Ref UploadSchemaFunction

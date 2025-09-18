@@ -1,0 +1,370 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: NLP-to-SQL Lambdas with shared deps layer
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Timeout: 30
+    MemorySize: 512
+
+Resources:
+  PyDepsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: pydeps-openai
+      ContentUri: layers/pydeps
+      CompatibleRuntimes:
+        - python3.12
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: python3.12
+      BuildProperties:
+        RequirementsFile: requirements.txt
+
+  # === S3 bucket to store schema text (unchanged) ===
+  SchemaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-schema-${AWS::AccountId}"
+      VersioningConfiguration: { Status: Enabled }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+    DeletionPolicy: Retain
+
+  # === NEW: S3 bucket for raw CSV/SQL uploads ===
+  DataUploadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::StackName}-uploads-${AWS::AccountId}"
+      VersioningConfiguration: { Status: Enabled }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+    DeletionPolicy: Retain
+
+  # === Existing generate/query function (kept as-is) ===
+  QueryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      CodeUri: src/generate_lambda
+      Layers: [!Ref PyDepsLayer]
+      Environment:
+        Variables:
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          DB_NAME: postgres
+          OPENAI_API_KEY: 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
+          SQL_SCHEMA: schema_sql
+          CSV_SCHEMA: schema_csv
+          TABLE_NAME: data_table
+          ROW_LIMIT: "100"
+          OPENAI_MODEL: gpt-4o-mini
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: RdsData
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BatchExecuteStatement
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+      Events:
+        PostGenerate:
+          Type: HttpApi
+          Properties: { Path: /generate, Method: POST }
+        GetGenerateHealth:
+          Type: HttpApi
+          Properties: { Path: /generate/health, Method: GET }
+
+  # === NEW: /upload Lambda (CSV/SQL -> S3 -> RDS) ===
+  UploadSchemaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler
+      CodeUri: src/upload_lambda
+      Layers: [!Ref PyDepsLayer]
+      Timeout: 900 # bump for CSV loading
+      MemorySize: 1024 # pandas needs RAM
+      Environment:
+        Variables:
+          S3_BUCKET: nlp2sql-ingest-bucket
+          # If using direct psycopg2 to RDS, provide host creds (or decrypt from Secrets Manager in code)
+          DB_NAME: postgres
+          DB_HOST: nlp-to-sql-cluster.cluster-ce5a66gkwety.us-east-1.rds.amazonaws.com
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          # If you need two fixed schemas:
+          CSV_SCHEMA: schema_csv
+          SQL_SCHEMA: schema_sql
+          TABLE_NAME: data_table
+          MAX_UPLOAD_BYTES: "26214400"
+      # If connecting to a VPC-based RDS with psycopg2, uncomment VpcConfig:
+      # VpcConfig:
+      #   SecurityGroupIds: [ sg-xxxxxxxx ]
+      #   SubnetIds: [ subnet-aaaaaaa, subnet-bbbbbbb ]
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: PutGetUploads
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+                - s3:HeadObject
+              Resource: arn:aws:s3:::nlp2sql-ingest-bucket/*
+
+              # --- ADD: RDS Data API perms on your cluster ---
+            - Sid: RdsDataApi
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BatchExecuteStatement
+                - rds-data:BeginTransaction # <-- add
+                - rds-data:CommitTransaction # <-- add
+                - rds-data:RollbackTransaction # <-- add
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+              # For a quick test, you can temporarily use: Resource: "*"
+
+              # --- ADD: allow reading DB creds from Secrets Manager ---
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+        # Only needed if you fetch DB creds from Secrets Manager inside code:
+        # - Version: "2012-10-17"
+        #   Statement:
+        #     - Sid: ReadDbSecret
+        #       Effect: Allow
+        #       Action: secretsmanager:GetSecretValue
+        #       Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+      Events:
+        PostUpload:
+          Type: HttpApi
+          Properties: { Path: /upload, Method: POST }
+
+  SqlQueryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/sql_query_lambda
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.12
+      Timeout: 30
+      MemorySize: 512
+      Environment:
+        Variables:
+          DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+          DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+          DB_NAME: postgres
+          SQL_SCHEMA: schema_sql
+          CSV_SCHEMA: schema_csv
+          MAX_RESULT_ROWS: "200"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Sid: RdsDataApi
+              Effect: Allow
+              Action:
+                - rds-data:ExecuteStatement
+                - rds-data:BeginTransaction
+                - rds-data:CommitTransaction
+                - rds-data:RollbackTransaction
+              Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+            - Sid: ReadDbSecret
+              Effect: Allow
+              Action:
+                - secretsmanager:GetSecretValue
+                - secretsmanager:DescribeSecret
+              Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-*
+      Events:
+        PostQuery:
+          Type: HttpApi
+          Properties: { Path: /query, Method: POST }
+
+  # === (Optional) health for upload ===
+  UploadHealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/upload_health.lambda_handler
+      InlineCode: |
+        def lambda_handler(event, context):
+            return {"statusCode": 200, "body": "ok"}
+      Events:
+        GetUploadHealth:
+          Type: HttpApi
+          Properties: { Path: /upload/health, Method: GET }
+
+Outputs:
+  FunctionName:
+    Value: !Ref QueryFunction
+  LayerName:
+    Value: !Ref PyDepsLayer
+  ApiEndpoint:
+    Description: "HTTP API base endpoint"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+  SchemaBucketName:
+    Description: "Schema Bucket"
+    Value: !Ref SchemaBucket
+  DataUploadsBucketName:
+    Description: "Uploads Bucket"
+    Value: !Ref DataUploadsBucket
+  UploadSchemaFunctionName:
+    Description: "Logical name of the schema upload function"
+    Value: !Ref UploadSchemaFunction
+  # UploadFunctionName:
+  #   Description: "Logical name of the data upload function"
+  #   Value: !Ref UploadFunction
+# AWSTemplateFormatVersion: "2010-09-09"
+# Transform: AWS::Serverless-2016-10-31
+# Description: NLP-to-SQL Lambdas with shared deps layer
+
+# Globals:
+#   Function:
+#     Runtime: python3.12
+#     Timeout: 30
+#     MemorySize: 512
+
+# Resources:
+#   PyDepsLayer:
+#     Type: AWS::Serverless::LayerVersion
+#     Properties:
+#       LayerName: pydeps-openai
+#       ContentUri: layers/pydeps
+#       CompatibleRuntimes:
+#         - python3.12
+#       RetentionPolicy: Retain
+#     Metadata:
+#       BuildMethod: python3.12
+#       BuildProperties:
+#         RequirementsFile: requirements.txt
+
+#   # === S3 bucket to store schema text ===
+#   SchemaBucket:
+#     Type: AWS::S3::Bucket
+#     Properties:
+#       BucketName: !Sub "${AWS::StackName}-schema-${AWS::AccountId}"
+#       VersioningConfiguration:
+#         Status: Enabled
+#       BucketEncryption:
+#         ServerSideEncryptionConfiguration:
+#           - ServerSideEncryptionByDefault:
+#               SSEAlgorithm: AES256
+#     DeletionPolicy: Retain
+
+#   # === Existing QueryFunction: now can read schema from S3 ===
+#   QueryFunction:
+#     Type: AWS::Serverless::Function
+#     Properties:
+#       Handler: lambda_function.lambda_handler
+#       CodeUri: src/generate_lambda
+#       Layers:
+#         - !Ref PyDepsLayer
+#       Environment:
+#         Variables:
+#           # Secrets Manager ARN for your DB credentials (example — replace)
+#           DB_SECRET_ARN: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+#           # RDS Data API resource ARN (Aurora cluster)
+#           DB_ARN: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+#           DB_NAME: postgres
+#           # Use a dynamic ref (store the key in Secrets Manager!)
+#           OPENAI_API_KEY: "{{resolve:secretsmanager:openai-api-key}}"
+#       Policies:
+#         - AWSLambdaBasicExecutionRole
+#         - Version: "2012-10-17"
+#           Statement:
+#             - Sid: RdsData
+#               Effect: Allow
+#               Action:
+#                 - rds-data:ExecuteStatement
+#                 - rds-data:BatchExecuteStatement
+#               Resource: arn:aws:rds:us-east-1:711784091976:cluster:nlp-to-sql-cluster
+#         - Version: "2012-10-17"
+#           Statement:
+#             - Sid: ReadDbSecret
+#               Effect: Allow
+#               Action: secretsmanager:GetSecretValue
+#               Resource: arn:aws:secretsmanager:us-east-1:711784091976:secret:restored-db-secret-JPmu28
+#       Events:
+#         PostGenerate:
+#           Type: HttpApi
+#           Properties:
+#             Path: /generate
+#             Method: POST
+#         GetGenerateHealth:
+#           Type: HttpApi
+#           Properties:
+#             Path: /generate/health
+#             Method: GET
+
+#   # === New: Upload schema function (unique name) ===
+#   UploadSchemaFunction:
+#     Type: AWS::Serverless::Function
+#     Properties:
+#       Handler: lambda_function.lambda_handler
+#       CodeUri: src/upload_lambda
+#       # Inherits Runtime/Timeout/Memory from Globals
+#       Environment:
+#         Variables:
+#           SCHEMA_BUCKET: !Ref SchemaBucket
+#           SCHEMA_KEY: "schema/schema.txt"
+#           SCHEMA_SSE: "AES256" # set to 'aws:kms' if you switch the bucket to KMS
+#       Policies:
+#         - AWSLambdaBasicExecutionRole
+#         - Version: "2012-10-17"
+#           Statement:
+#             - Sid: PutAndReadSchemaToS3
+#               Effect: Allow
+#               Action:
+#                 - s3:PutObject
+#                 - s3:GetObject
+#                 - s3:HeadObject
+#                 - s3:PutObjectAcl
+#               Resource: !Sub "arn:aws:s3:::${SchemaBucket}/schema/*"
+#       Events:
+#         PostSchema:
+#           Type: HttpApi
+#           Properties:
+#             Path: /schema
+#             Method: POST
+#         PostSchemaById:
+#           Type: HttpApi
+#           Properties:
+#             Path: /schema/{schema_id}
+#             Method: POST
+#         GetSchema:
+#           Type: HttpApi
+#           Properties:
+#             Path: /schema
+#             Method: GET
+#         GetSchemaById:
+#           Type: HttpApi
+#           Properties:
+#             Path: /schema/{schema_id}
+#             Method: GET
+
+# Outputs:
+#   FunctionName:
+#     Value: !Ref QueryFunction
+#   LayerName:
+#     Value: !Ref PyDepsLayer
+#   ApiEndpoint:
+#     Description: "HTTP API endpoint for UploadSchemaFunction"
+#     Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+#   SchemaBucketName:
+#     Description: "Schema Bucket"
+#     Value: !Ref SchemaBucket
+#   UploadSchemaFunctionName:
+#     Description: "Logical name of the upload function"
+#     Value: !Ref UploadSchemaFunction
