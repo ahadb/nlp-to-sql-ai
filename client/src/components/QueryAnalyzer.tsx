@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, Cog6ToothIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
 import StepTitle from "./StepTitle";
 import { useQueryHistory } from "../contexts/QueryHistoryContext";
@@ -26,9 +26,9 @@ export default function QueryAnalyzer({
   isSelected = false,
   onSelect,
   refreshTrigger,
-  currentDatabase: propCurrentDatabase,
+  //currentDatabase: propCurrentDatabase,
   selectedDatabase: propSelectedDatabase,
-  setSelectedDatabase: propSetSelectedDatabase,
+  //setSelectedDatabase: propSetSelectedDatabase,
 }: QueryAnalyzerProps) {
   const [query, setQuery] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -40,8 +40,8 @@ export default function QueryAnalyzer({
   
   // Use props if available, otherwise use internal state
   const displaySelectedDatabase = propSelectedDatabase ?? selectedDatabase;
-  const displayCurrentDatabase = propCurrentDatabase ?? currentDatabase;
-  const updateSelectedDatabase = propSetSelectedDatabase ?? setSelectedDatabase;
+  // const displayCurrentDatabase = propCurrentDatabase ?? currentDatabase;
+  // const updateSelectedDatabase = propSetSelectedDatabase ?? setSelectedDatabase;
   const [schemaDetails, setSchemaDetails] = useState<any>(null);
   const [isLoadingDatabase, setIsLoadingDatabase] = useState(true); // Start as true to show loading initially
   const { addQuery } = useQueryHistory();
@@ -247,14 +247,14 @@ export default function QueryAnalyzer({
 
   return (
     <div
-      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer relative z-10 bg-gray-800 ${
+      className={`w-full p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer relative z-10 bg-gray-900/80 backdrop-blur-xl ${
         isSelected
-          ? "border-blue-900 bg-blue-900/20 shadow-lg"
-          : "border-gray-700 hover:border-gray-600 hover:bg-gray-800"
+          ? "border-cyan-500/50 bg-cyan-900/20 shadow-lg shadow-cyan-500/25"
+          : "border-gray-700/50 hover:border-cyan-500/30 hover:bg-gray-800/50"
       }`}
       onClick={onSelect}
     >
-      <div className="mb-4 pb-2 border-b border-gray-700 -mx-4 px-4 bg-gray-800 -mt-4 pt-3 rounded-t-xl">
+      <div className="mb-4 pb-2 border-b border-cyan-500/20 -mx-4 px-4 bg-gradient-to-r from-gray-900/90 to-gray-800/90 backdrop-blur-lg -mt-4 pt-3 rounded-t-2xl">
         <StepTitle
           title="Generate Query"
           description="Type your question in plain English and get the corresponding SQL query"
@@ -275,7 +275,7 @@ export default function QueryAnalyzer({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="e.g., Show me all customers from the USA who have placed more than 5 orders since 2023, sorted by total spending..."
-            className="w-full bg-gray-900 px-3 py-2 border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200 hover:border-gray-500 bg-gray-700 text-gray-200 placeholder-gray-400 text-sm"
+            className="w-full bg-gray-800/80 backdrop-blur-sm px-3 py-2 border border-gray-600/50 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-none transition-all duration-200 hover:border-cyan-500/50 text-white placeholder-gray-400 text-sm"
             rows={2}
             disabled={isAnalyzing}
             onClick={(e) => {
@@ -384,11 +384,25 @@ export default function QueryAnalyzer({
           )}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end items-center space-x-3">
+          <button
+            type="button"
+            className="flex items-center px-3 py-2 text-sm font-medium text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10 border border-gray-600/50 hover:border-cyan-500/50 rounded-lg transition-all duration-200"
+            onClick={(e) => {
+              e.stopPropagation();
+              // TODO: Open settings modal
+              console.log("Settings clicked");
+            }}
+            title="Query Settings"
+          >
+            <Cog6ToothIcon className="h-4 w-4 mr-2" />
+            Settings
+          </button>
+          
           <button
             type="submit"
             disabled={!query.trim() || isAnalyzing}
-            className="flex items-center justify-center px-4 py-2 border-2 border-gray-600 text-sm font-semibold rounded text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-cyan-500/25 transform hover:scale-105"
             onClick={(e) => e.stopPropagation()}
           >
             {isAnalyzing ? (
@@ -398,7 +412,7 @@ export default function QueryAnalyzer({
               </>
             ) : (
               <>
-                <MagnifyingGlassIcon className="h-4 w-4 mr-2" />
+                <SparklesIcon className="h-4 w-4 mr-2" />
                 Generate Query
               </>
             )}

@@ -1,0 +1,14 @@
+ticket_id,customer_name,customer_email,subject,category,priority,status,assigned_agent,created_date,resolved_date,response_time_hours,satisfaction_rating,issue_description,issue_type,days_open
+T001,Sarah Johnson,sarah@techstart.com,Login Issues,Technical,High,Resolved,Mike Chen,2024-12-15,2024-12-15,2.5,5,Unable to access dashboard after password reset,Bug/Incident,0
+T002,Michael Rodriguez,mike@globalsol.com,Billing Discrepancy,Billing,Medium,Resolved,Lisa Wang,2024-12-14,2024-12-16,48,4,Charged twice for December subscription,Billing/Finance,2
+T003,Emily Davis,emily@innovlabs.co,Feature Request,Product,Low,Open,John Smith,2024-12-18,,24,,"Need export functionality for reports",Feature Request,276
+T004,David Wilson,david@futuresys.net,System Downtime,Technical,Critical,Resolved,Sarah Lee,2024-12-12,2024-12-12,1.2,5,Complete system outage for 30 minutes,Bug/Incident,0
+T005,Jennifer Brown,jen@alphacorp.com,Data Export Issue,Technical,Medium,In Progress,Tom Wilson,2024-12-17,,18,,"CSV export not including all columns",Bug/Incident,277
+T006,Robert Taylor,robert@betasol.com,Account Setup,Onboarding,Medium,Resolved,Amy Zhang,2024-12-13,2024-12-14,24,5,Help setting up multi-user access,Setup/Onboarding,1
+T007,Lisa Anderson,lisa@gammainc.com,Integration Problem,Technical,High,Resolved,Mark Davis,2024-12-16,2024-12-17,12,4,API connection failing with Salesforce,Bug/Incident,1
+T008,Christopher Moore,chris@deltaent.com,Password Reset,Technical,Low,Resolved,Rachel Kim,2024-12-19,2024-12-19,0.5,5,Cannot receive password reset email,Bug/Incident,0
+T009,Amanda Thompson,amanda@epsilontech.io,Performance Issue,Technical,Medium,Open,David Lee,2024-12-18,,6,,"Dashboard loading slowly, timeout errors",Bug/Incident,276
+T010,Matthew Garcia,matt@zetadyn.com,Training Request,Support,Low,Resolved,Jennifer Wu,2024-12-11,2024-12-13,36,5,Need training session for new team members,Training/Support,2
+T011,Ashley Martinez,ashley@thetanet.com,Data Synchronization,Technical,High,In Progress,Steve Johnson,2024-12-17,,30,,"Customer data not syncing from CRM",Bug/Incident,277
+T012,Joshua Hernandez,josh@lambdacorp.ca,Invoice Question,Billing,Low,Resolved,Maria Gonzalez,2024-12-14,2024-12-15,18,4,Need clarification on usage charges,Billing/Finance,1
+T013,Stephanie Lopez,steph@musol.com,Mobile App Bug,Technical,Medium,Open,Alex Thompson,2024-12-19,,3,,"Mobile app crashing on iOS devices",Bug/Incident,275

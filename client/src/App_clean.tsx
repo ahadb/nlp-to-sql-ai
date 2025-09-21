@@ -2,12 +2,15 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
-  useNavigate,
 } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
+  DocumentTextIcon,
   SparklesIcon,
+  ClipboardDocumentIcon,
+  CheckIcon,
+  PlayIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 
 import {
@@ -20,13 +23,10 @@ import {
   MarketingLandingPage,
   AuthPage,
   MyDataTab,
-  DataTablesTab,
-  DashboardPage,
-  DataTablesPage,
-  ReportsPage,
-  ConnectionsPage,
   ResultsDashboard,
 } from "./components";
+import HighlightedCode from "./components/CodeHighlighter";
+import { api } from "./services/api";
 import {
   QueryHistoryProvider,
   useQueryHistory,
@@ -41,47 +41,25 @@ interface GeneratedSQL {
 
 // Main App Component
 function MainApp() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [generatedSQL, setGeneratedSQL] = useState<GeneratedSQL | null>(null);
   const [selectedSection, setSelectedSection] = useState<
     "query" | "upload" | null
   >("upload");
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("My Data");
+  const [isCopied, setIsCopied] = useState(false);
+  const [isRunningQuery, setIsRunningQuery] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [queryResults, setQueryResults] = useState<any[]>([]);
+  const [isExplainOpen, setIsExplainOpen] = useState(false);
+  const [explanation, setExplanation] = useState<string | null>(null);
+  const [lastNLQuery, setLastNLQuery] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [currentDatabase, setCurrentDatabase] = useState<string | null>(null);
   const [selectedDatabase, setSelectedDatabase] = useState<"sql" | "csv" | null>(null);
-  const [isResultsFullWidth, setIsResultsFullWidth] = useState(false);
-
-  // Determine active tab from URL
-  const getActiveTabFromPath = (pathname: string) => {
-    if (pathname.includes('/app/tables')) return 'Data Tables';
-    if (pathname.includes('/app/reports')) return 'Reports';
-    if (pathname.includes('/app/connections')) return 'Connections';
-    return 'Dashboard'; // Default
-  };
-
-  const activeTab = getActiveTabFromPath(location.pathname);
-
-  const setActiveTab = (tab: string) => {
-    const routes = {
-      'Dashboard': '/app/dashboard',
-      'Data Tables': '/app/tables',
-      'Reports': '/app/reports',
-      'Connections': '/app/connections'
-    };
-    navigate(routes[tab as keyof typeof routes] || '/app/dashboard');
-  };
-
-  // Redirect /app to /app/dashboard
-  useEffect(() => {
-    if (location.pathname === '/app') {
-      navigate('/app/dashboard', { replace: true });
-    }
-  }, [location.pathname, navigate]);
+  const [isDrawerExpanded, setIsDrawerExpanded] = useState(false);
+  const { addQuery } = useQueryHistory();
+  const { currentSchema } = useApp();
 
   const handleFileUpload = (file: File) => {
     console.log("File uploaded successfully:", file.name);
@@ -95,12 +73,13 @@ function MainApp() {
     console.log("Schema analysis requested:", query);
     if (sqlData) {
       setGeneratedSQL(sqlData);
-      setIsDrawerOpen(true);
+      setLastNLQuery(query);
+      setIsDrawerExpanded(true);
     }
   };
 
   return (
-    <div className="bg-[#0f0f0f] min-h-screen relative">
+    <div className="bg-gray-950 min-h-screen relative">
       <MobileSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
@@ -108,17 +87,11 @@ function MainApp() {
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <TopBar setSidebarOpen={setSidebarOpen} />
       <Layout
-        isDrawerOpen={isDrawerOpen}
-        setIsDrawerOpen={setIsDrawerOpen}
-        drawerTriggerLabel="View Results"
         leftChildren={
-          isResultsFullWidth ? null : (
-            activeTab === "Dashboard" ? (
-              <MyDataTab />
-            ) : activeTab === "Data Tables" ? (
-              <DataTablesTab />
-            ) : (
-            <div className="space-y-12 relative z-10">
+          activeTab === "My Data" ? (
+            <MyDataTab />
+          ) : (
+          <div className="space-y-12 relative z-10">
             {/* Vision Section */}
             <div className="bg-gray-800/30 border border-gray-600/50 rounded-2xl p-6 backdrop-blur-xl">
               <div className="flex items-start space-x-4">
@@ -182,21 +155,22 @@ function MainApp() {
             </div>
           </div>
           )
-          )
         }
         rightChildren={
-          <ResultsDashboard 
-            isFullWidth={isResultsFullWidth}
-            setIsFullWidth={setIsResultsFullWidth}
-            queryResult={generatedSQL ? {
-              id: '1',
-              question: generatedSQL.question,
-              results: queryResults,
-              insights: [],
-              recommendations: [],
-              timestamp: 'Just now'
-            } : null}
-          />
+          <div className="h-full flex flex-col justify-end relative z-50 bg-gray-950">
+            <ResultsDashboard 
+              isExpanded={isDrawerExpanded}
+              setIsExpanded={setIsDrawerExpanded}
+              queryResult={generatedSQL ? {
+                id: '1',
+                question: generatedSQL.question,
+                results: queryResults,
+                insights: [],
+                recommendations: [],
+                timestamp: 'Just now'
+              } : null}
+            />
+          </div>
         }
       />
     </div>
@@ -214,10 +188,6 @@ export default function App() {
             <Route path="/login" element={<AuthPage mode="login" />} />
             <Route path="/signup" element={<AuthPage mode="signup" />} />
             <Route path="/app" element={<MainApp />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/tables" element={<DataTablesPage />} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/connections" element={<ConnectionsPage />} />
           </Routes>
         </Router>
       </QueryHistoryProvider>

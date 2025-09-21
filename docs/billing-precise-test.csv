@@ -1,0 +1,6 @@
+invoice_id,customer_name,customer_email,invoice_date,due_date,amount,tax_amount,total_amount,payment_status,payment_date,payment_method,subscription_plan,billing_period,late_fees,discount_applied,sales_rep,days_over_due
+1,Sarah Johnson,sarah@techstart.com,2024-12-01,2024-12-31,450.00,40.50,490.50,Paid,2024-12-15,Credit Card,Professional,Monthly,0.00,0.00,Mike Chen,0
+2,Michael Rodriguez,mike@globalsol.com,2024-12-01,2024-12-31,1200.00,108.00,1308.00,Paid,2024-12-12,ACH Transfer,Enterprise,Monthly,0.00,120.00,Lisa Wang,0
+3,Emily Davis,emily@innovlabs.co,2024-12-01,2024-12-31,299.00,26.91,325.91,Paid,2024-12-18,Credit Card,Basic,Monthly,0.00,0.00,John Smith,0
+9,Amanda Thompson,amanda@epsilontech.io,2024-12-01,2024-12-31,450.00,40.50,490.50,Overdue,,,Credit Card,Professional,Monthly,15.00,0.00,David Lee,263
+45,Marina Parker,marina@reefsol.com,2024-07-01,2024-07-31,299.00,26.91,325.91,Overdue,,,Credit Card,Basic,Monthly,10.00,0.00,Caleb Kim,416

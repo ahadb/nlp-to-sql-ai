@@ -1,0 +1,51 @@
+customer_id,company_name,contact_name,email,phone,industry,country,state,city,revenue,employees,subscription_tier,signup_date,last_order_date,total_orders,customer_status,sales_rep
+1,TechStart Inc,Sarah Johnson,sarah@techstart.com,+1-555-0101,Technology,USA,California,San Francisco,450000,25,Enterprise,2022-03-15,2024-12-20,47,Active,Mike Chen
+2,Global Solutions,Michael Rodriguez,mike@globalsol.com,+1-555-0102,Consulting,USA,New York,New York,780000,150,Enterprise,2021-08-22,2024-12-18,89,Active,Lisa Wang
+3,Innovation Labs,Emily Davis,emily@innovlabs.co,+1-555-0103,Research,USA,Massachusetts,Boston,320000,35,Professional,2022-11-10,2024-12-15,23,Active,John Smith
+4,Future Systems,David Wilson,david@futuresys.net,+1-555-0104,Manufacturing,USA,Texas,Austin,890000,200,Enterprise,2021-05-30,2024-12-19,156,Active,Sarah Lee
+5,Alpha Corp,Jennifer Brown,jen@alphacorp.com,+1-555-0105,Finance,USA,Illinois,Chicago,1200000,300,Enterprise,2020-12-01,2024-12-17,234,Active,Tom Wilson
+6,Beta Solutions,Robert Taylor,robert@betasol.com,+1-555-0106,Healthcare,USA,Florida,Miami,650000,85,Professional,2022-01-18,2024-12-16,67,Active,Amy Zhang
+7,Gamma Industries,Lisa Anderson,lisa@gammainc.com,+1-555-0107,Energy,USA,Colorado,Denver,540000,120,Professional,2021-09-14,2024-12-14,78,Active,Mark Davis
+8,Delta Enterprises,Christopher Moore,chris@deltaent.com,+1-555-0108,Retail,USA,Washington,Seattle,890000,180,Enterprise,2021-07-25,2024-12-21,145,Active,Rachel Kim
+9,Epsilon Tech,Amanda Thompson,amanda@epsilontech.io,+1-555-0109,Software,USA,Oregon,Portland,420000,55,Professional,2022-05-12,2024-12-13,34,Active,David Lee
+10,Zeta Dynamics,Matthew Garcia,matt@zetadyn.com,+1-555-0110,Aerospace,USA,California,Los Angeles,1500000,450,Enterprise,2020-10-08,2024-12-22,298,Active,Jennifer Wu
+11,Theta Networks,Ashley Martinez,ashley@thetanet.com,+1-555-0111,Telecommunications,Canada,Ontario,Toronto,720000,95,Professional,2021-12-03,2024-12-12,89,Active,Steve Johnson
+12,Lambda Corp,Joshua Hernandez,josh@lambdacorp.ca,+1-555-0112,Logistics,Canada,British Columbia,Vancouver,380000,70,Professional,2022-07-20,2024-12-11,45,Active,Maria Gonzalez
+13,Mu Solutions,Stephanie Lopez,steph@musol.com,+1-555-0113,Education,USA,Pennsylvania,Philadelphia,290000,40,Basic,2022-09-05,2024-12-10,18,Active,Alex Thompson
+14,Nu Industries,Andrew Gonzalez,andrew@nuind.com,+1-555-0114,Construction,USA,Georgia,Atlanta,670000,110,Professional,2021-11-16,2024-12-09,92,Active,Nicole Brown
+15,Xi Technologies,Samantha Wilson,sam@xitech.com,+1-555-0115,Biotechnology,USA,California,San Diego,1100000,280,Enterprise,2020-08-12,2024-12-23,187,Active,Kevin Martinez
+16,Omicron Systems,Daniel Miller,daniel@omicronsys.com,+1-555-0116,Defense,USA,Virginia,Richmond,950000,220,Enterprise,2021-04-07,2024-12-08,134,Active,Laura Davis
+17,Pi Ventures,Michelle Davis,michelle@pivent.com,+1-555-0117,Investment,USA,New York,Albany,850000,65,Professional,2022-02-28,2024-12-07,56,Active,Michael Kim
+18,Rho Analytics,Kevin Anderson,kevin@rhoanalytics.com,+1-555-0118,Analytics,USA,Texas,Dallas,480000,75,Professional,2022-06-14,2024-12-06,41,Active,Patricia Lee
+19,Sigma Corp,Jessica Thomas,jessica@sigmacorp.com,+1-555-0119,Insurance,USA,Ohio,Columbus,720000,145,Professional,2021-10-22,2024-12-05,98,Active,Robert Zhang
+20,Tau Systems,Ryan Jackson,ryan@tausys.com,+1-555-0120,Security,USA,Arizona,Phoenix,630000,95,Professional,2022-04-09,2024-12-04,52,Active,Susan Johnson
+21,Upsilon Tech,Nicole White,nicole@upsilontech.io,+1-555-0121,AI/ML,USA,California,Palo Alto,1300000,350,Enterprise,2020-06-18,2024-12-24,245,Active,James Wilson
+22,Phi Networks,Brandon Harris,brandon@phinetworks.com,+1-555-0122,Networking,USA,North Carolina,Raleigh,410000,80,Professional,2022-08-01,2024-12-03,38,Active,Emily Rodriguez
+23,Chi Solutions,Megan Clark,megan@chisol.com,+1-555-0123,Marketing,USA,Tennessee,Nashville,320000,45,Basic,2022-10-17,2024-12-02,21,Active,Carlos Martinez
+24,Psi Industries,Tyler Lewis,tyler@psiind.com,+1-555-0124,Chemicals,USA,Louisiana,New Orleans,580000,125,Professional,2021-06-30,2024-12-01,87,Active,Diana Kim
+25,Omega Corp,Kayla Robinson,kayla@omegacorp.com,+1-555-0125,Pharmaceuticals,USA,New Jersey,Newark,1400000,400,Enterprise,2020-09-25,2024-12-25,267,Active,Eric Lee
+26,Apex Solutions,Connor Walker,connor@apexsol.com,+1-555-0126,Real Estate,USA,Nevada,Las Vegas,690000,90,Professional,2021-08-11,2024-11-30,76,Active,Olivia Chen
+27,Vertex Tech,Morgan Young,morgan@vertextech.io,+1-555-0127,Gaming,USA,California,Santa Monica,520000,85,Professional,2022-03-26,2024-11-29,49,Active,Nathan Davis
+28,Zenith Corp,Austin Allen,austin@zenithcorp.com,+1-555-0128,Transportation,USA,Michigan,Detroit,780000,160,Professional,2021-07-08,2024-11-28,103,Active,Grace Wang
+29,Pinnacle Systems,Sydney King,sydney@pinnaclesys.com,+1-555-0129,Agriculture,USA,Iowa,Des Moines,350000,60,Basic,2022-05-23,2024-11-27,32,Active,Benjamin Lee
+30,Summit Industries,Jordan Wright,jordan@summitind.com,+1-555-0130,Mining,Australia,New South Wales,Sydney,920000,200,Enterprise,2021-02-14,2024-11-26,128,Active,Isabella Martinez
+31,Peak Solutions,Cameron Lopez,cameron@peaksol.com.au,+61-2-9876-5432,Consulting,Australia,Victoria,Melbourne,710000,110,Professional,2021-12-09,2024-11-25,94,Active,Alexander Kim
+32,Crest Technologies,Taylor Hill,taylor@cresttech.com.au,+61-3-8765-4321,Technology,Australia,Queensland,Brisbane,580000,95,Professional,2022-04-16,2024-11-24,63,Active,Sophia Johnson
+33,Ridge Corp,Quinn Green,quinn@ridgecorp.com,+44-20-7946-0958,Finance,UK,England,London,1250000,320,Enterprise,2020-11-20,2024-11-23,189,Active,Lucas Brown
+34,Valley Systems,Avery Adams,avery@valleysys.co.uk,+44-161-496-0142,Manufacturing,UK,England,Manchester,640000,135,Professional,2021-09-07,2024-11-22,82,Active,Chloe Wilson
+35,Canyon Solutions,Riley Baker,riley@canyonsol.co.uk,+44-131-496-0825,Energy,UK,Scotland,Edinburgh,530000,88,Professional,2022-01-11,2024-11-21,47,Active,Ethan Davis
+36,Mesa Industries,Parker Gonzalez,parker@mesaind.com,+1-555-0136,Aerospace,USA,California,Sacramento,870000,175,Professional,2021-05-18,2024-11-20,115,Active,Ava Rodriguez
+37,Plateau Corp,River Nelson,river@plateaucorp.com,+1-555-0137,Defense,USA,Maryland,Baltimore,780000,150,Professional,2021-10-04,2024-11-19,97,Active,Noah Martinez
+38,Basin Technologies,Sage Carter,sage@basintech.io,+1-555-0138,Software,USA,Utah,Salt Lake City,450000,70,Professional,2022-07-12,2024-11-18,55,Active,Emma Kim
+39,Delta Systems,Phoenix Mitchell,phoenix@deltasys.com,+1-555-0139,Healthcare,USA,Minnesota,Minneapolis,620000,105,Professional,2021-11-28,2024-11-17,73,Active,Liam Chen
+40,Coast Solutions,Rowan Perez,rowan@coastsol.com,+1-555-0140,Maritime,USA,Maine,Portland,390000,65,Basic,2022-08-30,2024-11-16,42,Active,Mia Davis
+41,Harbor Corp,Sage Roberts,sage@harborcorp.com,+1-555-0141,Shipping,USA,Washington,Tacoma,710000,140,Professional,2021-06-15,2024-11-15,86,Active,Jackson Wilson
+42,Bay Industries,River Turner,river@bayind.com,+1-555-0142,Fisheries,USA,Alaska,Anchorage,280000,50,Basic,2022-04-03,2024-11-14,29,Active,Aria Johnson
+43,Inlet Technologies,Storm Phillips,storm@inlettech.io,+1-555-0143,Marine Tech,USA,Florida,Key West,520000,80,Professional,2022-02-19,2024-11-13,48,Active,Owen Martinez
+44,Shore Systems,Ocean Campbell,ocean@shoresys.com,+1-555-0144,Environmental,USA,California,Monterey,680000,125,Professional,2021-08-26,2024-11-12,91,Active,Zoe Lee
+45,Reef Solutions,Marina Parker,marina@reefsol.com,+1-555-0145,Conservation,USA,Hawaii,Honolulu,340000,55,Basic,2022-06-08,2024-11-11,35,Active,Caleb Kim
+46,Tide Corp,Brooks Evans,brooks@tidecorp.com,+1-555-0146,Renewable Energy,USA,Oregon,Eugene,590000,100,Professional,2021-12-21,2024-11-10,78,Active,Luna Rodriguez
+47,Wave Industries,Coral Edwards,coral@waveind.com,+1-555-0147,Water Treatment,USA,Texas,Galveston,470000,85,Professional,2022-03-14,2024-11-09,53,Active,Asher Davis
+48,Current Technologies,Marina Collins,marina@currenttech.io,+1-555-0148,Power Generation,USA,California,San Luis Obispo,750000,160,Professional,2021-07-31,2024-11-08,102,Active,Nova Wilson
+49,Flow Systems,River Stewart,river@flowsys.com,+1-555-0149,Fluid Dynamics,USA,Colorado,Boulder,420000,75,Professional,2022-05-06,2024-11-07,46,Active,Atlas Johnson
+50,Stream Solutions,Delta Sanchez,delta@streamsol.com,+1-555-0150,Data Analytics,USA,New Mexico,Albuquerque,380000,65,Professional,2022-01-27,2024-11-06,41,Active,Iris Martinez

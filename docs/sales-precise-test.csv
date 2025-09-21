@@ -1,0 +1,6 @@
+customer_id,company_name,contact_name,email,phone,industry,country,state,city,revenue,employees,subscription_tier,signup_date,last_order_date,total_orders,customer_status,sales_rep,units,product_name
+1,TechStart Inc,Sarah Johnson,sarah@techstart.com,+1-555-0101,Technology,USA,California,San Francisco,450000,25,Enterprise,2022-03-15,2024-12-20,47,VIP,Mike Chen,120,AI Dashboard
+2,Global Solutions,Michael Rodriguez,mike@globalsol.com,+1-555-0102,Consulting,USA,New York,New York,780000,150,Enterprise,2021-08-22,2024-12-18,89,Active,Lisa Wang,340,Consulting Suite
+3,Innovation Labs,Emily Davis,emily@innovlabs.co,+1-555-0103,Research,USA,Massachusetts,Boston,320000,35,Professional,2022-11-10,2024-12-15,23,At Risk,John Smith,210,Research Portal
+4,Future Systems,David Wilson,david@futuresys.net,+1-555-0104,Manufacturing,USA,Texas,Austin,890000,200,Enterprise,2021-05-30,2024-12-19,156,Churned,Sarah Lee,580,Manufacturing ERP
+5,Alpha Corp,Jennifer Brown,jen@alphacorp.com,+1-555-0105,Finance,USA,Illinois,Chicago,1200000,300,Enterprise,2020-12-01,2024-12-17,234,Active,Tom Wilson,750,Finance Tracker

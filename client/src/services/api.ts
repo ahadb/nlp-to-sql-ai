@@ -28,20 +28,28 @@ export interface DatabaseResponse {
 }
 
 export const api = {
-  async uploadSchema(
-    file: File
-    // database: string = "example"
-  ): Promise<UploadResponse> {
-    const formData = new FormData();
-    formData.append("file", file);
+  async uploadSchema(file: File): Promise<UploadResponse> {
+    // Read file content
+    const fileContent = await file.text();
+    
+    // Determine schema type
+    const isCSV = file.name.endsWith('.csv');
+    const schemaType = isCSV ? 'CSV_FILE' : 'SQL_SCHEMA';
+    
+    // Prepare request body for your backend
+    const requestBody = {
+      file_name: file.name,
+      file_content: fileContent,
+      schema_type: schemaType,
+      description: `Uploaded ${isCSV ? 'CSV' : 'SQL'} file: ${file.name}`
+    };
 
-    // Use AWS upload endpoint from environment variable
-    const awsUploadUrl = import.meta.env.VITE_AWS_UPLOAD_URL;
-    console.log("awsUploadUrl", awsUploadUrl);
-
-    const response = await fetch(awsUploadUrl, {
+    const response = await fetch(`${API_BASE_URL}/upload`, {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -49,7 +57,13 @@ export const api = {
       throw new Error(errorData.detail || "Upload failed");
     }
 
-    return response.json();
+    const backendResponse = await response.json();
+    
+    // Transform backend response to match expected format
+    return {
+      message: backendResponse.message,
+      schema: backendResponse.schema_id || 'unknown'
+    };
   },
 
   async generateSQL(
@@ -141,6 +155,32 @@ export const api = {
     };
   },
 
+  async getDataSources(): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/upload/schemas`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get data sources");
+    }
+
+    return response.json();
+  },
+
+  async getTables(): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/tables`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get tables");
+    }
+
+    return response.json();
+  },
+
   async getCurrentDatabase(): Promise<DatabaseResponse> {
     const response = await fetch(`${API_BASE_URL}/current-database`, {
       method: "GET",
@@ -162,6 +202,19 @@ export const api = {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || "Failed to get schema details");
+    }
+
+    return response.json();
+  },
+
+  async getTableData(tableName: string, schemaName: string, limit: number = 5): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/tables/${tableName}/data?schema=${schemaName}&limit=${limit}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get table data");
     }
 
     return response.json();

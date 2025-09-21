@@ -24,13 +24,11 @@ export default function StepTitle({
   return (
     <div className="mb-2">
       <div className="flex items-start space-x-3">
-        <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${styles.circle}`}
-        >
-          <Icon className="h-4 w-4 text-white" />
+        <div className="flex items-center justify-center flex-shrink-0">
+          <Icon className="h-6 w-6 text-cyan-400" />
         </div>
         <div>
-          <h3 className={`text-base font-semibold ${styles.text} mb-0`}>
+          <h3 className="text-base font-semibold text-white mb-0">
             {title}
           </h3>
           <p className="text-xs text-gray-300 leading-none mt-0.5">
