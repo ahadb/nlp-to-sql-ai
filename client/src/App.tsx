@@ -10,6 +10,9 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 
+import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import {
   Sidebar,
   MobileSidebar,
@@ -26,6 +29,7 @@ import {
   ReportsPage,
   ConnectionsPage,
   ResultsDashboard,
+  SettingsPage,
 } from "./components";
 import {
   QueryHistoryProvider,
@@ -206,21 +210,48 @@ function MainApp() {
 // Main App Router
 export default function App() {
   return (
-    <AppProvider>
-      <QueryHistoryProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<MarketingLandingPage />} />
-            <Route path="/login" element={<AuthPage mode="login" />} />
-            <Route path="/signup" element={<AuthPage mode="signup" />} />
-            <Route path="/app" element={<MainApp />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/tables" element={<DataTablesPage />} />
-            <Route path="/reports" element={<ReportsPage />} />
-            <Route path="/connections" element={<ConnectionsPage />} />
-          </Routes>
-        </Router>
-      </QueryHistoryProvider>
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <QueryHistoryProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<MarketingLandingPage />} />
+              <Route path="/login" element={<AuthPage mode="login" />} />
+              <Route path="/signup" element={<AuthPage mode="signup" />} />
+              <Route path="/app" element={
+                <ProtectedRoute>
+                  <MainApp />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard" element={
+                // <ProtectedRoute>
+                  <DashboardPage />
+                // </ProtectedRoute>
+              } />
+              <Route path="/tables" element={
+                // <ProtectedRoute>
+                  <DataTablesPage />
+                // </ProtectedRoute>
+              } />
+              <Route path="/reports" element={
+                // <ProtectedRoute>
+                  <ReportsPage />
+                // </ProtectedRoute>
+              } />
+              <Route path="/connections" element={
+                // <ProtectedRoute>
+                  <ConnectionsPage />
+                // </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </Router>
+        </QueryHistoryProvider>
+      </AppProvider>
+    </AuthProvider>
   );
 }

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../contexts/AuthContext";
 
 interface LoginFormProps {
-  onLogin: (email: string, password: string) => void;
-  isLoading?: boolean;
+  onLogin?: (email: string, password: string) => void;
+  isSignup?: boolean;
 }
 
 const DEMO_USERS = [
@@ -14,33 +15,48 @@ const DEMO_USERS = [
 
 export default function LoginForm({
   onLogin,
-  isLoading = false,
+  isSignup = false,
 }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { signIn, signUp } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
-    if (!email || !password) {
-      setError("Please enter both email and password");
-      return;
-    }
+    try {
+      if (!email || !password) {
+        setError("Please enter both email and password");
+        return;
+      }
 
-    // Check if credentials match demo users
-    const isValidUser = DEMO_USERS.some(
-      (user) => user.email === email && user.password === password
-    );
+      if (isSignup && !fullName) {
+        setError("Please enter your full name");
+        return;
+      }
 
-    if (isValidUser) {
-      onLogin(email, password);
-    } else {
-      setError(
-        "Invalid credentials. Please use one of the demo accounts below."
-      );
+      if (isSignup) {
+        await signUp({ email, password, full_name: fullName });
+      } else {
+        await signIn({ email, password });
+      }
+
+      // Call legacy onLogin if provided (for compatibility)
+      if (onLogin) {
+        onLogin(email, password);
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      setError(error instanceof Error ? error.message : 'Authentication failed');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,6 +114,26 @@ export default function LoginForm({
           </div>
         </div>
 
+        {isSignup && (
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
+              Full Name
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-white placeholder-gray-400 transition-all duration-200 rounded-lg"
+              placeholder="Enter your full name"
+              disabled={isLoading}
+            />
+          </div>
+        )}
+
         <div>
           <label
             htmlFor="email"
@@ -154,13 +190,13 @@ export default function LoginForm({
           </div>
         )}
 
-        {/* Login Button */}
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading}
           className="w-full border border-blue-500 text-white bg-blue-500/10 hover:bg-blue-500/20 font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Signing In..." : "Sign In"}
+          {isLoading ? (isSignup ? "Creating Account..." : "Signing In...") : (isSignup ? "Create Account" : "Sign In")}
         </button>
       </form>
 

@@ -1,5 +1,7 @@
-import { Bars3Icon, BellIcon, MagnifyingGlassIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { useLocation } from "react-router-dom";
+import { Bars3Icon, BellIcon, MagnifyingGlassIcon, ChevronRightIcon, ArrowRightOnRectangleIcon, UserCircleIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useState, useEffect, useRef } from "react";
 
 interface TopBarProps {
   setSidebarOpen: (open: boolean) => void;
@@ -22,7 +24,34 @@ const getPageTitle = (pathname: string) => {
 
 export default function TopBar({ setSidebarOpen }: TopBarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pageTitle = getPageTitle(location.pathname);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
 
   return (
     <>
@@ -53,6 +82,7 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
           <div className="flex items-center space-x-4">
             {/* Breadcrumb with Organization */}
             <div className="flex items-center space-x-2 text-sm">
+              <BuildingOfficeIcon className="h-4 w-4 text-gray-400" />
               <span className="text-gray-400">Demo Org</span>
               <ChevronRightIcon className="h-3 w-3 text-gray-500" />
               <span className="text-white font-medium">{pageTitle}</span>
@@ -75,17 +105,51 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
               <BellIcon className="h-5 w-5" />
             </button>
             
-            {/* Profile */}
-            <div className="flex items-center space-x-3">
-              <img
-                alt="Profile"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                className="h-8 w-8 rounded-full bg-gray-800"
-              />
-              <div className="text-sm">
-                <div className="text-white font-medium">Demo User</div>
-                <div className="text-gray-400">demo@datamind.ai</div>
-              </div>
+            {/* Profile Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              >
+                <img
+                  alt="Profile"
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  className="h-8 w-8 rounded-full bg-gray-800"
+                />
+                <div className="text-sm text-left">
+                  <div className="text-white font-medium">{user?.full_name || "User"}</div>
+                  <div className="text-gray-400">{user?.email}</div>
+                </div>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showProfileMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-50">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        // Navigate to profile settings
+                      }}
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white w-full text-left transition-colors duration-200"
+                    >
+                      <UserCircleIcon className="h-4 w-4 mr-3" />
+                      Profile Settings
+                    </button>
+                    <hr className="border-gray-600 my-1" />
+                    <button
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        handleSignOut();
+                      }}
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-red-400 w-full text-left transition-colors duration-200"
+                    >
+                      <ArrowRightOnRectangleIcon className="h-4 w-4 mr-3" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

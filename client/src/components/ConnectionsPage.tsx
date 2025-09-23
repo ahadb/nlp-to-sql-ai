@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar, MobileSidebar, TopBar, Layout, AIChatDrawer } from "./index";
 import {
   CloudArrowUpIcon,
@@ -27,103 +27,121 @@ const ConnectionsPage: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeConnectionTab, setActiveConnectionTab] = useState<'sources' | 'history' | 'integrations'>('sources');
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [dataSources, setDataSources] = useState<any[]>([]);
+  const [hasData, setHasData] = useState(false);
+  const [uploadHistory, setUploadHistory] = useState<any[]>([]);
 
-  // Sample data for connected sources
-  const connectedSources = [
-    {
-      id: 1,
-      name: "Sales Data 2024",
-      type: "CSV Upload",
-      status: "Active",
-      records: 1247,
-      lastSync: "Dec 15, 2024 2:30 PM",
-      size: "2.4 MB",
-      icon: TableCellsIcon,
-      color: "text-green-400"
+  // Fetch data sources and upload history
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch schemas
+        const schemasResponse = await fetch('http://localhost:8000/upload/schemas');
+        if (schemasResponse.ok) {
+          const schemasData = await schemasResponse.json();
+          const schemas = schemasData.schemas || [];
+          setDataSources(schemas);
+          setHasData(schemas.length > 0);
+        }
+
+        // Fetch upload history
+        const historyResponse = await fetch('http://localhost:8000/upload/history');
+        if (historyResponse.ok) {
+          const historyData = await historyResponse.json();
+          setUploadHistory(historyData.history || []);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setHasData(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Dynamic connection stats based on data availability
+  const connectionStats = hasData ? [
+    { 
+      title: "Active Connections", 
+      value: `${dataSources.length}`, 
+      change: "+2", 
+      trend: "up",
+      sparklineData: [1, 1, 2, 2, 3, 3, dataSources.length],
+      color: "emerald"
     },
-    {
-      id: 2,
-      name: "Customer Database",
-      type: "SQL File",
-      status: "Active", 
-      records: 856,
-      lastSync: "Dec 14, 2024 9:15 AM",
-      size: "1.8 MB",
-      icon: DocumentTextIcon,
-      color: "text-blue-400"
+    { 
+      title: "Data Synced Today", 
+      value: "847K", 
+      change: "+23.5%", 
+      trend: "up",
+      sparklineData: [420, 445, 380, 510, 680, 720, 847],
+      color: "blue"
     },
-    {
-      id: 3,
-      name: "Order History Q4",
-      type: "CSV Upload",
-      status: "Syncing",
-      records: 2103,
-      lastSync: "Dec 15, 2024 3:45 PM",
-      size: "3.2 MB",
-      icon: TableCellsIcon,
-      color: "text-yellow-400"
+    { 
+      title: "Connection Health", 
+      value: "98.5%", 
+      change: "+1.2%", 
+      trend: "up",
+      sparklineData: [95, 96, 94, 97, 98, 98.2, 98.5],
+      color: "purple"
     },
-    {
-      id: 4,
-      name: "Product Catalog",
-      type: "SQL File",
-      status: "Error",
-      records: 0,
-      lastSync: "Dec 13, 2024 1:20 PM",
-      size: "856 KB",
-      icon: DocumentTextIcon,
-      color: "text-red-400"
-    }
+    { 
+      title: "Available Integrations", 
+      value: "24", 
+      change: "+6", 
+      trend: "up",
+      sparklineData: [12, 14, 16, 18, 18, 20, 24],
+      color: "cyan"
+    },
+  ] : [
+    { 
+      title: "Active Connections", 
+      value: "0", 
+      change: "0", 
+      trend: "neutral",
+      sparklineData: [0, 0, 0, 0, 0, 0, 0],
+      color: "emerald"
+    },
+    { 
+      title: "Data Synced Today", 
+      value: "0", 
+      change: "0%", 
+      trend: "neutral",
+      sparklineData: [0, 0, 0, 0, 0, 0, 0],
+      color: "blue"
+    },
+    { 
+      title: "Connection Health", 
+      value: "0%", 
+      change: "0%", 
+      trend: "neutral",
+      sparklineData: [0, 0, 0, 0, 0, 0, 0],
+      color: "purple"
+    },
+    { 
+      title: "Available Integrations", 
+      value: "24", 
+      change: "0", 
+      trend: "neutral",
+      sparklineData: [24, 24, 24, 24, 24, 24, 24],
+      color: "cyan"
+    },
   ];
 
-  // Upload history
-  const uploadHistory = [
-    {
-      id: 1,
-      filename: "sales_data_december.csv",
-      uploadDate: "Dec 15, 2024 2:30 PM",
-      size: "2.4 MB",
-      status: "Completed",
-      records: 1247,
-      type: "CSV"
-    },
-    {
-      id: 2,
-      filename: "customer_database.sql",
-      uploadDate: "Dec 14, 2024 9:15 AM", 
-      size: "1.8 MB",
-      status: "Completed",
-      records: 856,
-      type: "SQL"
-    },
-    {
-      id: 3,
-      filename: "orders_q4_2024.csv",
-      uploadDate: "Dec 15, 2024 3:45 PM",
-      size: "3.2 MB",
-      status: "Processing",
-      records: 2103,
-      type: "CSV"
-    },
-    {
-      id: 4,
-      filename: "product_catalog_v2.sql",
-      uploadDate: "Dec 13, 2024 1:20 PM",
-      size: "856 KB",
-      status: "Failed",
-      records: 0,
-      type: "SQL"
-    },
-    {
-      id: 5,
-      filename: "marketing_leads.csv",
-      uploadDate: "Dec 12, 2024 4:10 PM",
-      size: "1.2 MB", 
-      status: "Completed",
-      records: 634,
-      type: "CSV"
-    }
-  ];
+  // Real data from uploaded sources
+  const connectedSources = dataSources.map((schema, index) => ({
+    id: schema.schema_id || index,
+    name: schema.file_name || 'Unknown File',
+    type: schema.type === 'CSV_FILE' ? 'CSV Upload' : schema.type === 'SQL_SCHEMA' ? 'SQL File' : schema.type,
+    status: schema.status === 'Active' ? 'Active' : schema.row_count > 0 ? 'Active' : 'Error',
+    records: schema.row_count || 0,
+    lastSync: schema.last_updated || 'Unknown',
+    size: schema.size || 'Unknown',
+    icon: schema.type === 'CSV_FILE' ? TableCellsIcon : DocumentTextIcon,
+    color: schema.row_count > 0 ? 'text-green-400' : 'text-red-400'
+  }));
+
+  // Real upload history is now fetched via useEffect and stored in uploadHistory state
 
   // Future integrations
   const futureIntegrations = [
@@ -258,44 +276,49 @@ const ConnectionsPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Connection Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/40 border border-gray-600/30 rounded-xl p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">4</h3>
-                      <p className="text-sm text-gray-400">Active Sources</p>
+              {/* Connection Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {connectionStats.map((stat, index) => (
+                  <div key={index} className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
+                        <p className="text-sm text-gray-400">{stat.title}</p>
+                      </div>
+                      <span className={`text-sm font-medium ${
+                        stat.trend === 'up' ? 'text-emerald-400' : 
+                        stat.trend === 'down' ? 'text-red-400' : 
+                        'text-gray-400'
+                      }`}>
+                        {stat.change}
+                      </span>
                     </div>
-                    <span className="text-sm font-medium text-green-400">+2 this week</span>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/40 border border-gray-600/30 rounded-xl p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">4.2K</h3>
-                      <p className="text-sm text-gray-400">Total Records</p>
+                    
+                    {/* Sparkline */}
+                    <div className="h-8 mt-2">
+                      <svg className="w-full h-full" viewBox="0 0 100 20" preserveAspectRatio="none">
+                        <polyline
+                          fill="none"
+                          stroke={
+                            stat.color === 'emerald' ? 'rgb(52 211 153)' :
+                            stat.color === 'blue' ? 'rgb(59 130 246)' :
+                            stat.color === 'purple' ? 'rgb(168 85 247)' :
+                            'rgb(34 211 238)'
+                          }
+                          strokeWidth="2"
+                          points={stat.sparklineData.map((value, i) => {
+                            const x = (i / (stat.sparklineData.length - 1)) * 100;
+                            const minVal = Math.min(...stat.sparklineData);
+                            const maxVal = Math.max(...stat.sparklineData);
+                            const y = maxVal === minVal ? 10 : 20 - ((value - minVal) / (maxVal - minVal)) * 16;
+                            return `${x},${y}`;
+                          }).join(' ')}
+                        />
+                      </svg>
                     </div>
-                    <span className="text-sm font-medium text-green-400">+1.2K today</span>
+                    <p className="text-xs text-gray-500 mt-1">Last 7 periods</p>
                   </div>
-                </div>
-                <div className="bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/40 border border-gray-600/30 rounded-xl p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">Dec 15</h3>
-                      <p className="text-sm text-gray-400">Last Sync</p>
-                    </div>
-                    <span className="text-sm font-medium text-gray-400">2 mins ago</span>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-slate-900/40 via-slate-800/20 to-slate-900/40 border border-gray-600/30 rounded-xl p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">12 GB</h3>
-                      <p className="text-sm text-gray-400">Storage Limit</p>
-                    </div>
-                    <span className="text-sm font-medium text-green-400">8.2 MB used</span>
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Tab Navigation */}
@@ -386,33 +409,88 @@ const ConnectionsPage: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-700/30">
-                        {uploadHistory.map((upload) => (
+                        {uploadHistory.length > 0 ? uploadHistory.map((upload) => (
                           <tr key={upload.id} className="hover:bg-gray-800/30 transition-colors duration-200">
-                            <td className="px-6 py-4 text-sm text-white font-medium">{upload.filename}</td>
-                            <td className="px-6 py-4 text-sm text-gray-300">{upload.type}</td>
-                            <td className="px-6 py-4 text-sm text-gray-300">{upload.uploadDate}</td>
-                            <td className="px-6 py-4 text-sm text-gray-300">{upload.size}</td>
-                            <td className="px-6 py-4 text-sm text-gray-300">{upload.records.toLocaleString()}</td>
+                            <td className="px-6 py-4 text-sm text-white font-medium">{upload.file_name}</td>
+                            <td className="px-6 py-4 text-sm text-gray-300">{upload.file_type}</td>
+                            <td className="px-6 py-4 text-sm text-gray-300">{upload.upload_timestamp}</td>
+                            <td className="px-6 py-4 text-sm text-gray-300">{upload.size_display}</td>
+                            <td className="px-6 py-4 text-sm text-gray-300">{(upload.records_processed || 0).toLocaleString()}</td>
                             <td className="px-6 py-4">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${getUploadStatusBadge(upload.status)}`}>
-                                {upload.status}
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
+                                upload.status === 'success' ? 'bg-green-500/20 text-green-300' :
+                                upload.status === 'failed' ? 'bg-red-500/20 text-red-300' :
+                                upload.status === 'processing' ? 'bg-yellow-500/20 text-yellow-300' :
+                                'bg-gray-500/20 text-gray-300'
+                              }`}>
+                                <div className={`w-1.5 h-1.5 rounded-full mr-2 ${
+                                  upload.status === 'success' ? 'bg-green-400' :
+                                  upload.status === 'failed' ? 'bg-red-400' :
+                                  upload.status === 'processing' ? 'bg-yellow-400' :
+                                  'bg-gray-400'
+                                }`}></div>
+                                {upload.status === 'success' ? 'Completed' : 
+                                 upload.status === 'failed' ? 'Failed' :
+                                 upload.status === 'processing' ? 'Processing' : upload.status}
                               </span>
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center space-x-2">
-                                <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
-                                  <EyeIcon className="h-4 w-4" />
-                                </button>
-                                <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
-                                  <ArrowPathIcon className="h-4 w-4" />
-                                </button>
-                                <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
-                                  <TrashIcon className="h-4 w-4" />
-                                </button>
+                                {upload.status === 'success' ? (
+                                  <>
+                                    <button 
+                                      className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200"
+                                      title="View Details"
+                                    >
+                                      <EyeIcon className="h-4 w-4" />
+                                    </button>
+                                    <button 
+                                      className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200"
+                                      title="Delete"
+                                    >
+                                      <TrashIcon className="h-4 w-4" />
+                                    </button>
+                                  </>
+                                ) : upload.status === 'failed' ? (
+                                  <>
+                                    <button 
+                                      className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200"
+                                      title="View Error Details"
+                                    >
+                                      <EyeIcon className="h-4 w-4" />
+                                    </button>
+                                    <button 
+                                      className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200"
+                                      title="Retry Upload"
+                                    >
+                                      <ArrowPathIcon className="h-4 w-4" />
+                                    </button>
+                                    <button 
+                                      className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200"
+                                      title="Delete"
+                                    >
+                                      <TrashIcon className="h-4 w-4" />
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="text-xs text-gray-500">Processing...</span>
+                                )}
                               </div>
                             </td>
                           </tr>
-                        ))}
+                        )) : (
+                          <tr>
+                            <td colSpan={7} className="px-6 py-12 text-center">
+                              <div className="flex flex-col items-center">
+                                <ClockIcon className="h-8 w-8 text-gray-500 mb-3" />
+                                <div>
+                                  <p className="text-white font-medium text-sm">No upload history yet</p>
+                                  <p className="text-gray-500 text-xs mt-1">Upload files to see processing history</p>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>

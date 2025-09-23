@@ -20,6 +20,8 @@ import {
 import { FileUpload } from './index';
 import { api } from '../services/api';
 
+import DashboardCards from './DashboardCards';
+
 interface DataSource {
   id: string;
   name: string;
@@ -38,6 +40,7 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
   const [activeInsightTab, setActiveInsightTab] = useState<number>(0);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
+  const [showDemoPanel, setShowDemoPanel] = useState(true);
   const [tables, setTables] = useState<any[]>([]);
   const [reorderedTables, setReorderedTables] = useState<any[]>([]);
   const [tableData, setTableData] = useState<Record<string, any[]>>({});
@@ -621,13 +624,25 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
       </div>
 
         {/* Demo Environment Section */}
+        {showDemoPanel && (
         <div className="mb-8">
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 rounded-xl p-6">
+        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-6 relative">
+          {/* Close Button */}
+          <button 
+            onClick={() => setShowDemoPanel(false)}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200 p-1 hover:bg-gray-700/50 rounded"
+            title="Close demo panel"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Side - Verbiage */}
             <div>
               <div className="flex items-center space-x-3 mb-3">
-                <h3 className="text-xl font-semibold text-white">🎯 Interactive Demo Environment</h3>
+                <h3 className="text-xl font-semibold text-white">Interactive Demo Environment</h3>
                 <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-medium">
                   Demo Mode
                 </span>
@@ -636,19 +651,10 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
                 Experience DataMind AI with curated sample business data. Download and upload the provided templates to see instant insights and intelligent column mapping.
               </p>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span className="text-gray-300 text-sm">Smart sales & revenue analysis</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                  <span className="text-gray-300 text-sm">Customer support ticket insights</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-gray-300 text-sm">Billing & payment tracking</span>
-                </div>
+              <div className="space-y-2 mb-4">
+                <div className="text-gray-300 text-sm">• Smart sales & revenue analysis</div>
+                <div className="text-gray-300 text-sm">• Customer support ticket insights</div>
+                <div className="text-gray-300 text-sm">• Billing & payment tracking</div>
               </div>
               
             </div>
@@ -691,156 +697,43 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
           </div>
           
           {/* Full-width Demo Limitation */}
-          <div className="mt-6 bg-gray-800/30 border border-gray-600/30 rounded-lg p-4">
+          <div className="mt-2 border border-gray-600/30 rounded-lg p-4">
             <div className="flex items-start space-x-3">
-              <div className="w-5 h-5 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+              {/* <div className="w-5 h-5 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
                 <span className="text-blue-300 text-xs">ℹ️</span>
-              </div>
-              <div>
-                <p className="text-gray-300 text-sm">
-                  <span className="font-medium">Demo Limitation:</span> This environment accepts only the provided sample files to ensure optimal demonstration. 
-                  <span className="text-blue-300">The production version supports any CSV/SQL structure and can be fully customized to your business data.</span>
-                </p>
-              </div>
+              </div> */}
+                <div>
+                  <p className="text-gray-300 text-sm">
+                    <div className="font-medium">Demo Limitation:&nbsp;&nbsp;This environment accepts only the provided sample CSV files to ensure optimal demonstration. </div>
+                    <span className="text-blue-300">The production version supports unlimited file types and can be fully customized to your specific business data, workflows, and requirements.</span>
+                  </p>
+                </div>
             </div>
           </div>
         </div>
+        </div>
+        )}
         
-        {/* Upload Area - Restricted to Sample Files */}
-        <div className="mt-6">
-          <FileUpload 
-            onFileUpload={async (file) => {
-              console.log('File uploaded:', file.name);
-              // Refresh data sources and tables after upload
-              await fetchDataSources();
-              await fetchTables();
-            }}
-          />
-        </div>
-      </div>
-
-
-       {/* Stats Cards - 4 Individual Cards */}
-       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        {/* Stats Cards - 4 Individual Cards */}
+       
         {/* Query Volume */}
-        <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-slate-400 text-sm font-medium">Query Volume</p>
-            {demoStats.queryVolume > 0 && (
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">Simulated</span>
-            )}
-          </div>
-                  <div className="flex items-end space-x-3 mb-4">
-                    <div>
-                      <p className="text-white text-3xl font-bold">{demoStats.queryVolume}</p>
-                      <p className="text-sm text-slate-500">this month</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-emerald-400 text-sm">{demoStats.growthPercentage}</span>
-                    </div>
-                  </div>
-                  <div className="relative h-8 w-full mb-1">
-                    <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-                      <polyline
-                        fill="none"
-                        stroke="rgb(96 165 250)"
-                        strokeWidth="2"
-                        points={demoStats.sparklinePoints}
-                      />
-                    </svg>
-                  </div>
-          <p className="text-slate-500 text-xs">Last 7 days</p>
+        <DashboardCards />
+      
+     
+      {/* Upload Area - Restricted to Sample Files */}
+      <div className="mt-6 mb-8">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-white">Add Data Source</h2>
+          <p className="text-gray-400 text-sm mt-1">Upload CSV or SQL files to start analyzing your data</p>
         </div>
-
-        {/* Revenue Trend */}
-        <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-slate-400 text-sm font-medium">Revenue Trend</p>
-            {demoStats.revenue > 0 && (
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">Simulated</span>
-            )}
-          </div>
-                  <div className="flex items-end space-x-3 mb-4">
-                    <div>
-                      <p className="text-white text-3xl font-bold">${(demoStats.revenue / 1000).toLocaleString()}K</p>
-                      <p className="text-sm text-slate-500">this month</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-emerald-400 text-sm">{demoStats.growthPercentage}</span>
-                    </div>
-                  </div>
-                  <div className="relative h-8 w-full mb-1">
-                    <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-                      <polyline
-                        fill="none"
-                        stroke="rgb(129 140 248)"
-                        strokeWidth="2"
-                        points={demoStats.sparklinePoints}
-                      />
-                    </svg>
-                  </div>
-          <p className="text-slate-500 text-xs">Strong growth</p>
-        </div>
-
-        {/* Data Quality */}
-        <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-slate-400 text-sm font-medium">Data Quality</p>
-            {demoStats.dataQuality > 0 && (
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">Simulated</span>
-            )}
-          </div>
-          <div className="flex items-end space-x-3 mb-4">
-            <div>
-              <p className="text-white text-3xl font-bold">{demoStats.dataQuality.toFixed(1)}%</p>
-              <p className="text-sm text-slate-500">clean data</p>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-emerald-400 text-sm">{demoStats.qualityGrowth}</span>
-            </div>
-          </div>
-          <div className="relative h-8 w-full mb-1">
-            <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-              <polyline
-                fill="none"
-                stroke="rgb(74 222 128)"
-                strokeWidth="2"
-                points={demoStats.sparklinePoints}
-              />
-            </svg>
-          </div>
-          <p className="text-slate-500 text-xs">Excellent health</p>
-        </div>
-
-        {/* Total Records */}
-        <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-slate-400 text-sm font-medium">Total Records</p>
-            {demoStats.totalRecords > 0 && (
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">Simulated</span>
-            )}
-          </div>
-          <div className="flex items-end space-x-3 mb-4">
-            <div>
-              <p className="text-white text-3xl font-bold">{demoStats.totalRecords.toLocaleString()}</p>
-              <p className="text-sm text-slate-500">processed</p>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-emerald-400 text-sm">{demoStats.growthPercentage}</span>
-            </div>
-          </div>
-          <div className="relative h-8 w-full mb-1">
-            <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
-              <polyline
-                fill="none"
-                stroke="rgb(168 85 247)"
-                strokeWidth="2"
-                points={demoStats.sparklinePoints}
-              />
-            </svg>
-          </div>
-          <p className="text-slate-500 text-xs">All operational</p>
-        </div>
+        <FileUpload 
+          onFileUpload={async (file) => {
+            console.log('File uploaded:', file.name);
+            // Refresh data sources and tables after upload
+            await fetchDataSources();
+            await fetchTables();
+          }}
+        />
       </div>
      
       {/* Quick Insights - Tabbed Interface */}
@@ -873,7 +766,7 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
         </div>
 
         {/* Dynamic Tab Content */}
-        {reorderedTables.length > 0 && (
+        {reorderedTables.length > 0 ? (
           <div>
             <div className="mb-4">
               <h3 className="text-lg font-semibold text-white">
@@ -892,11 +785,42 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
               </button>
             </div>
           </div>
+        ) : (
+          /* Empty State Table */
+          <div className="bg-[#1a1a1a] border border-gray-600/50 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto scrollbar-dark">
+              <table className="w-full border-collapse">
+                <thead className="bg-[#262626] border-b border-gray-600/50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider border-r border-gray-600/30 whitespace-nowrap">Data Field</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider border-r border-gray-600/30 whitespace-nowrap">Value</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider border-r border-gray-600/30 whitespace-nowrap">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center">
+                      <div className="flex flex-col items-center space-y-3">
+                        <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <div>
+                          <p className="text-white font-medium text-sm">No insights available yet</p>
+                          <p className="text-gray-500 text-xs mt-1">Upload CSV or SQL files to see data insights</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Quick Actions */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {/* Quick Actions 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-lg p-4 hover:border-blue-500/50 hover:shadow-md transition-all duration-200 cursor-pointer group">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-all duration-200">
@@ -1012,10 +936,13 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
                   <tr>
                     <td colSpan={7} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
-                        <CircleStackIcon className="h-12 w-12 text-gray-500 mb-4" />
-                        <p className="text-gray-400 text-sm">
-                          {searchTerm ? 'No data sources match your search' : 'No data sources found'}
-                        </p>
+                        <CircleStackIcon className="h-8 w-8 text-gray-500 mb-3" />
+                        <div>
+                          <p className="text-white font-medium text-sm">
+                            {searchTerm ? 'No data sources match your search' : 'No data sources found'}
+                          </p>
+                          <p className="text-gray-500 text-xs mt-1">Upload CSV or SQL files to get started</p>
+                        </div>
                         {searchTerm && (
                           <button
                             onClick={() => setSearchTerm('')}

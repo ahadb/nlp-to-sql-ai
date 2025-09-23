@@ -15,7 +15,7 @@ const DashboardPage: React.FC = () => {
       <TopBar setSidebarOpen={setSidebarOpen} />
       <Layout
         leftChildren={<MyDataTab onOpenAIChat={() => setIsDrawerOpen(true)} />}
-        rightChildren={<AIChatDrawer />}
+        rightChildren={<AIChatDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />}
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
         drawerTriggerLabel="Ask AI"

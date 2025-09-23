@@ -153,11 +153,6 @@ export default function FileUpload({
 
   return (
     <div className="w-full bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-6 hover:border-gray-500/50 transition-all duration-200">
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-white mb-1">Add Data Source</h3>
-        <p className="text-gray-400 text-sm">Upload CSV or SQL files to start analyzing your data</p>
-      </div>
-
       <div onClick={(e) => e.stopPropagation()}>
         {selectedFiles.length === 0 ? (
           <div

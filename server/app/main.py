@@ -7,9 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.config import settings
 from app.database import test_connection, execute_query
-from app.services.openai_service import openai_service
+import logging
+# from app.services.openai_service import openai_service
 from app.services.schema_service import schema_service, SchemaType
-from app.routers import upload, tables
+from app.services.upload_history_service import upload_history_service
+from app.routers import upload, tables, auth, dashboard, reports, connections, insights, chat
+import time
 
 # Create FastAPI app
 app = FastAPI(
@@ -28,8 +31,14 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth.router)
+app.include_router(dashboard.router)
 app.include_router(upload.router)
 app.include_router(tables.router)
+app.include_router(reports.router)
+app.include_router(connections.router)
+app.include_router(insights.router)
+app.include_router(chat.router)
 
 # Test request models
 class TestNLPRequest(BaseModel):
@@ -145,6 +154,9 @@ async def test_nlp_to_sql(request: TestNLPRequest):
 async def test_schema_processing(request: TestSchemaRequest):
     """Test endpoint for schema processing (SQL and CSV)"""
     
+    start_time = time.time()
+    upload_id = None
+    
     try:
         # Convert string to enum
         if request.schema_type.upper() == "SQL_SCHEMA":
@@ -153,6 +165,14 @@ async def test_schema_processing(request: TestSchemaRequest):
             schema_type = SchemaType.CSV_FILE
         else:
             raise HTTPException(status_code=400, detail="Invalid schema_type. Use 'SQL_SCHEMA' or 'CSV_FILE'")
+        
+        # Log upload start
+        file_size = len(request.file_content.encode('utf-8'))
+        upload_id = await upload_history_service.log_upload_start(
+            file_name=request.file_name,
+            file_size=file_size,
+            file_type=request.schema_type
+        )
         
         # Process the file
         schema = await schema_service.process_file_upload(
@@ -203,7 +223,65 @@ async def test_schema_processing(request: TestSchemaRequest):
             "ai_context_preview": ai_context
         }
         
+        # Log successful upload
+        processing_time = int((time.time() - start_time) * 1000)
+        if upload_id:
+            # Get record count from schema tables
+            total_records = sum(len(table.sample_data) for table in schema.tables) if schema.tables else 0
+            await upload_history_service.log_upload_success(
+                upload_id=upload_id,
+                schema_id=schema.schema_id,
+                records_processed=total_records,
+                processing_time_ms=processing_time
+            )
+        
+        return {
+            "status": "success",
+            "message": "Schema processed successfully",
+            "schema": {
+                "schema_id": schema.schema_id,
+                "schema_type": schema.schema_type.value,
+                "namespace": schema.namespace,
+                "file_name": schema.file_name,
+                "tables_count": len(schema.tables),
+                "relationships_count": len(schema.relationships),
+                "tables": [
+                    {
+                        "name": table.name,
+                        "columns_count": len(table.columns),
+                        "columns": [
+                            {
+                                "name": col.name,
+                                "data_type": col.data_type,
+                                "is_primary_key": col.is_primary_key,
+                                "is_foreign_key": col.is_foreign_key,
+                                "foreign_key_reference": col.foreign_key_reference
+                            } for col in table.columns
+                        ],
+                        "primary_keys": table.primary_keys,
+                        "foreign_keys": table.foreign_keys
+                    } for table in schema.tables
+                ],
+                "relationships": [
+                    {
+                        "from": f"{rel.from_table}.{rel.from_column}",
+                        "to": f"{rel.to_table}.{rel.to_column}",
+                        "type": rel.relationship_type
+                    } for rel in schema.relationships
+                ]
+            },
+            "ai_context_preview": ai_context
+        }
+        
     except Exception as e:
+        # Log failed upload
+        processing_time = int((time.time() - start_time) * 1000)
+        if upload_id:
+            await upload_history_service.log_upload_error(
+                upload_id=upload_id,
+                error_message=str(e),
+                processing_time_ms=processing_time
+            )
         raise HTTPException(status_code=500, detail=f"Schema processing failed: {str(e)}")
 
 @app.get("/test-schemas")

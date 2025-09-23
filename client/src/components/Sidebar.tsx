@@ -1,6 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navigation, classNames } from "./navigation";
-import { CircleStackIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { CircleStackIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "../contexts/AuthContext";
 
 interface SidebarProps {
   activeTab?: string;
@@ -9,6 +10,17 @@ interface SidebarProps {
 
 export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
 
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-48 lg:overflow-y-auto lg:bg-[#0f0f0f] lg:pb-4 border-r border-gray-600/30" style={{boxShadow: '4px 0 15px rgba(0, 0, 0, 0.3)'}}>
@@ -60,6 +72,20 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
           </div>
           <span className="ml-3 flex items-center">Settings</span>
         </Link>
+      </div>
+
+      {/* Logout - Bottom Section */}
+      <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-gray-600/50 bg-[#0f0f0f]">
+        {/* Logout Button */}
+        <button
+          onClick={handleSignOut}
+          className="w-full flex items-center gap-x-3 rounded-lg p-2 text-sm/6 font-semibold text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/30 border border-transparent transition-all duration-200"
+        >
+          <div className="flex items-center justify-center w-5 h-5 flex-shrink-0">
+            <ArrowRightOnRectangleIcon aria-hidden="true" className="size-5" />
+          </div>
+          <span className="ml-3">Sign Out</span>
+        </button>
       </div>
 
     </div>

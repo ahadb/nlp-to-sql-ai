@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CircleStackIcon } from "@heroicons/react/24/outline";
 import { LoginForm } from "./";
 import SignupForm from "./SignupForm";
+import { useAuth } from "../contexts/AuthContext";
 
 interface AuthPageProps {
   mode: "login" | "signup";
@@ -10,9 +11,15 @@ interface AuthPageProps {
 
 export default function AuthPage({ mode }: AuthPageProps) {
   const navigate = useNavigate();
-  const [, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    // Redirect if already authenticated
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -23,16 +30,9 @@ export default function AuthPage({ mode }: AuthPageProps) {
   }, []);
 
   const handleAuth = async (email: string, password: string) => {
-    setIsLoading(true);
-
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsAuthenticated(true);
-    setIsLoading(false);
-
-    // Navigate to app after successful authentication
-    navigate("/app");
+    // This is now handled by the LoginForm component using useAuth
+    // Navigate to dashboard after successful authentication
+    navigate("/dashboard");
   };
 
   const handleSignup = async (userData: {
@@ -165,11 +165,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
                   </p>
                 </div>
 
-                {mode === "login" ? (
-                  <LoginForm onLogin={handleAuth} isLoading={isLoading} />
-                ) : (
-                  <SignupForm onSignup={handleSignup} isLoading={isLoading} />
-                )}
+                <LoginForm onLogin={handleAuth} isSignup={mode === "signup"} />
 
                 {/* Toggle between login/signup */}
                 <div className="mt-6 text-center">

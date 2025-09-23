@@ -1,0 +1,561 @@
+"""
+AI responses for demo mode
+"""
+from typing import Dict, Any
+
+# Responses for each template
+MOCK_RESPONSES: Dict[str, Dict[str, Any]] = {
+    "top-customers": {
+        "ai_response": """Here's what I found regarding your top 5 customers by revenue:
+
+## Key Insights
+- **Top Revenue Generators**: 
+    - **Zeta Dynamics** leads with a revenue of **$1,500,000**.
+    - Followed closely by **Omega Corp** at **$1,400,000** and **Upsilon Tech** at **$1,300,000**.
+  
+- **Customer Status**:
+    - Four out of the five customers are classified as **VIP**, indicating a high level of importance and potentially strong loyalty.
+  
+- **Industry Representation**:
+    - The customers span diverse industries including **Aerospace**, **Pharmaceuticals**, **AI/ML**, and **Finance**, showcasing a broad market reach.
+  
+- **Geographical Distribution**:
+    - The majority of top customers are based in the **USA** (4 out of 5), with **Ridge Corp** located in the **UK**.
+
+- **Total Orders**:
+    - Zeta Dynamics has the highest number of total orders at **298**, which may indicate strong product demand or service engagement.
+
+| Company Name     | Revenue   | Industry      | Country | Total Orders | Customer Status | Sales Rep       |
+|------------------|-----------|---------------|---------|--------------|------------------|------------------|
+| Zeta Dynamics     | $1,500,000 | Aerospace     | USA     | 298          | VIP              | Jennifer Wu      |
+| Omega Corp        | $1,400,000 | Pharmaceuticals | USA     | 267          | VIP              | Eric Lee         |
+| Upsilon Tech      | $1,300,000 | AI/ML        | USA     | 245          | VIP              | James Wilson     |
+| Ridge Corp        | $1,250,000 | Finance       | UK      | 189          | VIP              | Lucas Brown      |
+| Alpha Corp        | $1,200,000 | Finance       | USA     | 234          | Active           | Tom Wilson       |
+
+## Business Recommendations
+- **Enhance Engagement with VIP Customers**: Given the high revenue contribution from VIP customers, consider personalized marketing strategies and loyalty programs to deepen engagement and enhance retention.
+  
+- **Cross-Selling Opportunities**: Analyze order histories to identify potential cross-selling opportunities, especially in the **Finance** and **AI/ML** sectors, where customers like Ridge Corp and Upsilon Tech might benefit from additional offerings.
+
+- **Geographic Strategy**: With a concentration in the USA, explore expansion strategies or tailored marketing approaches for international markets, specifically the UK, where Ridge Corp is located.
+
+- **Monitor Performance Metrics**: Track the performance and satisfaction of these top customers closely. If their order volume decreases, it may indicate underlying issues that need to be addressed.
+
+## Next Steps
+- **Follow-Up Questions**:
+    - What specific products or services are these top customers purchasing?
+    - How does the customer satisfaction rate compare across these top 5 customers?
+
+- **Related Analyses**:
+    - Conduct a customer segmentation analysis to identify other high-potential customers who may not yet be in the top revenue bracket.
+    - Analyze trends over time to see how revenue from these customers has shifted, particularly post any significant campaigns or product launches.
+
+- **Data Exploration Recommendations**:
+    - Investigate the impact of industry trends on these customers' purchasing behaviors.
+    - Examine the effectiveness of different sales representatives linked to these customers and identify best practices.
+
+By following these insights and recommendations, your organization can better leverage its top customers for sustained growth and profitability.""",
+        
+        "sql_query": """SELECT 
+    company_name,
+    revenue,
+    contact_name,
+    email,
+    phone,
+    industry,
+    country,
+    state,
+    city,
+    total_orders,
+    customer_status,
+    sales_rep
+FROM 
+    sales_precise_test.sales_precise_test_data
+ORDER BY 
+    revenue DESC
+LIMIT 5;""",
+        
+        "query_results": {
+            "columns": [
+                "company_name",
+                "revenue",
+                "contact_name",
+                "email",
+                "phone",
+                "industry",
+                "country",
+                "state",
+                "city",
+                "total_orders",
+                "customer_status",
+                "sales_rep"
+            ],
+            "data": [
+                {
+                    "company_name": "Zeta Dynamics",
+                    "revenue": 1500000,
+                    "contact_name": "Matthew Garcia",
+                    "email": "matt@zetadyn.com",
+                    "phone": "+1-555-0110",
+                    "industry": "Aerospace",
+                    "country": "USA",
+                    "state": "California",
+                    "city": "Los Angeles",
+                    "total_orders": 298,
+                    "customer_status": "VIP",
+                    "sales_rep": "Jennifer Wu"
+                },
+                {
+                    "company_name": "Omega Corp",
+                    "revenue": 1400000,
+                    "contact_name": "Kayla Robinson",
+                    "email": "kayla@omegacorp.com",
+                    "phone": "+1-555-0125",
+                    "industry": "Pharmaceuticals",
+                    "country": "USA",
+                    "state": "New Jersey",
+                    "city": "Newark",
+                    "total_orders": 267,
+                    "customer_status": "VIP",
+                    "sales_rep": "Eric Lee"
+                },
+                {
+                    "company_name": "Upsilon Tech",
+                    "revenue": 1300000,
+                    "contact_name": "Nicole White",
+                    "email": "nicole@upsilontech.io",
+                    "phone": "+1-555-0121",
+                    "industry": "AI/ML",
+                    "country": "USA",
+                    "state": "California",
+                    "city": "Palo Alto",
+                    "total_orders": 245,
+                    "customer_status": "VIP",
+                    "sales_rep": "James Wilson"
+                },
+                {
+                    "company_name": "Ridge Corp",
+                    "revenue": 1250000,
+                    "contact_name": "Quinn Green",
+                    "email": "quinn@ridgecorp.com",
+                    "phone": "+44-20-7946-0958",
+                    "industry": "Finance",
+                    "country": "UK",
+                    "state": "England",
+                    "city": "London",
+                    "total_orders": 189,
+                    "customer_status": "VIP",
+                    "sales_rep": "Lucas Brown"
+                },
+                {
+                    "company_name": "Alpha Corp",
+                    "revenue": 1200000,
+                    "contact_name": "Jennifer Brown",
+                    "email": "jen@alphacorp.com",
+                    "phone": "+1-555-0105",
+                    "industry": "Finance",
+                    "country": "USA",
+                    "state": "Illinois",
+                    "city": "Chicago",
+                    "total_orders": 234,
+                    "customer_status": "Active",
+                    "sales_rep": "Tom Wilson"
+                }
+            ],
+            "row_count": 5
+        }
+    },
+    
+    "revenue-trends": {
+        "ai_response": """Here's what I found regarding your query on revenue trends for the last six months.
+
+## Key Insights
+- **No Revenue Data Available**: The query returned no results, indicating that there may be no recorded revenue in the last six months for the specified dataset.
+- **Potential Data Gaps**: This could signify a gap in the sales data, or it may suggest that there haven't been any orders processed in that timeframe.
+- **Need for Data Validation**: It's essential to verify if the `last_order_date` field is populated correctly and whether the dataset includes the expected revenue records.
+
+## Business Recommendations
+- **Data Review**: Conduct a thorough review of the `sales_precise_test_data` table to ensure that the data exists and is being recorded accurately. Check for:
+  - Missing or incorrect `last_order_date` entries.
+  - Potential issues with how revenue is recorded.
+  
+- **Expand Data Query**: Consider widening the query scope or adjusting the `last_order_date` filter to include previous months for a more extensive analysis.
+
+- **Data Integration**: If applicable, integrate data from the `billing_precise_test_data` or other relevant tables to provide a more comprehensive view of the financial situation.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What time period should we analyze if the last six months yielded no results?
+  - Are there any other datasets or tables we should consider for revenue insights?
+
+- **Related Analyses**: 
+  - Investigate customer behavior patterns by analyzing `total_orders` or `units` sold over time.
+  - Review billing data to identify any potential correlations with revenue trends.
+
+- **Data Exploration Recommendations**:
+  - Explore the `billing_precise_test_data` for related financial metrics, such as invoices and total amounts, that might indicate sales activity not reflected in the sales data.
+  - Analyze customer engagement metrics to identify potential issues that may be affecting revenue.
+
+> **Important Insight**: The absence of data may signal underlying issues that need to be addressed to ensure accurate business forecasting and strategy formulation.""",
+        
+        "sql_query": """SELECT 
+    DATE_TRUNC('month', last_order_date::date) AS month,
+    SUM(revenue) AS total_revenue
+FROM 
+    sales_precise_test.sales_precise_test_data
+WHERE 
+    last_order_date::date >= CURRENT_DATE - INTERVAL '6 months'
+GROUP BY 
+    month
+ORDER BY 
+    month;""",
+        
+        "query_results": {
+            "columns": [
+                "month",
+                "total_revenue"
+            ],
+            "data": [],
+            "row_count": 0
+        }
+    },
+    
+    "customer-satisfaction": {
+        "ai_response": """Your query executed successfully! Here's what I found regarding your support ticket performance and customer satisfaction.
+
+## Key Insights
+- **Total Tickets**: **100** tickets were logged in the dataset, indicating a significant volume of customer inquiries.
+- **Average Response Time**: The average response time is approximately **27.25 hours**, suggesting there may be room for improvement in response efficiency.
+- **Average Satisfaction Rating**: Customers rated their satisfaction at an average of **4.55 out of 5**, which is a strong indicator of overall customer satisfaction.
+- **Ticket Resolution Status**: There are **0 resolved tickets** and **0 open tickets** recorded, which seems unusual given the total ticket count. This may indicate an issue with data accuracy or ticket status tracking.
+- **High Priority Tickets**: There are **0 high priority tickets**, suggesting that either there are no urgent issues being reported or that ticket categorization may need reviewing.
+
+> **Important Insight**: The high number of total tickets alongside the lack of resolved or open tickets raises questions about the data integrity or definitions of ticket status.
+
+## Business Recommendations
+- **Investigate Data Integrity**: Review the ticket tracking system to ensure that ticket statuses are recorded accurately. This could involve auditing the ticket system or re-evaluating the criteria for ticket resolution.
+- **Enhance Response Times**: With an average response time exceeding a day, consider implementing automated responses for common inquiries or additional training for support agents to improve efficiency.
+- **Monitor Customer Satisfaction**: Continue to track customer satisfaction ratings closely and proactively address any feedback to maintain or improve satisfaction levels.
+- **Evaluate Ticket Categorization**: Ensure that tickets are categorized correctly, especially regarding priority levels, to better manage urgent issues and allocate resources effectively.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What specific challenges are agents facing in resolving tickets?
+  - Are there common themes or categories that could inform process improvements?
+  
+- **Related Analyses**:
+  - Analyze ticket resolution times to identify bottlenecks in the support process.
+  - Conduct a deeper dive into customer feedback to understand the reasons behind the satisfaction scores.
+
+- **Data Exploration Recommendations**:
+  - Explore ticket data over time to identify trends in ticket volume and response efficiency.
+  - Investigate customer demographics to tailor support efforts effectively.
+
+Feel free to reach out if you have more questions or need further analysis on specific aspects of your support ticket performance!""",
+        
+        "sql_query": """SELECT 
+    COUNT(ticket_id) AS total_tickets,
+    AVG(response_time_hours) AS average_response_time,
+    AVG(satisfaction_rating) AS average_satisfaction_rating,
+    COUNT(CASE WHEN status = 'resolved' THEN 1 END) AS resolved_tickets,
+    COUNT(CASE WHEN status = 'open' THEN 1 END) AS open_tickets,
+    COUNT(CASE WHEN priority = 'high' THEN 1 END) AS high_priority_tickets
+FROM 
+    support_precise_test.support_precise_test_data;""",
+        
+        "query_results": {
+            "columns": [
+                "total_tickets",
+                "average_response_time",
+                "average_satisfaction_rating",
+                "resolved_tickets",
+                "open_tickets",
+                "high_priority_tickets"
+            ],
+            "data": [
+                {
+                    "total_tickets": 100,
+                    "average_response_time": 27.252,
+                    "average_satisfaction_rating": 4.553191489361702,
+                    "resolved_tickets": 0,
+                    "open_tickets": 0,
+                    "high_priority_tickets": 0
+                }
+            ],
+            "row_count": 1
+        }
+    },
+    
+    "sales-performance": {
+        "ai_response": """Here's what I found regarding your billing insights, focusing on overdue payments and payment methods.
+
+## Key Insights
+- **Total Overdue Invoices**: There are **7 invoices** that are currently overdue.
+- **Payment Status**: 
+  - **5 invoices** have a payment status of **Overdue**.
+  - **1 invoice** is marked as **Refunded**.
+- **Payment Methods**:
+  - **3 invoices** have **no payment method** recorded.
+  - **1 invoice** was paid via **Credit Card**.
+- **Days Overdue**: 
+  - The invoices range from **0 days** (recently overdue) to potentially longer overdue periods.
+- **Highest Amount Due**: The amounts for overdue invoices are consistently **$450** and **$299** across the board.
+
+| Invoice ID | Customer Name    | Email                      | Invoice Date | Due Date    | Amount | Payment Status | Payment Method | Days Overdue  |
+|------------|------------------|---------------------------|--------------|-------------|--------|----------------|----------------|---------------|
+| 9          | Amanda Thompson   | amanda@epsilontech.io     | 2024-12-01   | 2024-12-31  | 450.0  | Overdue        | NULL           | David Lee     |
+| 26         | Connor Walker     | connor@apexsol.com        | 2024-10-01   | 2024-10-31  | 450.0  | Refunded       | Credit Card    | 0             |
+| 45         | Marina Parker     | marina@reefsol.com        | 2024-07-01   | 2024-07-31  | 299.0  | Overdue        | NULL           | Caleb Kim     |
+| 58         | Taylor Brooks     | taylor@fusiontech.io      | 2024-04-01   | 2024-04-30  | 450.0  | Overdue        | NULL           | Rachel Kim    |
+| 71         | Morgan Scott      | morgan@alphawave.com      | 2024-01-01   | 2024-01-31  | 450.0  | Overdue        | NULL           | James Wilson   |
+| 87         | Taylor Cook       | taylor@techfusion.com     | 2023-09-01   | 2023-09-30  | 450.0  | Overdue        | NULL           | Noah Martinez   |
+| 100        | Riley Adams       | riley@fusionpoint.com     | 2023-05-01   | 2023-05-31  | 450.0  | Overdue        | NULL           | Iris Martinez   |
+
+## Business Recommendations
+- **Follow Up on Overdue Invoices**: Initiate contact with customers who have overdue payments to encourage prompt payment. Consider sending reminders or offering flexible payment options.
+- **Review Payment Methods**: Investigate why a significant number of overdue invoices lack a recorded payment method. This could indicate a potential issue in the billing process or customer experience.
+- **Analyze Customer Behavior**: Look into the payment history of customers with overdue invoices to identify patterns that may indicate risk or the need for improved credit terms.
+- **Implement Late Fees**: Consider implementing or enforcing late fees to encourage timely payments and reduce future overdue occurrences.
+
+## Next Steps
+- **Suggested Follow-Up Questions**:
+  - What strategies can be employed to reduce overdue payments in the future?
+  - Are there specific customer segments that frequently have overdue invoices?
+  
+- **Related Analyses**:
+  - Analyzing payment trends over time to identify any seasonal patterns in overdue payments.
+  - Examining customer demographics and their correlation with payment behavior.
+
+- **Data Exploration Recommendations**:
+  - Dive deeper into the payment method data to evaluate customer preferences and the impact on payment timeliness.
+  - Assess the effectiveness of communication strategies with overdue customers to improve collections.
+
+> By taking proactive measures in billing and customer engagement, you can significantly enhance cash flow and customer satisfaction.""",
+        
+        "sql_query": """SELECT 
+    invoice_id,
+    customer_name,
+    customer_email,
+    invoice_date,
+    due_date,
+    amount,
+    payment_status,
+    payment_method,
+    days_over_due
+FROM 
+    billing_precise_test.billing_precise_test_data
+WHERE 
+    payment_status != 'Paid' AND 
+    due_date::date < CURRENT_DATE;""",
+        
+        "query_results": {
+            "columns": [
+                "invoice_id",
+                "customer_name",
+                "customer_email",
+                "invoice_date",
+                "due_date",
+                "amount",
+                "payment_status",
+                "payment_method",
+                "days_over_due"
+            ],
+            "data": [
+                {
+                    "invoice_id": 9,
+                    "customer_name": "Amanda Thompson",
+                    "customer_email": "amanda@epsilontech.io",
+                    "invoice_date": "2024-12-01",
+                    "due_date": "2024-12-31",
+                    "amount": 450.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "David Lee"
+                },
+                {
+                    "invoice_id": 26,
+                    "customer_name": "Connor Walker",
+                    "customer_email": "connor@apexsol.com",
+                    "invoice_date": "2024-10-01",
+                    "due_date": "2024-10-31",
+                    "amount": 450.0,
+                    "payment_status": "Refunded",
+                    "payment_method": "Credit Card",
+                    "days_over_due": "0"
+                },
+                {
+                    "invoice_id": 45,
+                    "customer_name": "Marina Parker",
+                    "customer_email": "marina@reefsol.com",
+                    "invoice_date": "2024-07-01",
+                    "due_date": "2024-07-31",
+                    "amount": 299.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "Caleb Kim"
+                },
+                {
+                    "invoice_id": 58,
+                    "customer_name": "Taylor Brooks",
+                    "customer_email": "taylor@fusiontech.io",
+                    "invoice_date": "2024-04-01",
+                    "due_date": "2024-04-30",
+                    "amount": 450.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "Rachel Kim"
+                },
+                {
+                    "invoice_id": 71,
+                    "customer_name": "Morgan Scott",
+                    "customer_email": "morgan@alphawave.com",
+                    "invoice_date": "2024-01-01",
+                    "due_date": "2024-01-31",
+                    "amount": 450.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "James Wilson"
+                },
+                {
+                    "invoice_id": 87,
+                    "customer_name": "Taylor Cook",
+                    "customer_email": "taylor@techfusion.com",
+                    "invoice_date": "2023-09-01",
+                    "due_date": "2023-09-30",
+                    "amount": 450.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "Noah Martinez"
+                },
+                {
+                    "invoice_id": 100,
+                    "customer_name": "Riley Adams",
+                    "customer_email": "riley@fusionpoint.com",
+                    "invoice_date": "2023-05-01",
+                    "due_date": "2023-05-31",
+                    "amount": 450.0,
+                    "payment_status": "Overdue",
+                    "payment_method": "",
+                    "days_over_due": "Iris Martinez"
+                }
+            ],
+            "row_count": 7
+        }
+    },
+    
+    "inventory-analysis": {
+        "ai_response": """Here's what I found regarding your customer segmentation by subscription tier.
+
+## Key Insights
+- **Customer Distribution**:
+  - **Basic Tier**: 6 customers
+  - **Professional Tier**: 77 customers
+  - **Enterprise Tier**: 17 customers
+- **Average Revenue**:
+  - **Basic**: $328,333
+  - **Professional**: $590,779
+  - **Enterprise**: $1,008,235
+- **Average Employees**:
+  - **Basic**: 52.5 employees
+  - **Professional**: 104.9 employees
+  - **Enterprise**: 240.6 employees
+- **Average Total Orders**:
+  - **Basic**: 29.5 orders
+  - **Professional**: 74.5 orders
+  - **Enterprise**: 165.6 orders
+
+> Notably, the **Enterprise tier** customers not only represent the highest average revenue but also have significantly more employees and total orders compared to other tiers.
+
+## Business Recommendations
+- **Focus on Enterprise Growth**:
+  - Given their higher average revenue and order volume, consider enhancing marketing efforts tailored to attract more **Enterprise customers**.
+- **Optimize Professional Tier Offerings**:
+  - With a substantial customer base in the **Professional tier**, evaluate opportunities to upsell or cross-sell to increase their average revenue.
+- **Customer Engagement**:
+  - Implement targeted engagement strategies for the **Basic tier customers** to understand their needs better and potentially upgrade them to higher tiers.
+- **Retention Strategies**:
+  - High average order counts in the **Enterprise tier** suggest strong loyalty. Develop retention strategies to ensure these customers remain engaged and satisfied.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What specific characteristics or needs do customers in each tier have?
+  - Are there any trends in customer feedback or support tickets that correlate with subscription tiers?
+  
+- **Related Analyses**:
+  - Analyze churn rates across different subscription tiers to identify potential risks.
+  - Explore customer demographics (industry, location) to understand market segments better.
+
+- **Data Exploration Recommendations**:
+  - Investigate customer journey metrics for each tier to identify points of friction or opportunities for improvement.
+  - Assess the impact of marketing campaigns on customer acquisition and retention by tier.
+
+By leveraging these insights and recommendations, you can drive strategic decision-making and enhance your customer engagement strategies. If you need further analysis or assistance, feel free to ask!""",
+        
+        "sql_query": """SELECT 
+    subscription_tier,
+    COUNT(customer_id) AS customer_count,
+    AVG(revenue) AS average_revenue,
+    AVG(employees) AS average_employees,
+    AVG(total_orders) AS average_total_orders
+FROM 
+    sales_precise_test.sales_precise_test_data
+GROUP BY 
+    subscription_tier
+ORDER BY 
+    subscription_tier;""",
+        
+        "query_results": {
+            "columns": [
+                "subscription_tier",
+                "customer_count",
+                "average_revenue",
+                "average_employees",
+                "average_total_orders"
+            ],
+            "data": [
+                {
+                    "subscription_tier": "Basic",
+                    "customer_count": 6,
+                    "average_revenue": 328333.3333333333,
+                    "average_employees": 52.5,
+                    "average_total_orders": 29.5
+                },
+                {
+                    "subscription_tier": "Enterprise",
+                    "customer_count": 17,
+                    "average_revenue": 1008235.2941176471,
+                    "average_employees": 240.58823529411765,
+                    "average_total_orders": 165.64705882352942
+                },
+                {
+                    "subscription_tier": "Professional",
+                    "customer_count": 77,
+                    "average_revenue": 590779.2207792208,
+                    "average_employees": 104.9090909090909,
+                    "average_total_orders": 74.49350649350649
+                }
+            ],
+            "row_count": 3
+        }
+    }
+}
+
+def get_mock_response(message: str) -> Dict[str, Any]:
+    """Get response based on message content"""
+    message_lower = message.lower()
+    
+    # Simple keyword matching to identify template
+    if "top" in message_lower and "customer" in message_lower:
+        return MOCK_RESPONSES["top-customers"]
+    elif "revenue" in message_lower and "trend" in message_lower:
+        return MOCK_RESPONSES["revenue-trends"]
+    elif "satisfaction" in message_lower or "customer" in message_lower:
+        return MOCK_RESPONSES["customer-satisfaction"]
+    elif "sales" in message_lower and "performance" in message_lower:
+        return MOCK_RESPONSES["sales-performance"]
+    elif "inventory" in message_lower or "stock" in message_lower:
+        return MOCK_RESPONSES["inventory-analysis"]
+    else:
+        # Default response for unmatched queries
+        return MOCK_RESPONSES["top-customers"]

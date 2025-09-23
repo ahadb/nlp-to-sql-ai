@@ -1,3 +1,5 @@
+import { authService } from './auth';
+
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
@@ -27,6 +29,41 @@ export interface DatabaseResponse {
   };
 }
 
+export interface InsightData {
+  title: string;
+  metric: string;
+  change: string;
+  description: string;
+  trend: 'up' | 'down' | 'stable';
+  data_points: number[];
+}
+
+export interface InsightsResponse {
+  status: string;
+  insights: InsightData[];
+  patterns: InsightData[];
+}
+
+export interface ChatMessage {
+  message: string;
+  schema_id?: string;
+  user_id?: string;
+}
+
+export interface ChatResponse {
+  status: string;
+  message: string;
+  sql_query?: string;
+  query_results?: {
+    columns: string[];
+    data: any[];
+    row_count: number;
+    error?: string;
+  };
+  context?: any;
+  timestamp: string;
+}
+
 export const api = {
   async uploadSchema(file: File): Promise<UploadResponse> {
     // Read file content
@@ -44,11 +81,8 @@ export const api = {
       description: `Uploaded ${isCSV ? 'CSV' : 'SQL'} file: ${file.name}`
     };
 
-    const response = await fetch(`${API_BASE_URL}/upload`, {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/upload`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(requestBody),
     });
 
@@ -156,7 +190,7 @@ export const api = {
   },
 
   async getDataSources(): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/upload/schemas`, {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/upload/schemas`, {
       method: "GET",
     });
 
@@ -169,7 +203,7 @@ export const api = {
   },
 
   async getTables(): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/tables`, {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/tables`, {
       method: "GET",
     });
 
@@ -208,7 +242,7 @@ export const api = {
   },
 
   async getTableData(tableName: string, schemaName: string, limit: number = 5): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/tables/${tableName}/data?schema=${schemaName}&limit=${limit}`, {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/tables/${tableName}/data?schema=${schemaName}&limit=${limit}`, {
       method: "GET",
     });
 
@@ -219,4 +253,104 @@ export const api = {
 
     return response.json();
   },
+
+  // Dashboard API methods
+  async getDashboard(): Promise<any> {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/dashboard`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get dashboard data");
+    }
+
+    return response.json();
+  },
+
+  // Reports API methods
+  async getReports(): Promise<any> {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/reports`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get reports");
+    }
+
+    return response.json();
+  },
+
+  // Connections API methods
+  async getConnections(): Promise<any> {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/connections`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get connections");
+    }
+
+    return response.json();
+  },
+
+  async getDashboardInsights(): Promise<InsightsResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/insights/dashboard/all`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: InsightsResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching dashboard insights:', error);
+      throw error;
+    }
+  },
+
+  // Chat functions
+  async sendChatMessage(message: string, schemaId: string = "all"): Promise<ChatResponse> {
+    const response = await fetch(`${API_BASE_URL}/chat/message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message,
+        schema_id: schemaId,
+        user_id: 'default'
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to send chat message');
+    }
+    
+    return response.json();
+  },
+
+  async getChatHistory(userId: string = "default"): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/chat/history/${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to get chat history');
+    }
+    return response.json();
+  },
+
+  async getDataContext(schemaId: string): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/chat/context/${schemaId}`);
+    if (!response.ok) {
+      throw new Error('Failed to get data context');
+    }
+    return response.json();
+  }
 };

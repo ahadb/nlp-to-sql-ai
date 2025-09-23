@@ -1,11 +1,14 @@
 """
 Upload endpoints for file processing and schema management
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Optional
+import time
+from app.auth import get_current_user, CurrentUser
 
 from ..services.schema_service import SchemaService, SchemaType
+from ..services.upload_history_service import upload_history_service
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
@@ -27,10 +30,14 @@ class UploadResponse(BaseModel):
     ai_context_ready: bool
 
 @router.post("/", response_model=UploadResponse)
+# TODO: current_user: CurrentUser = Depends(get_current_user)
 async def upload_file(request: UploadRequest):
     """
     Upload and process SQL or CSV files
     """
+    start_time = time.time()
+    upload_id = None
+    
     try:
         # Convert string to proper SchemaType enum
         if request.schema_type.upper() == "SQL_SCHEMA":
@@ -39,6 +46,14 @@ async def upload_file(request: UploadRequest):
             schema_type = SchemaType.CSV_FILE
         else:
             raise HTTPException(status_code=400, detail="Invalid schema_type. Use 'SQL_SCHEMA' or 'CSV_FILE'")
+        
+        # Log upload start
+        file_size = len(request.file_content.encode('utf-8'))
+        upload_id = await upload_history_service.log_upload_start(
+            file_name=request.file_name,
+            file_size=file_size,
+            file_type=request.schema_type
+        )
         
         # Process the file with proper enum
         schema = await schema_service.process_file_upload(
@@ -51,6 +66,18 @@ async def upload_file(request: UploadRequest):
         # Generate AI context to test cross-schema functionality
         ai_context = schema_service.generate_schema_context_for_ai([schema.schema_id])
         
+        # Log successful upload
+        processing_time = int((time.time() - start_time) * 1000)
+        if upload_id:
+            # Get record count from schema - use a simple count for now
+            total_records = len(schema.tables) if schema.tables else 0
+            await upload_history_service.log_upload_success(
+                upload_id=upload_id,
+                schema_id=schema.schema_id,
+                records_processed=total_records,
+                processing_time_ms=processing_time
+            )
+        
         return UploadResponse(
             status="success",
             message=f"Successfully processed {request.file_name}",
@@ -61,6 +88,14 @@ async def upload_file(request: UploadRequest):
         )
         
     except Exception as e:
+        # Log failed upload
+        processing_time = int((time.time() - start_time) * 1000)
+        if upload_id:
+            await upload_history_service.log_upload_error(
+                upload_id=upload_id,
+                error_message=str(e),
+                processing_time_ms=processing_time
+            )
         raise HTTPException(status_code=500, detail=f"Upload processing failed: {str(e)}")
 
 class SchemaDetails(BaseModel):
@@ -74,6 +109,7 @@ class SchemaDetails(BaseModel):
     last_updated: str
 
 @router.get("/schemas")
+# TODO: current_user: CurrentUser = Depends(get_current_user), add back in for auth
 async def list_schemas():
     """
     List all uploaded schemas with detailed information
@@ -188,7 +224,7 @@ async def list_schemas():
         raise HTTPException(status_code=500, detail=f"Failed to list schemas: {str(e)}")
 
 @router.delete("/schemas/{schema_id}")
-async def delete_schema(schema_id: str):
+async def delete_schema(schema_id: str, current_user: CurrentUser = Depends(get_current_user)):
     """
     Delete a schema and its tables
     """
@@ -211,3 +247,20 @@ async def delete_schema(schema_id: str):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete schema: {str(e)}")
+
+@router.get("/history")
+async def get_upload_history(current_user: CurrentUser = Depends(get_current_user)):
+    """
+    Get upload history for the current user
+    """
+    try:
+        history = await upload_history_service.get_upload_history(limit=50)
+        
+        return {
+            "status": "success",
+            "history": history,
+            "count": len(history)
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get upload history: {str(e)}")

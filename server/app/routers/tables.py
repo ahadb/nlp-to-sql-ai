@@ -1,10 +1,11 @@
 """
 Tables endpoints for dynamic data table management
 """
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Dict, Any
 from datetime import datetime
+from app.auth import get_current_user, CurrentUser
 
 router = APIRouter(prefix="/tables", tags=["tables"])
 
@@ -27,6 +28,7 @@ class TablesResponse(BaseModel):
     count: int
 
 @router.get("/", response_model=TablesResponse)
+# TODO: current_user: CurrentUser = Depends(get_current_user), add back in for auth
 async def get_all_tables():
     """
     Get all tables from all uploaded schemas with sample data
@@ -139,6 +141,7 @@ async def get_all_tables():
 
 
 @router.get("/{table_name}/data")
+# TODO: current_user: CurrentUser = Depends(get_current_user), add back in for auth
 async def get_table_data(table_name: str, schema: str, limit: int = 50):
     """
     Get data from a specific table with optional limit

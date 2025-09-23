@@ -31,6 +31,9 @@ class Settings:
     # OpenAI Settings
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     
+    # Demo Mode Settings
+    DEMO_MODE: bool = os.getenv("DEMO_MODE", "false").lower() == "true"
+    
     # CORS Settings
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
