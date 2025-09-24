@@ -9,6 +9,10 @@ import { type ChatTemplate } from '../data/chatTemplates';
 interface AIChatDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTemplate?: string | null;
+  customTemplates?: ChatTemplate[];
+  activeTableName?: string | null;
+  hasData?: boolean;
 }
 
 interface ChatHistoryItem {
@@ -19,7 +23,17 @@ interface ChatHistoryItem {
   isUser: boolean;
 }
 
-const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
+const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTemplate, customTemplates, activeTableName, hasData = true }) => {
+  // Convert table templates to ChatTemplate format
+  const convertedTemplates: ChatTemplate[] | undefined = customTemplates ? customTemplates.map((template, index) => ({
+    id: `table-template-${index}`,
+    title: template.title,
+    description: template.description,
+    message: `Analyze ${template.title.toLowerCase()} in the current table`
+  })) : undefined;
+  
+  console.log('🎯 AIChatDrawer - customTemplates:', customTemplates);
+  console.log('🎯 AIChatDrawer - convertedTemplates:', convertedTemplates);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
@@ -37,6 +51,18 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     scrollToBottom();
   }, [chatHistory]);
+
+  // Handle initial template when drawer opens
+  useEffect(() => {
+    if (isOpen && initialTemplate) {
+      // Set the message and send it automatically
+      setMessage(initialTemplate);
+      // Auto-send the template message
+      setTimeout(() => {
+        handleSendMessage();
+      }, 100);
+    }
+  }, [isOpen, initialTemplate]);
 
   // Demo mode is now hidden manually on first template click
 
@@ -59,7 +85,8 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
     setChatHistory(prev => [...prev, userMessageItem]);
 
     try {
-      const response = await api.sendChatMessage(userMessage);
+      const schemaId = activeTableName || "all";
+      const response = await api.sendChatMessage(userMessage, schemaId);
       
       // Add AI response to history
       const aiResponseItem: ChatHistoryItem = {
@@ -123,7 +150,8 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
 
     try {
       // Make real API call
-      const response = await api.sendChatMessage(template.message);
+      const schemaId = activeTableName || "all";
+      const response = await api.sendChatMessage(template.message, schemaId);
       
       // Add AI response
       const aiResponseItem: ChatHistoryItem = {
@@ -164,7 +192,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
       
       <div className="absolute right-0 top-0 h-full w-full max-w-2xl bg-[#1a1a1a] border-l border-gray-600/30 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-600/30">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700/50 bg-[#262626]">
           <div>
             <h2 className="text-xl font-semibold text-white">AI Assistant</h2>
             <p className="text-sm text-gray-400">Choose a template or ask questions about your data</p>
@@ -182,8 +210,24 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {chatHistory.length === 0 && !showTemplates ? (
-            <div className="text-center py-8">
+          {!hasData ? (
+            <div className="text-center py-8 bg-[#282828] rounded-lg mx-2">
+              <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-2xl font-bold">AI</span>
+              </div>
+              <h3 className="text-white font-medium mb-2">Load Data First</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Please load your data first to unlock AI features. Once you have data loaded, I can help you:
+              </p>
+              <div className="text-left text-sm text-gray-400 space-y-1">
+                <div>• Generate SQL queries from natural language</div>
+                <div>• Analyze your business data</div>
+                <div>• Provide insights and recommendations</div>
+                <div>• Answer questions about your data</div>
+              </div>
+            </div>
+          ) : chatHistory.length === 0 && !showTemplates ? (
+            <div className="text-center py-8 bg-[#282828] rounded-lg mx-2">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white text-2xl font-bold">AI</span>
               </div>
@@ -220,7 +264,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Templates - Moved to bottom */}
-        <div className="px-4 py-2 border-t border-gray-600/30">
+        <div className="px-4 py-3 border-t border-gray-700/50 bg-[#2a2a2a]">
           <TemplateSelector 
             key={`template-selector-${showDemoMode}`}
             onSelectTemplate={handleTemplateSelect}
@@ -230,6 +274,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose }) => {
             showDemoMode={showDemoMode}
             isDemoModeExpanded={isDemoModeExpanded}
             onToggleDemoMode={() => setIsDemoModeExpanded(!isDemoModeExpanded)}
+            customTemplates={convertedTemplates}
           />
         </div>
 

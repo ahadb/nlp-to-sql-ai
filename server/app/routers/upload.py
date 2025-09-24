@@ -264,3 +264,70 @@ async def get_upload_history(current_user: CurrentUser = Depends(get_current_use
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get upload history: {str(e)}")
+
+@router.post("/sample-data")
+async def load_sample_data():
+    """
+    Load sample data files for demo purposes
+    """
+    try:
+        import os
+        from pathlib import Path
+        
+        # Get the project root directory (go up from server/app/routers)
+        project_root = Path(__file__).parent.parent.parent.parent
+        docs_dir = project_root / "docs"
+        
+        # Sample files to load
+        sample_files = [
+            "billing-precise-test.csv",
+            "sales-precise-test.csv", 
+            "support-precise-test.csv"
+        ]
+        
+        uploaded_schemas = []
+        
+        for file_name in sample_files:
+            file_path = docs_dir / file_name
+            
+            if not file_path.exists():
+                print(f"Sample file not found: {file_path}")
+                continue
+                
+            # Read file content
+            with open(file_path, 'r', encoding='utf-8') as f:
+                file_content = f.read()
+            
+            # Determine schema type
+            schema_type = "CSV_FILE" if file_name.endswith('.csv') else "SQL_SCHEMA"
+            
+            # Create upload request
+            upload_request = UploadRequest(
+                file_name=file_name,
+                file_content=file_content,
+                schema_type=schema_type,
+                description=f"Sample {file_name} for demo"
+            )
+            
+            # Process the file
+            schema = await schema_service.process_file_upload(
+                file_name=upload_request.file_name,
+                file_content=upload_request.file_content,
+                schema_type=SchemaType.CSV_FILE if schema_type == "CSV_FILE" else SchemaType.SQL_SCHEMA,
+                description=upload_request.description
+            )
+            
+            uploaded_schemas.append({
+                "file_name": file_name,
+                "schema_id": schema.schema_id,
+                "table_count": len(schema.tables)
+            })
+        
+        return {
+            "status": "success",
+            "message": f"Successfully loaded {len(uploaded_schemas)} sample files",
+            "schemas": uploaded_schemas
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load sample data: {str(e)}")

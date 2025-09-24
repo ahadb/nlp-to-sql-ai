@@ -11,7 +11,7 @@ import logging
 # from app.services.openai_service import openai_service
 from app.services.schema_service import schema_service, SchemaType
 from app.services.upload_history_service import upload_history_service
-from app.routers import upload, tables, auth, dashboard, reports, connections, insights, chat
+from app.routers import upload, tables, auth, dashboard, reports, connections, insights, chat, data
 import time
 
 # Create FastAPI app
@@ -39,6 +39,7 @@ app.include_router(reports.router)
 app.include_router(connections.router)
 app.include_router(insights.router)
 app.include_router(chat.router)
+app.include_router(data.router)
 
 # Test request models
 class TestNLPRequest(BaseModel):

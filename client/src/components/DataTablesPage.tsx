@@ -5,6 +5,9 @@ import { XMarkIcon, SparklesIcon } from "@heroicons/react/24/outline";
 const DataTablesPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [initialTemplate, setInitialTemplate] = useState<string | null>(null);
+  const [customTemplates, setCustomTemplates] = useState<any[] | null>(null);
+  const [activeTableName, setActiveTableName] = useState<string | null>(null);
 
   return (
     <div className="bg-[#1a1a1a] min-h-screen relative">
@@ -18,7 +21,14 @@ const DataTablesPage: React.FC = () => {
       {/* Full-width layout for tables */}
       <main className="lg:pl-52 h-screen">
         <div className="h-full -ml-5">
-          <DataTablesTab onOpenAIChat={() => setIsDrawerOpen(true)} />
+          <DataTablesTab 
+            onOpenAIChat={(templateMessage, templates, tableName) => {
+              setInitialTemplate(templateMessage);
+              setCustomTemplates(templates || null);
+              setActiveTableName(tableName || null);
+              setIsDrawerOpen(true);
+            }} 
+          />
         </div>
       </main>
 
@@ -52,7 +62,18 @@ const DataTablesPage: React.FC = () => {
             
             {/* Drawer Content */}
             <div className="h-full overflow-y-auto pb-20">
-              <AIChatDrawer />
+              <AIChatDrawer 
+                isOpen={isDrawerOpen} 
+                onClose={() => {
+                  setIsDrawerOpen(false);
+                  setInitialTemplate(null);
+                  setCustomTemplates(null);
+                  setActiveTableName(null);
+                }}
+                initialTemplate={initialTemplate}
+                customTemplates={customTemplates}
+                activeTableName={activeTableName}
+              />
             </div>
           </div>
         </>

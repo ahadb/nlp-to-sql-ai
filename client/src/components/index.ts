@@ -14,6 +14,7 @@ export { default as MyDataTab } from "./MyDataTab";
 export { default as DataTablesTab } from "./DataTablesTab";
 export { default as DashboardPage } from "./DashboardPage";
 export { default as DataTablesPage } from "./DataTablesPage";
+export { default as DemoPage } from "./DemoPage";
 export { default as ReportsPage } from "./ReportsPage";
 export { default as ConnectionsPage } from "./ConnectionsPage";
 export { default as SettingsPage } from "./SettingsPage";

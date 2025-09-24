@@ -18,6 +18,7 @@ interface TemplateSelectorProps {
   showDemoMode?: boolean;
   isDemoModeExpanded?: boolean;
   onToggleDemoMode?: () => void;
+  customTemplates?: ChatTemplate[];
 }
 
 const TemplateSelector: React.FC<TemplateSelectorProps> = ({ 
@@ -27,7 +28,8 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   usedTemplates = new Set(),
   showDemoMode = true,
   isDemoModeExpanded = true,
-  onToggleDemoMode
+  onToggleDemoMode,
+  customTemplates
 }) => {
   if (!isVisible) return null;
 
@@ -49,7 +51,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   };
 
   return (
-    <div className="p-4 border-b border-gray-600/30">
+    <div className="p-4 border-b border-gray-600/30 bg-#202020">
       {showDemoMode && (
         <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 mb-3">
           <p className="text-sm text-blue-300">
@@ -77,7 +79,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       
       {(!showDemoMode || isDemoModeExpanded) && (
         <div className="grid grid-cols-1 gap-2">
-        {chatTemplates.map((template) => {
+        {(customTemplates || chatTemplates).map((template) => {
           const IconComponent = getIcon(template.id);
           const isUsed = usedTemplates.has(template.id);
           return (

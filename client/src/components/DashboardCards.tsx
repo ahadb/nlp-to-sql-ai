@@ -58,7 +58,11 @@ import { api, type InsightData, type InsightsResponse } from '../services/api';
 //   ]
 // };
 
-const Dashboard: React.FC = () => {
+interface DashboardCardsProps {
+  hasData?: boolean;
+}
+
+const Dashboard: React.FC<DashboardCardsProps> = ({ hasData = true }) => {
   const [insights, setInsights] = useState<InsightData[]>([]);
   const [patterns, setPatterns] = useState<InsightData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,15 +70,20 @@ const Dashboard: React.FC = () => {
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    console.log('🔍 DashboardCards useEffect triggered, hasFetched:', hasFetched.current);
-    if (!hasFetched.current) {
+    console.log('🔍 DashboardCards useEffect triggered, hasFetched:', hasFetched.current, 'hasData:', hasData);
+    if (hasData && !hasFetched.current) {
       hasFetched.current = true;
       console.log('🚀 Calling fetchInsights for the first time');
       fetchInsights();
+    } else if (!hasData) {
+      console.log('📊 No data loaded - showing empty state');
+      setLoading(false);
+      setInsights([]);
+      setPatterns([]);
     } else {
       console.log('⏭️ Skipping fetchInsights - already called');
     }
-  }, []);
+  }, [hasData]);
 
   const fetchInsights = async () => {
     try {
@@ -102,6 +111,49 @@ const Dashboard: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Empty state when no data is loaded
+  if (!hasData && !loading) {
+    return (
+      <div className="space-y-8">
+        <div className="grid grid-cols-4 gap-6">
+          {/* Empty state cards */}
+          {[
+            { title: "Revenue Trends", metric: "0", description: "No data available" },
+            { title: "Customer Insights", metric: "0", description: "No data available" },
+            { title: "Data Quality", metric: "0", description: "No data available" },
+            { title: "Performance", metric: "0", description: "No data available" }
+          ].map((card, index) => (
+            <div key={index} className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 opacity-50">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-slate-400 text-sm font-medium">{card.title}</p>
+                <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">No Data</span>
+              </div>
+              
+              <div className="flex items-end space-x-3 mb-4">
+                <div>
+                  <p className="text-white text-3xl font-bold">{card.metric}</p>
+                  <p className="text-sm text-slate-500 line-clamp-2">{card.description}</p>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-gray-500 text-sm">--</span>
+                </div>
+              </div>
+              
+              {/* Empty sparkline area */}
+              <div className="relative h-8 w-full mb-1">
+                <div className="h-full bg-gray-800/30 rounded flex items-center justify-center">
+                  <span className="text-gray-600 text-xs">No chart data</span>
+                </div>
+              </div>
+              
+              <p className="text-slate-500 text-xs">Load data to see insights</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -200,7 +252,7 @@ const Dashboard: React.FC = () => {
           <div key={index} className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
             <div className="flex items-center justify-between mb-2">
               <p className="text-slate-400 text-sm font-medium">{insight.title}</p>
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">AI Generated</span>
+              <span className="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-400/30 px-2 py-1 rounded">AI Generated</span>
             </div>
             
             <div className="flex items-end space-x-3 mb-4">
@@ -238,7 +290,7 @@ const Dashboard: React.FC = () => {
           <div key={index} className="bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-4 hover:border-gray-500/50 transition-all duration-300 relative">
             <div className="flex items-center justify-between mb-2">
               <p className="text-slate-400 text-sm font-medium">{pattern.title}</p>
-              <span className="text-xs text-gray-500 bg-gray-800/50 px-2 py-1 rounded">AI Generated</span>
+              <span className="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-400/30 px-2 py-1 rounded">AI Generated</span>
             </div>
             
             <div className="flex items-end space-x-3 mb-4">

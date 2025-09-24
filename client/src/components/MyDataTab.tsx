@@ -34,9 +34,11 @@ interface DataSource {
 
 interface MyDataTabProps {
   onOpenAIChat?: () => void;
+  hasData?: boolean;
+  setHasData?: (hasData: boolean) => void;
 }
 
-const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
+const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasData, setHasData: propSetHasData }) => {
   const [activeInsightTab, setActiveInsightTab] = useState<number>(0);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
@@ -44,9 +46,30 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
   const [tables, setTables] = useState<any[]>([]);
   const [reorderedTables, setReorderedTables] = useState<any[]>([]);
   const [tableData, setTableData] = useState<Record<string, any[]>>({});
+  const [hasData, setHasData] = useState(propHasData || false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Check if data exists on component mount
+  const checkForExistingData = async () => {
+    try {
+      const [dataSourcesResponse, tablesResponse] = await Promise.all([
+        api.getDataSources(),
+        api.getTables()
+      ]);
+      
+      const hasDataSources = dataSourcesResponse.schemas && dataSourcesResponse.schemas.length > 0;
+      const hasTables = tablesResponse.tables && tablesResponse.tables.length > 0;
+      
+      if (hasDataSources || hasTables) {
+        setHasData(true);
+        propSetHasData?.(true);
+      }
+    } catch (error) {
+      console.log('No existing data found:', error);
+    }
+  };
   
   // Fetch tables from backend
   const fetchTables = async () => {
@@ -108,8 +131,15 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
 
   // Load data sources and tables on component mount
   useEffect(() => {
-    fetchDataSources();
-    fetchTables();
+    const initializeData = async () => {
+      // First check if data already exists
+      await checkForExistingData();
+      // Then fetch the actual data
+      await fetchDataSources();
+      await fetchTables();
+    };
+    
+    initializeData();
   }, []);
 
   // Reorder tables to put Sales first whenever tables change
@@ -147,6 +177,45 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
       if (selectedTable) {
         await fetchTableData(selectedTable.table_name, selectedTable.schema_id);
       }
+    }
+  };
+
+  const handleFileUpload = async (file: File) => {
+    console.log('📁 Handling file upload:', file.name);
+    
+    try {
+      // Use the existing API method that handles file content and JSON conversion
+      const result = await api.uploadSchema(file);
+      console.log('✅ File uploaded successfully:', result);
+      
+      return result;
+    } catch (error) {
+      console.error('❌ Upload error:', error);
+      throw error;
+    }
+  };
+
+  const handleLoadSampleData = async () => {
+    console.log('🚀 Loading sample data...');
+    
+    try {
+      // Call the backend endpoint to load sample data
+      console.log('📁 Loading sample data from backend...');
+      
+      const response = await api.loadSampleData();
+      console.log('✅ Sample data loaded:', response);
+      
+      // Set data loaded state
+      setHasData(true);
+      propSetHasData?.(true);
+      
+      // Refresh data sources and tables to show the new data
+      await fetchDataSources();
+      await fetchTables();
+      
+      console.log('✅ Sample data loaded successfully');
+    } catch (error) {
+      console.error('❌ Error loading sample data:', error);
     }
   };
 
@@ -614,110 +683,48 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat }) => {
             </div>
             <button 
               onClick={onOpenAIChat}
-              className="border border-blue-500/50 text-blue-400 px-4 py-2 rounded-lg hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-200 group flex items-center space-x-2"
+              className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2"
             >
-              <SparklesIcon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+              <SparklesIcon className="h-4 w-4 text-orange-400 group-hover:scale-110 transition-transform duration-200" />
               <span className="font-medium text-sm">Ask AI</span>
             </button>
           </div>
         </div>
       </div>
 
-        {/* Demo Environment Section */}
-        {showDemoPanel && (
+        {/* Data Loading Badge */}
         <div className="mb-8">
-        <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-6 relative">
-          {/* Close Button */}
-          <button 
-            onClick={() => setShowDemoPanel(false)}
-            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200 p-1 hover:bg-gray-700/50 rounded"
-            title="Close demo panel"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Side - Verbiage */}
-            <div>
-              <div className="flex items-center space-x-3 mb-3">
-                <h3 className="text-xl font-semibold text-white">Interactive Demo Environment</h3>
-                <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-medium">
-                  Demo Mode
-                </span>
+          <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-2">Load sample data to see AI insights in the cards below and converse with AI using templates</h3>
+                <p className="text-gray-300 text-sm">Only dashboard and data tables pages are AI enabled. In production, we'll customize this with your data and enable AI across all tabs - feel free to check all tabs to explore the interface</p>
               </div>
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                Experience DataMind AI with curated sample business data. Download and upload the provided templates to see instant insights and intelligent column mapping.
-              </p>
-              
-              <div className="space-y-2 mb-4">
-                <div className="text-gray-300 text-sm">• Smart sales & revenue analysis</div>
-                <div className="text-gray-300 text-sm">• Customer support ticket insights</div>
-                <div className="text-gray-300 text-sm">• Billing & payment tracking</div>
-              </div>
-              
-            </div>
-            
-            {/* Right Side - Sample File Cards */}
-            <div>
-              <h4 className="text-white font-medium text-sm mb-4">Download Sample Templates</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-lg p-4 hover:border-blue-500/50 transition-all duration-200">
-              <div className="mb-3">
-                <h4 className="text-white font-medium text-sm">Sales Data</h4>
-                <p className="text-gray-400 text-xs">Revenue & customer insights</p>
-              </div>
-              <button className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                Download CSV
-              </button>
-            </div>
-            
-            <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-lg p-4 hover:border-blue-500/50 transition-all duration-200">
-              <div className="mb-3">
-                <h4 className="text-white font-medium text-sm">Support Tickets</h4>
-                <p className="text-gray-400 text-xs">Customer service tracking</p>
-              </div>
-              <button className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                Download CSV
-              </button>
-            </div>
-            
-            <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-lg p-4 hover:border-blue-500/50 transition-all duration-200">
-              <div className="mb-3">
-                <h4 className="text-white font-medium text-sm">Billing Data</h4>
-                <p className="text-gray-400 text-xs">Payment & invoice tracking</p>
-              </div>
-              <button className="w-full bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-200">
-                Download CSV
-              </button>
-              </div>
+              <div className="ml-6">
+                <button 
+                  onClick={handleLoadSampleData}
+                  className="px-6 py-3 bg-indigo-500/20 border border-indigo-400 text-indigo-300 hover:bg-indigo-500/30 hover:text-indigo-200 hover:border-indigo-300 rounded-lg font-medium text-sm transition-all duration-200 relative overflow-hidden group"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                    borderImage: 'linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4) 1',
+                    boxShadow: '0 0 20px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10 flex items-center space-x-2">
+                    <SparklesIcon className="h-4 w-4" />
+                    <span>Load Data</span>
+                  </span>
+                </button>
               </div>
             </div>
           </div>
-          
-          {/* Full-width Demo Limitation */}
-          <div className="mt-2 border border-gray-600/30 rounded-lg p-4">
-            <div className="flex items-start space-x-3">
-              {/* <div className="w-5 h-5 bg-blue-500/20 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
-                <span className="text-blue-300 text-xs">ℹ️</span>
-              </div> */}
-                <div>
-                  <p className="text-gray-300 text-sm">
-                    <div className="font-medium">Demo Limitation:&nbsp;&nbsp;This environment accepts only the provided sample CSV files to ensure optimal demonstration. </div>
-                    <span className="text-blue-300">The production version supports unlimited file types and can be fully customized to your specific business data, workflows, and requirements.</span>
-                  </p>
-                </div>
-            </div>
-          </div>
         </div>
-        </div>
-        )}
         
         {/* Stats Cards - 4 Individual Cards */}
        
         {/* Query Volume */}
-        <DashboardCards />
+        <DashboardCards hasData={hasData} />
       
      
       {/* Upload Area - Restricted to Sample Files */}

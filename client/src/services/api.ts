@@ -282,6 +282,20 @@ export const api = {
     return response.json();
   },
 
+  // Data Insights API methods
+  async getDataInsights(tableName: string): Promise<any> {
+    const response = await authService.authenticatedFetch(`${API_BASE_URL}/data/insights/${tableName}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get data insights");
+    }
+
+    return response.json();
+  },
+
   // Connections API methods
   async getConnections(): Promise<any> {
     const response = await authService.authenticatedFetch(`${API_BASE_URL}/connections`, {
@@ -315,6 +329,23 @@ export const api = {
       console.error('Error fetching dashboard insights:', error);
       throw error;
     }
+  },
+
+  // Sample data functions
+  async loadSampleData(): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/upload/sample-data`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to load sample data");
+    }
+    
+    return response.json();
   },
 
   // Chat functions

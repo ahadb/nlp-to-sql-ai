@@ -350,11 +350,21 @@ const ReportsPage: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setIsDrawerOpen(true)}
-                    className="border border-blue-500/50 text-blue-400 px-4 py-2 rounded-lg hover:border-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-all duration-200 group flex items-center space-x-2"
+                    className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2"
                   >
-                    <SparklesIcon className="h-4 w-4 group-hover:scale-110 transition-transform duration-200" />
+                    <SparklesIcon className="h-4 w-4 text-orange-400 group-hover:scale-110 transition-transform duration-200" />
                     <span className="font-medium text-sm">Ask AI</span>
                   </button>
+                </div>
+              </div>
+
+              {/* Demo Badge */}
+              <div className="mb-6">
+                <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Demo: AI not enabled on this page</h3>
+                    <p className="text-gray-300 text-sm">This page showcases the reporting interface. In production, we can customize this further with AI-powered report generation, automated insights, and intelligent data visualization based on your specific business needs.</p>
+                  </div>
                 </div>
               </div>
 

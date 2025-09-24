@@ -17,7 +17,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
   useEffect(() => {
     // Redirect if already authenticated
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/demo");
     }
   }, [isAuthenticated, navigate]);
 
@@ -31,8 +31,8 @@ export default function AuthPage({ mode }: AuthPageProps) {
 
   const handleAuth = async (email: string, password: string) => {
     // This is now handled by the LoginForm component using useAuth
-    // Navigate to dashboard after successful authentication
-    navigate("/dashboard");
+    // Navigate to demo page after successful authentication
+    navigate("/demo");
   };
 
   const handleSignup = async (userData: {

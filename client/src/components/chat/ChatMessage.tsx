@@ -56,7 +56,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, response, isUser, ti
 
   return (
     <div className="flex justify-start mb-4">
-      <div className="bg-[#1a1a1a] border border-gray-600/30 rounded-lg p-4 max-w-4xl w-full">
+      <div className="bg-[#282828] border border-gray-600/30 rounded-lg p-4 max-w-4xl w-full">
         {/* AI Response Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-2">

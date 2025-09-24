@@ -538,6 +538,327 @@ ORDER BY
             ],
             "row_count": 3
         }
+    },
+    
+    "sales-data-analysis": {
+        "ai_response": """Here's what I found regarding your comprehensive sales data analysis including performance trends and key metrics.
+
+## Key Insights
+- **Revenue Performance**: Your sales data shows strong performance with **$847K** in monthly revenue, representing a **+23.5%** growth trend.
+- **Top Performing Product**: The **Enterprise Plan** is your highest revenue generator at **$125K**, indicating strong demand for premium offerings.
+- **Customer Acquisition**: You've acquired **47 new customers** this month, showing **+18%** growth in customer base.
+- **Peak Sales Performance**: Sales peak during **2-4 PM** with **+12%** higher conversion rates during afternoon hours.
+- **Weekend Advantage**: Weekend sales consistently outperform weekdays by **34%**, suggesting strong consumer engagement during leisure time.
+
+## Business Recommendations
+- **Capitalize on Peak Hours**: Focus marketing efforts and sales team availability during **2-4 PM** to maximize conversion opportunities.
+- **Weekend Strategy**: Consider expanding weekend marketing campaigns and ensuring adequate support coverage during weekends.
+- **Enterprise Focus**: Given the strong performance of the Enterprise Plan, consider developing additional premium features or expanding enterprise sales efforts.
+- **Customer Growth**: Maintain the momentum in customer acquisition by analyzing what's driving the **+18%** growth and scaling successful strategies.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What specific marketing channels are driving the new customer acquisition?
+  - How does customer lifetime value compare across different acquisition periods?
+  
+- **Related Analyses**:
+  - Analyze customer retention rates to ensure new customers are staying engaged.
+  - Examine seasonal trends to predict future performance patterns.
+
+- **Data Exploration Recommendations**:
+  - Deep dive into customer demographics to understand your most valuable segments.
+  - Investigate the factors contributing to weekend sales success for potential weekday optimization.
+
+Your sales performance shows excellent momentum with strong growth across multiple key metrics!""",
+        
+        "sql_query": """SELECT 
+    DATE_TRUNC('month', last_order_date::date) AS month,
+    SUM(revenue) AS total_revenue,
+    COUNT(DISTINCT customer_id) AS new_customers,
+    AVG(revenue) AS avg_revenue_per_customer
+FROM 
+    sales_precise_test.sales_precise_test_data
+WHERE 
+    last_order_date::date >= CURRENT_DATE - INTERVAL '6 months'
+GROUP BY 
+    month
+ORDER BY 
+    month DESC;""",
+        
+        "query_results": {
+            "columns": ["month", "total_revenue", "new_customers", "avg_revenue_per_customer"],
+            "data": [
+                {
+                    "month": "2024-12-01",
+                    "total_revenue": 847000.0,
+                    "new_customers": 47,
+                    "avg_revenue_per_customer": 18021.28
+                }
+            ],
+            "row_count": 1
+        }
+    },
+    
+    "billing-data-analysis": {
+        "ai_response": """Here's what I found regarding your billing patterns, payment trends, and financial health analysis.
+
+## Key Insights
+- **Cash Flow Performance**: Your cash flow shows **$2.1M** with a strong **+15%** growth trend, indicating healthy financial momentum.
+- **Payment Efficiency**: Average payment speed has improved to **12 days**, showing **-4 days** faster processing compared to previous periods.
+- **Collection Success**: You've achieved an impressive **96.2%** collection rate, representing a **+1.8%** improvement in payment collection efficiency.
+- **Payment Timing Patterns**: **End of Month** payments show **+8%** higher activity, suggesting customers align payments with their billing cycles.
+- **Risk Management**: Overdue risk has decreased to **3.8%**, showing **-1.2%** improvement in payment reliability.
+
+## Business Recommendations
+- **Optimize End-of-Month Processing**: Given the **+8%** spike in end-of-month payments, ensure adequate processing capacity and customer support during these peak periods.
+- **Maintain Collection Excellence**: Your **96.2%** collection rate is outstanding - continue current collection strategies while monitoring for any emerging trends.
+- **Payment Speed Optimization**: The **12-day** average payment speed is excellent - consider implementing automated payment reminders to maintain this efficiency.
+- **Risk Monitoring**: With overdue risk at only **3.8%**, maintain current credit policies while staying vigilant for any changes in customer payment behavior.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What specific collection strategies are driving the improved collection rate?
+  - Are there seasonal patterns in payment timing that could inform cash flow planning?
+  
+- **Related Analyses**:
+  - Analyze payment method preferences to optimize the payment experience.
+  - Examine customer segments to identify any payment behavior differences.
+
+- **Data Exploration Recommendations**:
+  - Investigate the factors contributing to faster payment processing.
+  - Monitor trends in overdue accounts to proactively address potential issues.
+
+Your billing and payment performance demonstrates excellent financial health with strong collection efficiency!""",
+        
+        "sql_query": """SELECT 
+    COUNT(invoice_id) AS total_invoices,
+    SUM(amount) AS total_amount,
+    AVG(days_over_due) AS avg_payment_delay,
+    COUNT(CASE WHEN payment_status = 'Paid' THEN 1 END) AS paid_invoices,
+    COUNT(CASE WHEN payment_status = 'Overdue' THEN 1 END) AS overdue_invoices
+FROM 
+    billing_precise_test.billing_precise_test_data;""",
+        
+        "query_results": {
+            "columns": ["total_invoices", "total_amount", "avg_payment_delay", "paid_invoices", "overdue_invoices"],
+            "data": [
+                {
+                    "total_invoices": 100,
+                    "total_amount": 2100000.0,
+                    "avg_payment_delay": 12.0,
+                    "paid_invoices": 96,
+                    "overdue_invoices": 4
+                }
+            ],
+            "row_count": 1
+        }
+    },
+    
+    "support-data-analysis": {
+        "ai_response": """Here's what I found regarding your support ticket performance, response times, and resolution patterns analysis.
+
+## Key Insights
+- **Response Time Excellence**: Your average response time is **1.2 hours**, showing **-0.3h** improvement, indicating faster customer support delivery.
+- **Customer Satisfaction**: Customers rate their experience at **4.8/5**, representing a **+0.3** improvement in satisfaction scores.
+- **Ticket Volume**: You've handled **247 tickets** this month, showing **+12%** increase in support activity.
+- **Peak Support Hours**: **10 AM - 2 PM** shows **+15%** higher ticket volume, indicating when customers most need assistance.
+- **Common Issue Types**: **Account Access** issues represent the most frequent support request with **+8%** increase, suggesting potential UX optimization opportunities.
+
+## Business Recommendations
+- **Optimize Peak Hour Coverage**: With **+15%** higher ticket volume during **10 AM - 2 PM**, ensure adequate support staff coverage during these critical hours.
+- **Address Account Access Issues**: The **+8%** increase in account access issues suggests reviewing your authentication and account management processes for potential improvements.
+- **Maintain Response Excellence**: Your **1.2-hour** response time is excellent - continue current support processes while monitoring for any capacity constraints.
+- **Leverage High Satisfaction**: With **4.8/5** satisfaction rating, consider gathering detailed feedback to identify best practices for maintaining this high standard.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What specific improvements led to the faster response times?
+  - Are there patterns in account access issues that could inform product improvements?
+  
+- **Related Analyses**:
+  - Analyze resolution times by issue type to identify optimization opportunities.
+  - Examine customer satisfaction trends to maintain high service quality.
+
+- **Data Exploration Recommendations**:
+  - Investigate the factors contributing to improved response times for replication.
+  - Monitor ticket categorization accuracy to ensure proper issue tracking.
+
+Your support performance shows excellent customer service with fast response times and high satisfaction!""",
+        
+        "sql_query": """SELECT 
+    COUNT(ticket_id) AS total_tickets,
+    AVG(response_time_hours) AS avg_response_time,
+    AVG(satisfaction_rating) AS avg_satisfaction,
+    COUNT(CASE WHEN priority = 'high' THEN 1 END) AS high_priority_tickets,
+    COUNT(CASE WHEN status = 'resolved' THEN 1 END) AS resolved_tickets
+FROM 
+    support_precise_test.support_precise_test_data;""",
+        
+        "query_results": {
+            "columns": ["total_tickets", "avg_response_time", "avg_satisfaction", "high_priority_tickets", "resolved_tickets"],
+            "data": [
+                {
+                    "total_tickets": 247,
+                    "avg_response_time": 1.2,
+                    "avg_satisfaction": 4.8,
+                    "high_priority_tickets": 15,
+                    "resolved_tickets": 232
+                }
+            ],
+            "row_count": 1
+        }
+    },
+    
+    "payment-insights": {
+        "ai_response": """Here's what I found regarding your payment behavior and collection patterns analysis.
+
+## Key Insights
+- **Payment Method Distribution**: 
+  - **Credit Card**: 45% of payments (most popular method)
+  - **Bank Transfer**: 30% of payments (preferred by enterprise customers)
+  - **PayPal**: 15% of payments (growing among small businesses)
+  - **Check**: 10% of payments (declining trend)
+- **Payment Timing Patterns**: 
+  - **Early Payments**: 35% of customers pay 5+ days early
+  - **On-Time Payments**: 48% pay within the due date window
+  - **Late Payments**: 17% pay after due date (down from 22% last quarter)
+- **Collection Efficiency**: 
+  - **Average Collection Period**: 18 days (improved from 22 days)
+  - **Collection Success Rate**: 94% (up from 91% last quarter)
+  - **Dispute Rate**: 2.3% (industry average is 4.1%)
+
+## Business Recommendations
+- **Promote Preferred Payment Methods**: Consider offering incentives for credit card payments to reduce processing time and improve cash flow.
+- **Early Payment Incentives**: Implement discounts for early payments to encourage the 35% who already pay early and attract more customers to this behavior.
+- **Automated Payment Reminders**: Set up automated reminders 3 days before due date to reduce the 17% late payment rate.
+- **Payment Method Optimization**: Analyze customer segments to recommend the most effective payment method for each customer type.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What factors influence customers' choice of payment methods?
+  - Are there seasonal patterns in payment behavior we should account for?
+  
+- **Related Analyses**:
+  - Analyze payment method preferences by customer segment and industry.
+  - Examine the correlation between payment method and customer satisfaction.
+
+- **Data Exploration Recommendations**:
+  - Investigate the impact of payment method on customer lifetime value.
+  - Monitor trends in payment disputes and resolution times.
+
+Your payment insights show strong collection performance with opportunities for further optimization!""",
+        
+        "sql_query": """SELECT 
+    payment_method,
+    COUNT(*) AS payment_count,
+    AVG(days_over_due) AS avg_days_overdue,
+    COUNT(CASE WHEN payment_status = 'Paid' THEN 1 END) AS successful_payments,
+    COUNT(CASE WHEN payment_status = 'Disputed' THEN 1 END) AS disputed_payments
+FROM 
+    billing_precise_test.billing_precise_test_data
+GROUP BY 
+    payment_method
+ORDER BY 
+    payment_count DESC;""",
+        
+        "query_results": {
+            "columns": ["payment_method", "payment_count", "avg_days_overdue", "successful_payments", "disputed_payments"],
+            "data": [
+                {
+                    "payment_method": "Credit Card",
+                    "payment_count": 45,
+                    "avg_days_overdue": -2.1,
+                    "successful_payments": 44,
+                    "disputed_payments": 1
+                },
+                {
+                    "payment_method": "Bank Transfer",
+                    "payment_count": 30,
+                    "avg_days_overdue": 1.5,
+                    "successful_payments": 29,
+                    "disputed_payments": 1
+                },
+                {
+                    "payment_method": "PayPal",
+                    "payment_count": 15,
+                    "avg_days_overdue": 0.8,
+                    "successful_payments": 15,
+                    "disputed_payments": 0
+                },
+                {
+                    "payment_method": "Check",
+                    "payment_count": 10,
+                    "avg_days_overdue": 5.2,
+                    "successful_payments": 8,
+                    "disputed_payments": 2
+                }
+            ],
+            "row_count": 4
+        }
+    },
+    
+    "financial-optimization": {
+        "ai_response": """Here's what I found regarding your financial optimization opportunities to improve cash flow and reduce risk.
+
+## Key Insights
+- **Cash Flow Optimization Potential**: 
+  - **Working Capital**: Current ratio of 2.1 indicates healthy liquidity
+  - **Cash Conversion Cycle**: 28 days (industry benchmark: 35 days) - excellent performance
+  - **Revenue Recognition**: 95% of revenue recognized within 30 days
+- **Risk Management Metrics**:
+  - **Credit Risk**: 3.2% of customers have payment delays >30 days
+  - **Concentration Risk**: Top 5 customers represent 28% of revenue (acceptable level)
+  - **Currency Risk**: 15% of revenue in foreign currencies (hedged)
+- **Cost Optimization Opportunities**:
+  - **Payment Processing**: 2.9% average fee (can be reduced to 2.4% with volume discounts)
+  - **Collection Costs**: $12K monthly (opportunity to automate and reduce by 40%)
+  - **Bad Debt**: 0.8% write-off rate (industry average: 1.5%) - excellent
+
+## Business Recommendations
+- **Implement Dynamic Discounting**: Offer 1-2% discounts for payments within 10 days to improve cash flow velocity.
+- **Automate Collections**: Implement automated payment reminders and escalation to reduce collection costs by $4.8K monthly.
+- **Negotiate Payment Terms**: Extend payment terms with reliable customers to improve working capital efficiency.
+- **Risk-Based Pricing**: Adjust credit terms based on customer risk profiles to minimize bad debt exposure.
+
+## Next Steps
+- **Follow-Up Questions**:
+  - What is our optimal cash reserve level given current market conditions?
+  - How can we better predict customer payment behavior to optimize credit terms?
+  
+- **Related Analyses**:
+  - Conduct scenario analysis for different economic conditions.
+  - Analyze the impact of payment term changes on customer satisfaction.
+
+- **Data Exploration Recommendations**:
+  - Model cash flow projections under various growth scenarios.
+  - Evaluate the ROI of implementing automated collection systems.
+
+Your financial optimization analysis reveals strong fundamentals with clear opportunities for improvement!""",
+        
+        "sql_query": """SELECT 
+    AVG(amount) AS avg_invoice_amount,
+    AVG(days_over_due) AS avg_payment_delay,
+    COUNT(CASE WHEN payment_status = 'Paid' THEN 1 END) AS paid_invoices,
+    COUNT(CASE WHEN payment_status = 'Overdue' THEN 1 END) AS overdue_invoices,
+    COUNT(CASE WHEN payment_status = 'Disputed' THEN 1 END) AS disputed_invoices,
+    SUM(amount) AS total_revenue
+FROM 
+    billing_precise_test.billing_precise_test_data;""",
+        
+        "query_results": {
+            "columns": ["avg_invoice_amount", "avg_payment_delay", "paid_invoices", "overdue_invoices", "disputed_invoices", "total_revenue"],
+            "data": [
+                {
+                    "avg_invoice_amount": 21000.0,
+                    "avg_payment_delay": 2.1,
+                    "paid_invoices": 96,
+                    "overdue_invoices": 3,
+                    "disputed_invoices": 1,
+                    "total_revenue": 2100000.0
+                }
+            ],
+            "row_count": 1
+        }
     }
 }
 
@@ -545,12 +866,24 @@ def get_mock_response(message: str) -> Dict[str, Any]:
     """Get response based on message content"""
     message_lower = message.lower()
     
-    # Simple keyword matching to identify template
-    if "top" in message_lower and "customer" in message_lower:
+    # Data table specific templates (check first for more specific matches)
+    if "sales data analysis" in message_lower or ("sales" in message_lower and "performance trends" in message_lower):
+        return MOCK_RESPONSES["sales-data-analysis"]
+    elif "billing data analysis" in message_lower or ("billing" in message_lower and "payment trends" in message_lower):
+        return MOCK_RESPONSES["billing-data-analysis"]
+    elif "support data analysis" in message_lower or ("support" in message_lower and "response times" in message_lower):
+        return MOCK_RESPONSES["support-data-analysis"]
+    elif "payment insights" in message_lower or ("payment" in message_lower and "behavior" in message_lower):
+        return MOCK_RESPONSES["payment-insights"]
+    elif "financial optimization" in message_lower or ("opportunities" in message_lower and "cash flow" in message_lower and "reduce risk" in message_lower):
+        return MOCK_RESPONSES["financial-optimization"]
+    
+    # Original dashboard templates
+    elif "top" in message_lower and "customer" in message_lower:
         return MOCK_RESPONSES["top-customers"]
     elif "revenue" in message_lower and "trend" in message_lower:
         return MOCK_RESPONSES["revenue-trends"]
-    elif "satisfaction" in message_lower or "customer" in message_lower:
+    elif "satisfaction" in message_lower or ("customer" in message_lower and "feedback" in message_lower):
         return MOCK_RESPONSES["customer-satisfaction"]
     elif "sales" in message_lower and "performance" in message_lower:
         return MOCK_RESPONSES["sales-performance"]

@@ -26,6 +26,7 @@ import {
   DataTablesTab,
   DashboardPage,
   DataTablesPage,
+  DemoPage,
   ReportsPage,
   ConnectionsPage,
   ResultsDashboard,
@@ -218,6 +219,11 @@ export default function App() {
               <Route path="/" element={<MarketingLandingPage />} />
               <Route path="/login" element={<AuthPage mode="login" />} />
               <Route path="/signup" element={<AuthPage mode="signup" />} />
+              <Route path="/demo" element={
+                // <ProtectedRoute>
+                  <DemoPage />
+                // </ProtectedRoute>
+              } />
               <Route path="/app" element={
                 <ProtectedRoute>
                   <MainApp />
