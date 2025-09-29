@@ -22,7 +22,7 @@ MOCK_DASHBOARD_INSIGHTS: Dict[str, Any] = {
             ]
         },
         {
-            "title": "Customer Satisfaction",
+            "title": "Cust. Satisfaction",
             "metric": "4.5/5",
             "change": "+2%",
             "description": "Average satisfaction rating from support tickets resolved.",

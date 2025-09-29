@@ -68,7 +68,7 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
   return (
     <>
       {/* Mobile Header */}
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900/30 px-4 py-4 shadow-xs sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900/30 px-4 py-2 shadow-xs sm:px-6 lg:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
@@ -88,7 +88,7 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
 
       {/* Desktop Header */}
       <div className="hidden lg:block lg:pl-52 sticky top-0 z-30 bg-[#0f0f0f]/95 backdrop-blur-sm border-b border-gray-700/50">
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-2">
           <div className="flex items-center space-x-4">
             {/* Breadcrumb with Organization */}
             <div className="flex items-center space-x-2 text-sm">

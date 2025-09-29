@@ -265,13 +265,19 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTem
 
         {/* Templates - Moved to bottom */}
         <div className="px-4 py-3 border-t border-gray-700/50 bg-[#2a2a2a]">
+          {/* Demo Mode Badge */}
+          <div className="mb-3 p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+            <div className="text-xs text-orange-200">
+              <span className="font-medium">Demo Mode:</span> Conversations are disabled. Please use the templates below to experience AI-powered data analysis.
+            </div>
+          </div>
+          
           <TemplateSelector 
             key={`template-selector-${showDemoMode}`}
             onSelectTemplate={handleTemplateSelect}
             isVisible={true}
             isLoading={isLoading}
             usedTemplates={usedTemplates}
-            showDemoMode={showDemoMode}
             isDemoModeExpanded={isDemoModeExpanded}
             onToggleDemoMode={() => setIsDemoModeExpanded(!isDemoModeExpanded)}
             customTemplates={convertedTemplates}
@@ -299,9 +305,6 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTem
               <span>Demo Mode</span>
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
-            In demo mode, try the templates above to experience AI-powered data analysis
-          </p>
         </div>
       </div>
     </div>

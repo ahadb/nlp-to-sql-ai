@@ -78,7 +78,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, response, isUser, ti
         {/* Charts Section */}
         {!isUser && response.query_results && (
           <ResponseCharts 
-            responseType={getResponseType(message)} 
+            responseType={response.response_type || getResponseType(message)} 
             queryResults={response.query_results} 
           />
         )}

@@ -59,6 +59,7 @@ export interface ChatResponse {
     row_count: number;
     error?: string;
   };
+  response_type?: string;
   context?: any;
   timestamp: string;
 }

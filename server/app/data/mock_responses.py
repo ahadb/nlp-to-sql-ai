@@ -168,36 +168,41 @@ LIMIT 5;""",
     },
     
     "revenue-trends": {
-        "ai_response": """Here's what I found regarding your query on revenue trends for the last six months.
+        "ai_response": """Here's what I found regarding your revenue trends for the last six months.
 
 ## Key Insights
-- **No Revenue Data Available**: The query returned no results, indicating that there may be no recorded revenue in the last six months for the specified dataset.
-- **Potential Data Gaps**: This could signify a gap in the sales data, or it may suggest that there haven't been any orders processed in that timeframe.
-- **Need for Data Validation**: It's essential to verify if the `last_order_date` field is populated correctly and whether the dataset includes the expected revenue records.
+- **Strong Revenue Growth**: Revenue has shown consistent growth over the past 6 months, increasing from **$1.2M** in July to **$1.8M** in December.
+- **Monthly Performance**: 
+  - **July**: $1,200,000 (baseline)
+  - **August**: $1,350,000 (+12.5% growth)
+  - **September**: $1,420,000 (+5.2% growth)
+  - **October**: $1,580,000 (+11.3% growth)
+  - **November**: $1,650,000 (+4.4% growth)
+  - **December**: $1,800,000 (+9.1% growth)
+- **Average Monthly Growth**: **8.7%** month-over-month growth rate
+- **Total 6-Month Revenue**: **$9,000,000** across all months
+- **Peak Performance**: December shows the highest revenue at **$1.8M**
 
 ## Business Recommendations
-- **Data Review**: Conduct a thorough review of the `sales_precise_test_data` table to ensure that the data exists and is being recorded accurately. Check for:
-  - Missing or incorrect `last_order_date` entries.
-  - Potential issues with how revenue is recorded.
-  
-- **Expand Data Query**: Consider widening the query scope or adjusting the `last_order_date` filter to include previous months for a more extensive analysis.
-
-- **Data Integration**: If applicable, integrate data from the `billing_precise_test_data` or other relevant tables to provide a more comprehensive view of the financial situation.
+- **Maintain Growth Momentum**: The consistent growth pattern suggests strong market demand and effective sales strategies.
+- **Q4 Optimization**: December's peak performance indicates strong holiday season sales - consider expanding Q4 marketing efforts.
+- **Forecast Planning**: With 8.7% average growth, plan for continued expansion in the coming months.
+- **Resource Allocation**: Ensure adequate resources are available to support the growing revenue demands.
 
 ## Next Steps
 - **Follow-Up Questions**:
-  - What time period should we analyze if the last six months yielded no results?
-  - Are there any other datasets or tables we should consider for revenue insights?
+  - What specific factors are driving the consistent revenue growth?
+  - Are there seasonal patterns we should account for in future planning?
 
 - **Related Analyses**: 
-  - Investigate customer behavior patterns by analyzing `total_orders` or `units` sold over time.
-  - Review billing data to identify any potential correlations with revenue trends.
+  - Analyze customer acquisition trends to understand the growth drivers.
+  - Review product performance to identify top revenue generators.
 
 - **Data Exploration Recommendations**:
-  - Explore the `billing_precise_test_data` for related financial metrics, such as invoices and total amounts, that might indicate sales activity not reflected in the sales data.
-  - Analyze customer engagement metrics to identify potential issues that may be affecting revenue.
+  - Investigate revenue by customer segment to optimize targeting.
+  - Analyze sales team performance during high-growth periods.
 
-> **Important Insight**: The absence of data may signal underlying issues that need to be addressed to ensure accurate business forecasting and strategy formulation.""",
+> **Excellent Performance**: Your revenue trends show strong, consistent growth with no signs of slowing down!""",
         
         "sql_query": """SELECT 
     DATE_TRUNC('month', last_order_date::date) AS month,
@@ -216,8 +221,33 @@ ORDER BY
                 "month",
                 "total_revenue"
             ],
-            "data": [],
-            "row_count": 0
+            "data": [
+                {
+                    "month": "2024-07-01",
+                    "total_revenue": 1200000.0
+                },
+                {
+                    "month": "2024-08-01",
+                    "total_revenue": 1350000.0
+                },
+                {
+                    "month": "2024-09-01",
+                    "total_revenue": 1420000.0
+                },
+                {
+                    "month": "2024-10-01",
+                    "total_revenue": 1580000.0
+                },
+                {
+                    "month": "2024-11-01",
+                    "total_revenue": 1650000.0
+                },
+                {
+                    "month": "2024-12-01",
+                    "total_revenue": 1800000.0
+                }
+            ],
+            "row_count": 6
         }
     },
     
@@ -868,27 +898,49 @@ def get_mock_response(message: str) -> Dict[str, Any]:
     
     # Data table specific templates (check first for more specific matches)
     if "sales data analysis" in message_lower or ("sales" in message_lower and "performance trends" in message_lower):
-        return MOCK_RESPONSES["sales-data-analysis"]
+        response = MOCK_RESPONSES["sales-data-analysis"].copy()
+        response["response_type"] = "sales-data-analysis"
+        return response
     elif "billing data analysis" in message_lower or ("billing" in message_lower and "payment trends" in message_lower):
-        return MOCK_RESPONSES["billing-data-analysis"]
+        response = MOCK_RESPONSES["billing-data-analysis"].copy()
+        response["response_type"] = "billing-data-analysis"
+        return response
     elif "support data analysis" in message_lower or ("support" in message_lower and "response times" in message_lower):
-        return MOCK_RESPONSES["support-data-analysis"]
+        response = MOCK_RESPONSES["support-data-analysis"].copy()
+        response["response_type"] = "support-data-analysis"
+        return response
     elif "payment insights" in message_lower or ("payment" in message_lower and "behavior" in message_lower):
-        return MOCK_RESPONSES["payment-insights"]
+        response = MOCK_RESPONSES["payment-insights"].copy()
+        response["response_type"] = "payment-insights"
+        return response
     elif "financial optimization" in message_lower or ("opportunities" in message_lower and "cash flow" in message_lower and "reduce risk" in message_lower):
-        return MOCK_RESPONSES["financial-optimization"]
+        response = MOCK_RESPONSES["financial-optimization"].copy()
+        response["response_type"] = "financial-optimization"
+        return response
     
     # Original dashboard templates
     elif "top" in message_lower and "customer" in message_lower:
-        return MOCK_RESPONSES["top-customers"]
+        response = MOCK_RESPONSES["top-customers"].copy()
+        response["response_type"] = "top-customers"
+        return response
     elif "revenue" in message_lower and "trend" in message_lower:
-        return MOCK_RESPONSES["revenue-trends"]
+        response = MOCK_RESPONSES["revenue-trends"].copy()
+        response["response_type"] = "revenue-trends"
+        return response
     elif "satisfaction" in message_lower or ("customer" in message_lower and "feedback" in message_lower):
-        return MOCK_RESPONSES["customer-satisfaction"]
+        response = MOCK_RESPONSES["customer-satisfaction"].copy()
+        response["response_type"] = "customer-satisfaction"
+        return response
     elif "sales" in message_lower and "performance" in message_lower:
-        return MOCK_RESPONSES["sales-performance"]
+        response = MOCK_RESPONSES["sales-performance"].copy()
+        response["response_type"] = "sales-performance"
+        return response
     elif "inventory" in message_lower or "stock" in message_lower:
-        return MOCK_RESPONSES["inventory-analysis"]
+        response = MOCK_RESPONSES["inventory-analysis"].copy()
+        response["response_type"] = "inventory-analysis"
+        return response
     else:
         # Default response for unmatched queries
-        return MOCK_RESPONSES["top-customers"]
+        response = MOCK_RESPONSES["top-customers"].copy()
+        response["response_type"] = "top-customers"
+        return response

@@ -14,7 +14,6 @@ interface TemplateSelectorProps {
   isVisible: boolean;
   isLoading?: boolean;
   usedTemplates?: Set<string>;
-  showDemoMode?: boolean;
   isDemoModeExpanded?: boolean;
   onToggleDemoMode?: () => void;
   customTemplates?: ChatTemplate[];
@@ -25,7 +24,6 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   isVisible, 
   isLoading = false, 
 
-  showDemoMode = true,
   isDemoModeExpanded = true,
   onToggleDemoMode,
   customTemplates
@@ -51,13 +49,6 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
 
   return (
     <div className="p-3 border-b border-gray-600/30 bg-#202020">
-      {showDemoMode && (
-        <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-2 mb-2">
-          <p className="text-xs text-blue-300">
-            <strong>Demo Mode:</strong> Click any template below to see real AI analysis of your data.
-          </p>
-        </div>
-      )}
       
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xs font-medium text-gray-400">Quick Analysis Templates</h3>
