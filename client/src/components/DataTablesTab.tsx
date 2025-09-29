@@ -11,7 +11,7 @@ import {
   ChevronDownIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
-import JSZip from 'jszip';
+// import JSZip from 'jszip';
 import { api } from '../services/api';
 import TableInsightsCards from './TableInsightsCards';
 import { mockTableInsights, type TableInsight } from '../data/mockTableInsights';
