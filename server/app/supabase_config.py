@@ -4,7 +4,13 @@ from supabase import create_client, Client
 from typing import Optional
 
 # Load environment variables
-if os.getenv("ENVIRONMENT") == "dev":
+if (os.getenv("RAILWAY_ENVIRONMENT") or 
+    os.getenv("RAILWAY_PROJECT_ID") or 
+    os.getenv("SUPABASE_URL")):
+    # In production (Railway), don't load .env files
+    pass
+else:
+    # In development, load .env files
     load_dotenv()
 
 class SupabaseConfig:
