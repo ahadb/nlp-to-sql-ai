@@ -4,7 +4,8 @@ from supabase import create_client, Client
 from typing import Optional
 
 # Load environment variables
-load_dotenv()
+if os.getenv("ENVIRONMENT") == "dev":
+    load_dotenv()
 
 class SupabaseConfig:
     """Supabase configuration and client management"""

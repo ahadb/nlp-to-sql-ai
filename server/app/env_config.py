@@ -10,14 +10,16 @@ class EnvironmentConfig:
     
     def load_environment_file(self):
         """Load environment-specific .env file"""
-        # First load the base .env file
-        if os.path.exists(".env"):
-            self._load_env_file(".env")
-        
-        # Then load environment-specific file to override
-        env_file = f".env.{self.environment}"
-        if os.path.exists(env_file):
-            self._load_env_file(env_file)
+        # Only load .env files in development
+        if self.environment == "dev":
+            # First load the base .env file
+            if os.path.exists(".env"):
+                self._load_env_file(".env")
+            
+            # Then load environment-specific file to override
+            env_file = f".env.{self.environment}"
+            if os.path.exists(env_file):
+                self._load_env_file(env_file)
     
     def _load_env_file(self, file_path: str):
         """Load environment variables from a specific file"""

@@ -6,7 +6,8 @@ from typing import List
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+if os.getenv("ENVIRONMENT") == "dev":
+    load_dotenv()
 
 class Settings:
     """Application settings"""
