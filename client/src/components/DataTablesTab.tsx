@@ -8,7 +8,6 @@ import {
   TrashIcon,
   XMarkIcon,
   ChevronUpIcon,
-  InformationCircleIcon,
   ChevronDownIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
@@ -52,42 +51,42 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
   }>({ insights: [], patterns: [], templates: [] });
 
   // Function to download all CSV files as a zip
-  const handleDownloadAllCSV = async () => {
-    try {
-      const zip = new JSZip();
-      const csvFiles = [
-        'Artisan Craft - Billing.csv',
-        'Artisan Craft - Sales.csv', 
-        'Artisan Craft - Support.csv'
-      ];
+  // const handleDownloadAllCSV = async () => {
+  //   try {
+  //     const zip = new JSZip();
+  //     const csvFiles = [
+  //       'Artisan Craft - Billing.csv',
+  //       'Artisan Craft - Sales.csv', 
+  //       'Artisan Craft - Support.csv'
+  //     ];
 
-      // Fetch each CSV file and add to zip
-      for (const fileName of csvFiles) {
-        try {
-          const response = await fetch(`/${fileName}`);
-          if (response.ok) {
-            const csvContent = await response.text();
-            zip.file(fileName, csvContent);
-          }
-        } catch (error) {
-          console.error(`Error fetching ${fileName}:`, error);
-        }
-      }
+  //     // Fetch each CSV file and add to zip
+  //     for (const fileName of csvFiles) {
+  //       try {
+  //         const response = await fetch(`/${fileName}`);
+  //         if (response.ok) {
+  //           const csvContent = await response.text();
+  //           zip.file(fileName, csvContent);
+  //         }
+  //       } catch (error) {
+  //         console.error(`Error fetching ${fileName}:`, error);
+  //       }
+  //     }
 
-      // Generate and download the zip file
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const url = URL.createObjectURL(zipBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'sample-data.zip';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error creating zip file:', error);
-    }
-  };
+  //     // Generate and download the zip file
+  //     const zipBlob = await zip.generateAsync({ type: 'blob' });
+  //     const url = URL.createObjectURL(zipBlob);
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.download = 'sample-data.zip';
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //     URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.error('Error creating zip file:', error);
+  //   }
+  // };
 
   // Get AI insights for current table
   const getCurrentTableInsights = () => {
