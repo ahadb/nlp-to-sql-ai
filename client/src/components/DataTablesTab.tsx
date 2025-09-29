@@ -8,9 +8,11 @@ import {
   TrashIcon,
   XMarkIcon,
   ChevronUpIcon,
+  InformationCircleIcon,
   ChevronDownIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
+import JSZip from 'jszip';
 import { api } from '../services/api';
 import TableInsightsCards from './TableInsightsCards';
 import { mockTableInsights, type TableInsight } from '../data/mockTableInsights';
@@ -48,6 +50,44 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
     patterns: any[];
     templates: any[];
   }>({ insights: [], patterns: [], templates: [] });
+
+  // Function to download all CSV files as a zip
+  const handleDownloadAllCSV = async () => {
+    try {
+      const zip = new JSZip();
+      const csvFiles = [
+        'Artisan Craft - Billing.csv',
+        'Artisan Craft - Sales.csv', 
+        'Artisan Craft - Support.csv'
+      ];
+
+      // Fetch each CSV file and add to zip
+      for (const fileName of csvFiles) {
+        try {
+          const response = await fetch(`/${fileName}`);
+          if (response.ok) {
+            const csvContent = await response.text();
+            zip.file(fileName, csvContent);
+          }
+        } catch (error) {
+          console.error(`Error fetching ${fileName}:`, error);
+        }
+      }
+
+      // Generate and download the zip file
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'sample-data.zip';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error creating zip file:', error);
+    }
+  };
 
   // Get AI insights for current table
   const getCurrentTableInsights = () => {
@@ -992,7 +1032,7 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
           <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
             <div>
               <h3 className="text-lg font-semibold text-white mb-2">This Tab is AI Enabled</h3>
-              <p className="text-gray-300 text-sm">Experience AI-powered insights and analysis in the cards below. Click on any template to start a conversation with our AI assistant and explore your data through natural language queries. All insights are generated using LLMs to provide meaningful business intelligence. Some features are disabled on this tab.</p>
+              <p className="text-gray-300 text-sm">Experience AI-powered insights and analysis in the cards below - click on any template to start a conversation with our AI assistant and explore your data through natural language queries. All insights are generated using LLMs to provide meaningful business intelligence. Some features are disabled on this tab.</p>
             </div>
           </div>
         </div>
@@ -1013,10 +1053,17 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
             <FunnelIcon className="h-4 w-4" />
             <span>Filter</span>
           </button>
-          <button className="flex items-center space-x-2 px-3 py-2 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white text-sm rounded-lg transition-colors duration-200">
+          <button 
+            // onClick={handleDownloadAllCSV}
+            className="flex items-center space-x-2 px-3 py-2 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white text-sm rounded-lg transition-colors duration-200"
+          >
             <ArrowDownTrayIcon className="h-4 w-4" />
             <span>Export</span>
           </button>
+          {/* <div className="flex items-center space-x-2 text-xs text-gray-400">
+            <InformationCircleIcon className="h-4 w-4" />
+            <span>Viewing sample data - AI analyzes this dataset. Download to see our pre-loading data.</span>
+          </div> */}
         </div>
       </div>
 
