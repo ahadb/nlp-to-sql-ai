@@ -12,14 +12,15 @@ export default function StepTitle({
   description,
   icon: Icon = DocumentTextIcon,
 }: StepTitleProps) {
-  const getVariantStyles = () => {
-    return {
-      circle: "bg-blue-600",
-      text: "text-white",
-    };
-  };
 
-  const styles = getVariantStyles();
+  // const getVariantStyles = () => {
+  //   return {
+  //     circle: "bg-blue-600",
+  //     text: "text-white",
+  //   };
+  // };
+
+  //const styles = getVariantStyles();
 
   return (
     <div className="mb-2">

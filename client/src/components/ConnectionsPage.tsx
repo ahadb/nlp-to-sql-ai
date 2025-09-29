@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Sidebar, MobileSidebar, TopBar, Layout, AIChatDrawer } from "./index";
 import {
   CloudArrowUpIcon,
@@ -30,6 +30,7 @@ const ConnectionsPage: React.FC = () => {
   const [dataSources, setDataSources] = useState<any[]>([]);
   const [hasData, setHasData] = useState(false);
   const [uploadHistory, setUploadHistory] = useState<any[]>([]);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   // Fetch data sources and upload history
   useEffect(() => {
@@ -58,6 +59,23 @@ const ConnectionsPage: React.FC = () => {
 
     fetchData();
   }, []);
+
+  // Handle click outside to close actions dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionsRef.current && !actionsRef.current.contains(event.target as Node)) {
+        setIsActionsOpen(false);
+      }
+    };
+
+    if (isActionsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isActionsOpen]);
 
   // Dynamic connection stats based on data availability
   const connectionStats = hasData ? [
@@ -208,14 +226,14 @@ const ConnectionsPage: React.FC = () => {
     }
   };
 
-  const getUploadStatusBadge = (status: string) => {
-    const statusStyles = {
-      'Completed': 'bg-green-500/20 text-green-300',
-      'Processing': 'bg-yellow-500/20 text-yellow-300',
-      'Failed': 'bg-red-500/20 text-red-300'
-    };
-    return statusStyles[status as keyof typeof statusStyles] || 'bg-gray-500/20 text-gray-300';
-  };
+  // const getUploadStatusBadge = (status: string) => {
+  //   const statusStyles = {
+  //     'Completed': 'bg-green-500/20 text-green-300',
+  //     'Processing': 'bg-yellow-500/20 text-yellow-300',
+  //     'Failed': 'bg-red-500/20 text-red-300'
+  //   };
+  //   return statusStyles[status as keyof typeof statusStyles] || 'bg-gray-500/20 text-gray-300';
+  // };
 
   return (
     <div className="bg-[#1a1a1a] min-h-screen relative">
@@ -236,10 +254,10 @@ const ConnectionsPage: React.FC = () => {
                   <p className="text-gray-400">Manage your data sources and integrations</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="relative">
+                  <div className="relative" ref={actionsRef}>
                     <button 
                       onClick={() => setIsActionsOpen(!isActionsOpen)}
-                      className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200"
+                      className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200 cursor-pointer"
                     >
                       <EllipsisVerticalIcon className="h-4 w-4" />
                       <span>Actions</span>
@@ -268,7 +286,7 @@ const ConnectionsPage: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setIsDrawerOpen(true)}
-                    className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2"
+                    className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2 cursor-pointer"
                   >
                     <SparklesIcon className="h-4 w-4 text-orange-400 group-hover:scale-110 transition-transform duration-200" />
                     <span className="font-medium text-sm">Ask AI</span>
@@ -280,8 +298,8 @@ const ConnectionsPage: React.FC = () => {
               <div className="mb-6">
                 <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Demo: AI not enabled on this page</h3>
-                    <p className="text-gray-300 text-sm">This page showcases the data connections interface. In production, we can customize this further with AI-powered data validation, intelligent schema detection, and automated data quality insights based on your specific data sources.</p>
+                    <h3 className="text-lg font-semibold text-white mb-2">AI Not Enabled on this Tab</h3>
+                    <p className="text-gray-300 text-sm">This page showcases the data connections interface. In the full version, we can customize this further with AI-powered data validation, intelligent schema detection, and automated data quality insights based on your specific data sources. Most features are disabled.</p>
                   </div>
                 </div>
               </div>
@@ -530,7 +548,9 @@ const ConnectionsPage: React.FC = () => {
                         </div>
                         <p className="text-gray-400 text-sm mb-6">{integration.description}</p>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-yellow-400 font-medium">{integration.status}</span>
+                          <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-yellow-500/20 text-yellow-300">
+                            {integration.status}
+                          </span>
                           <button className="flex items-center space-x-2 px-3 py-1.5 bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white text-sm rounded-md transition-colors duration-200">
                             <EnvelopeIcon className="h-4 w-4" />
                             <span>Notify Me</span>
@@ -558,7 +578,11 @@ const ConnectionsPage: React.FC = () => {
             </div>
           </div>
         }
-        rightChildren={<AIChatDrawer />}
+        rightChildren={<AIChatDrawer 
+          isOpen={isDrawerOpen} 
+          onClose={() => setIsDrawerOpen(false)} 
+          hasData={hasData}
+        />}
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
         drawerTriggerLabel="Ask AI"

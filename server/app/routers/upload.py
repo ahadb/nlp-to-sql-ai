@@ -115,76 +115,32 @@ async def list_schemas():
     List all uploaded schemas with detailed information
     """
     try:
-        from ..database import get_connection
-        import psycopg
+        from ..services.hybrid_service import hybrid_service
         from datetime import datetime
         
+        # Get schemas from Supabase via hybrid service
+        schemas_data = await hybrid_service.get_schemas()
+        
         schemas_list = []
-        
-        # Get connection to query PostgreSQL system tables
-        conn = get_connection()
-        cursor = conn.cursor()
-        
-        # Query for all schemas excluding system schemas
-        cursor.execute("""
-            SELECT schema_name 
-            FROM information_schema.schemata 
-            WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast', 'public')
-            ORDER BY schema_name
-        """)
-        
-        schema_names = cursor.fetchall()
-        
-        for (schema_name,) in schema_names:
+        for schema in schemas_data:
             try:
-                # Extract file name from schema name
-                # Schema names are cleaned file names (products, sales_data, etc.)
-                display_name = schema_name
+                # Extract schema data
+                schema_data = schema.get('schema_data', {})
+                tables = schema_data.get('tables', [])
+                table_count = len(tables)
                 
-                # Determine type by checking if schema has typical CSV table pattern
-                cursor.execute("""
-                    SELECT table_name 
-                    FROM information_schema.tables 
-                    WHERE table_schema = %s
-                    LIMIT 1
-                """, (schema_name,))
-                first_table = cursor.fetchone()
+                # Calculate total row count from tables
+                row_count = 0
+                if tables:
+                    # For now, we'll use a placeholder since we don't have row counts in Supabase yet
+                    row_count = 100  # Placeholder - in real implementation, you'd calculate this
                 
-                if first_table and first_table[0].endswith('_data'):
-                    file_type = "CSV"
-                    display_name = f"{schema_name}.csv"
-                else:
-                    file_type = "SQL"
-                    display_name = f"{schema_name}.sql"
-                
-                # Count tables in this schema
-                cursor.execute("""
-                    SELECT COUNT(*) 
-                    FROM information_schema.tables 
-                    WHERE table_schema = %s
-                """, (schema_name,))
-                table_count = cursor.fetchone()[0]
-                
-                # Count total rows across all tables in schema
-                total_rows = 0
-                cursor.execute("""
-                    SELECT table_name 
-                    FROM information_schema.tables 
-                    WHERE table_schema = %s
-                """, (schema_name,))
-                tables = cursor.fetchall()
-                
-                for (table_name,) in tables:
-                    try:
-                        cursor.execute(f'SELECT COUNT(*) FROM "{schema_name}"."{table_name}"')
-                        row_count = cursor.fetchone()[0]
-                        total_rows += row_count
-                    except:
-                        # Skip if table has issues
-                        continue
+                # Determine file type
+                file_type = "CSV" if schema['schema_type'] == 'CSV_FILE' else "SQL"
+                display_name = schema['file_name']
                 
                 # Estimate size (rough calculation)
-                estimated_size = total_rows * 100  # ~100 bytes per row estimate
+                estimated_size = row_count * 100  # ~100 bytes per row estimate
                 if estimated_size < 1024:
                     size_display = f"{estimated_size} B"
                 elif estimated_size < 1024 * 1024:
@@ -193,26 +149,23 @@ async def list_schemas():
                     size_display = f"{estimated_size / (1024 * 1024):.1f} MB"
                 
                 # Status based on whether tables have data
-                status = "Active" if total_rows > 0 else "Empty"
+                status = "Active" if row_count > 0 else "Empty"
                 
                 schemas_list.append(SchemaDetails(
-                    schema_id=schema_name,
+                    schema_id=schema['schema_id'],
                     file_name=display_name,
                     type=file_type,
                     table_count=table_count,
-                    row_count=total_rows,
+                    row_count=row_count,
                     size=size_display,
                     status=status,
-                    last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    last_updated=schema.get('created_at', datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                 ))
-                
+                    
             except Exception as e:
                 # Skip problematic schemas but log the error
-                print(f"Error processing schema {schema_name}: {e}")
+                print(f"Error processing schema {schema.get('schema_id', 'unknown')}: {e}")
                 continue
-        
-        cursor.close()
-        conn.close()
         
         return {
             "status": "success",

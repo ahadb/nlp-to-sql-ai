@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import { 
-  CogIcon, 
-  BellIcon, 
-  ShieldCheckIcon,
-  UserCircleIcon,
   CheckIcon 
 } from '@heroicons/react/24/outline';
-import { useAuth } from '../contexts/AuthContext';
 import { Sidebar, MobileSidebar, TopBar, Layout, AIChatDrawer } from './index';
 
 export default function SettingsPage() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
@@ -52,6 +47,16 @@ export default function SettingsPage() {
         <p className="text-gray-400">Customize your DataMind AI experience</p>
       </div>
 
+      {/* Demo Badge */}
+      <div className="mb-6">
+        <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-2">AI Not Enabled on this Tab</h3>
+            <p className="text-gray-300 text-sm">This page showcases the settings interface. In the full version, we can customize this further with personalization, intelligent defaults, and automated configuration recommendations based on your usage patterns.</p>
+          </div>
+        </div>
+      </div>
+
         <div className="space-y-8">
           {/* User Profile Section */}
           <div className="border border-gray-700 rounded-lg p-6">
@@ -66,7 +71,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="text"
-                  value={user?.full_name || ''}
+                  value="Demo User"
                   disabled
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-400 cursor-not-allowed"
                 />
@@ -79,7 +84,7 @@ export default function SettingsPage() {
                 </label>
                 <input
                   type="email"
-                  value={user?.email || ''}
+                  value="demo_user@gmail.com"
                   disabled
                   className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-400 cursor-not-allowed"
                 />
@@ -330,7 +335,8 @@ export default function SettingsPage() {
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-700">
             <button
               onClick={handleSave}
-              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2"
+              disabled
+              className="px-6 py-2 bg-transparent border border-indigo-400 text-indigo-300 rounded-lg font-medium transition-colors duration-200 flex items-center space-x-2 cursor-not-allowed opacity-50"
             >
               <CheckIcon className="h-4 w-4" />
               <span>Save Changes</span>
@@ -350,7 +356,7 @@ export default function SettingsPage() {
       <TopBar setSidebarOpen={setSidebarOpen} />
       <Layout
         leftChildren={settingsContent}
-        rightChildren={<AIChatDrawer />}
+        rightChildren={<AIChatDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />}
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
         drawerTriggerLabel="Ask AI"

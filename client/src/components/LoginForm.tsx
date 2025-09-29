@@ -5,17 +5,19 @@ import { useAuth } from "../contexts/AuthContext";
 interface LoginFormProps {
   onLogin?: (email: string, password: string) => void;
   isSignup?: boolean;
+  disabled?: boolean;
 }
 
-const DEMO_USERS = [
-  { email: "demo@company.com", password: "demo123", role: "Demo User" },
-  { email: "client@company.com", password: "client123", role: "Client" },
-  { email: "admin@company.com", password: "admin123", role: "Admin" },
-];
+// const DEMO_USERS = [
+//   { email: "demo@company.com", password: "demo123", role: "Demo User" },
+//   { email: "client@company.com", password: "client123", role: "Client" },
+//   { email: "admin@company.com", password: "admin123", role: "Admin" },
+// ];
 
 export default function LoginForm({
   onLogin,
   isSignup = false,
+  disabled = false,
 }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -129,7 +131,7 @@ export default function LoginForm({
               onChange={(e) => setFullName(e.target.value)}
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-white placeholder-gray-400 transition-all duration-200 rounded-lg"
               placeholder="Enter your full name"
-              disabled={isLoading}
+              disabled={isLoading || disabled}
             />
           </div>
         )}
@@ -148,7 +150,7 @@ export default function LoginForm({
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-3 py-2 bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-white placeholder-gray-400 transition-all duration-200 rounded-lg"
             placeholder="Enter your email"
-            disabled={isLoading}
+            disabled={isLoading || disabled}
           />
         </div>
 
@@ -167,12 +169,13 @@ export default function LoginForm({
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 text-white placeholder-gray-400 transition-all duration-200 pr-12 rounded-lg"
               placeholder="Enter your password"
-              disabled={isLoading}
+              disabled={isLoading || disabled}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors"
+              disabled={disabled}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {showPassword ? (
                 <EyeSlashIcon className="h-5 w-5" />
@@ -193,7 +196,7 @@ export default function LoginForm({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           className="w-full border border-blue-500 text-white bg-blue-500/10 hover:bg-blue-500/20 font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (isSignup ? "Creating Account..." : "Signing In...") : (isSignup ? "Create Account" : "Sign In")}

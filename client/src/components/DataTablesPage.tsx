@@ -23,9 +23,9 @@ const DataTablesPage: React.FC = () => {
         <div className="h-full -ml-5">
           <DataTablesTab 
             onOpenAIChat={(templateMessage, templates, tableName) => {
-              setInitialTemplate(templateMessage);
+              setInitialTemplate(templateMessage ?? null);
               setCustomTemplates(templates || null);
-              setActiveTableName(tableName || null);
+              setActiveTableName(tableName ?? null);
               setIsDrawerOpen(true);
             }} 
           />
@@ -71,7 +71,7 @@ const DataTablesPage: React.FC = () => {
                   setActiveTableName(null);
                 }}
                 initialTemplate={initialTemplate}
-                customTemplates={customTemplates}
+                customTemplates={customTemplates ?? undefined}
                 activeTableName={activeTableName}
               />
             </div>

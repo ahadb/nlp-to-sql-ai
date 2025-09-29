@@ -20,7 +20,7 @@ class ChatService:
             # Check if demo mode is enabled
             if settings.DEMO_MODE:
                 # Add realistic delay to simulate AI thinking
-                await asyncio.sleep(2.5)
+                await asyncio.sleep(4.0)
                 
                 # Return mock response
                 mock_response = get_mock_response(message)

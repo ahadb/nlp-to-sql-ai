@@ -1,4 +1,4 @@
-import { Bars3Icon, BellIcon, ChevronRightIcon, ArrowRightOnRectangleIcon, UserCircleIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, ChevronRightIcon, ArrowRightOnRectangleIcon, UserCircleIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useState, useEffect, useRef } from "react";
@@ -29,6 +29,18 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pageTitle = getPageTitle(location.pathname);
+
+  // Generate initials from user's name
+  const getInitials = (name: string) => {
+    if (!name) return 'DU'; // Default for Demo User
+    const names = name.trim().split(' ');
+    if (names.length === 1) {
+      return names[0].substring(0, 2).toUpperCase();
+    }
+    return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+  };
+
+  const userInitials = getInitials(user?.full_name || "Demo User");
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -68,11 +80,9 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
         <div className="flex-1 text-sm/6 font-semibold text-white">{pageTitle}</div>
         <a href="#">
           <span className="sr-only">Your profile</span>
-          <img
-            alt=""
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            className="size-8 rounded-full bg-gray-800"
-          />
+          <div className="size-8 rounded-full bg-indigo-600 flex items-center justify-center">
+            <span className="text-white text-sm font-semibold">{userInitials}</span>
+          </div>
         </a>
       </div>
 
@@ -83,29 +93,27 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
             {/* Breadcrumb with Organization */}
             <div className="flex items-center space-x-2 text-sm">
               <BuildingOfficeIcon className="h-4 w-4 text-gray-400" />
-              <span className="text-gray-400">Demo Org</span>
+              <button 
+                onClick={() => navigate('/settings')}
+                className="text-indigo-400 hover:text-indigo-300 transition-colors duration-200 cursor-pointer"
+              >
+                Demo Org
+              </button>
               <ChevronRightIcon className="h-3 w-3 text-gray-500" />
               <span className="text-white font-medium">{pageTitle}</span>
             </div>
           </div>
           
           <div className="flex items-center space-x-4">
-            {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors duration-200">
-              <BellIcon className="h-5 w-5" />
-            </button>
-            
             {/* Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200"
               >
-                <img
-                  alt="Profile"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  className="h-8 w-8 rounded-full bg-gray-800"
-                />
+                <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">{userInitials}</span>
+                </div>
                 <div className="text-sm text-left">
                   <div className="text-white font-medium">{user?.full_name || "Demo User"}</div>
                   <div className="text-gray-400">{user?.email}</div>
@@ -119,7 +127,7 @@ export default function TopBar({ setSidebarOpen }: TopBarProps) {
                     <button
                       onClick={() => {
                         setShowProfileMenu(false);
-                        // Navigate to profile settings
+                        navigate('/settings');
                       }}
                       className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white w-full text-left transition-colors duration-200"
                     >

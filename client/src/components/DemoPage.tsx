@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import TopBar from "./TopBar";
 import { 
   ArrowRightIcon, 
@@ -8,14 +9,10 @@ import {
   ChartBarIcon,
   ServerStackIcon,
   CpuChipIcon,
-  ChartPieIcon,
-  LinkIcon,
-  GlobeAltIcon,
-  UsersIcon,
-  AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/outline";
 
 const DemoPage: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#1a1a1a] min-h-screen">
       <TopBar setSidebarOpen={() => {}}/>
@@ -28,14 +25,16 @@ const DemoPage: React.FC = () => {
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                <h1 className="text-4xl font-bold text-white text-left mb-4">Welcome to DataMind AI Demo</h1>
-                <p className="text-gray-400 text-left">We respect your time - this is a focused demo of our AI capabilities. You'll experience real LLM responses, but conversations are limited to pre-built templates and live sample data. Everything can be customized to your specific needs and data.</p>
+                <h1 className="text-4xl font-bold text-white text-left mb-4">DataMind Controlled Demo</h1>
+                <p className="text-gray-400 text-left text-lg leading-relaxed">Welcome to DataMind AI! We truly respect your time, so we've prepared a curated demonstration of our powerful AI capabilities. This is a production-grade data analytics and business intelligence application with full backend, frontend, cloud infrastructure, and modern web app architecture - you get all that enterprise-grade infrastructure included.</p>
+                <br />
+                <p className="text-gray-400 text-left text-lg leading-relaxed">We're focusing this demo on the AI technology that makes the difference. You'll explore carefully crafted questions that showcase AI-powered data analysis, real-time insights generation, and intelligent recommendations - exactly the types of queries your team would use in a real implementation.</p>
                 </div>
-                <div>
+                <div className="ml-8">
                   <button
                     onClick={() => {
                       // Navigate to dashboard
-                      window.location.href = '/dashboard';
+                      navigate('/dashboard');
                     }}
                     className="inline-flex items-center px-10 py-5 border border-indigo-400 text-indigo-400 font-semibold rounded-lg hover:border-indigo-300 hover:text-indigo-300 hover:bg-indigo-500/10 transition-all duration-200 whitespace-nowrap"
                   >
@@ -57,9 +56,9 @@ const DemoPage: React.FC = () => {
               <div className="mt-6 mb-8">
                 <h2 className="text-2xl font-bold text-white mb-6 text-left">AI Features You'll Explore</h2>
                 <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-                  Navigate to the Dashboard and Data Tables pages to see our AI in action - AI is only enabled on these two pages. Load sample data, try the AI chat drawer, 
-                  explore templates, and experience real LLM-generated responses to natural language queries. This demo uses live CSV files - 
-                  in production, you'll connect your own databases and integrate with your existing data sources.
+                  Sample documents will be pre-loaded for you in the dashboard. The only AI-enabled pages are Dashboard and Data Tables, so focus on them. Try the AI chat drawer, 
+                  explore our quick templates, and experience real LLM-generated responses to natural language queries. This demo uses live CSV files - 
+                  in the full version, you'll connect your own databases and integrate with your existing data sources.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

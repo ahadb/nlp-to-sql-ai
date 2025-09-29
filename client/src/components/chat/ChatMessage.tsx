@@ -158,7 +158,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, response, isUser, ti
                       <tbody className="divide-y divide-gray-700/50">
                         {response.query_results.data.slice(0, 10).map((row, rowIndex) => (
                           <tr key={rowIndex} className="hover:bg-gray-800/30">
-                            {response.query_results.columns.map((column, colIndex) => (
+                            {response.query_results!.columns.map((column, colIndex) => (
                               <td key={colIndex} className="px-3 py-2 text-sm text-gray-300">
                                 {typeof row[column] === 'number' 
                                   ? row[column].toLocaleString() 

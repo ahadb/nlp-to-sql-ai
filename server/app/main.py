@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.config import settings
 from app.database import test_connection, execute_query
+from app.env_config import env_config
+from app.services.hybrid_service import hybrid_service
 import logging
 # from app.services.openai_service import openai_service
 from app.services.schema_service import schema_service, SchemaType
@@ -41,6 +43,16 @@ app.include_router(insights.router)
 app.include_router(chat.router)
 app.include_router(data.router)
 
+@app.on_event("startup")
+async def startup_event():
+    """Application startup event"""
+    print("=" * 50)
+    print("🚀 QuantumSQL Backend Starting...")
+    print(f"📊 Environment: {env_config.environment.upper()}")
+    print(f"🗄️  Database: {'Supabase' if hybrid_service.use_supabase else 'Local PostgreSQL'}")
+    print(f"🔧 Debug Mode: {env_config.debug}")
+    print("=" * 50)
+
 # Test request models
 class TestNLPRequest(BaseModel):
     natural_query: str
@@ -59,7 +71,20 @@ async def root():
         "message": "QuantumSQL API is running",
         "version": "2.0.0",
         "status": "healthy",
-        "database": settings.DB_NAME
+        "environment": env_config.environment,
+        "database": "Supabase" if hybrid_service.use_supabase else "Local PostgreSQL"
+    }
+
+@app.get("/env-status")
+async def environment_status():
+    """Get current environment and database status"""
+    return {
+        "environment": env_config.environment,
+        "debug_mode": env_config.debug,
+        "database_type": "Supabase" if hybrid_service.use_supabase else "Local PostgreSQL",
+        "supabase_available": hybrid_service.use_supabase,
+        "supabase_url": env_config.supabase_url[:20] + "..." if env_config.supabase_url else None,
+        "local_db": settings.DB_NAME
     }
 
 @app.get("/health")

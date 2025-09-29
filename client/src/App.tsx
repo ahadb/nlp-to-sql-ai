@@ -34,9 +34,8 @@ import {
 } from "./components";
 import {
   QueryHistoryProvider,
-  useQueryHistory,
 } from "./contexts/QueryHistoryContext";
-import { AppProvider, useApp } from "./contexts/AppContext";
+import { AppProvider } from "./contexts/AppContext";
 
 interface GeneratedSQL {
   question: string;
@@ -55,7 +54,7 @@ function MainApp() {
     "query" | "upload" | null
   >("upload");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [queryResults, setQueryResults] = useState<any[]>([]);
+  const [queryResults, ] = useState<any[]>([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [currentDatabase, setCurrentDatabase] = useState<string | null>(null);
   const [selectedDatabase, setSelectedDatabase] = useState<"sql" | "csv" | null>(null);
@@ -220,9 +219,9 @@ export default function App() {
               <Route path="/login" element={<AuthPage mode="login" />} />
               <Route path="/signup" element={<AuthPage mode="signup" />} />
               <Route path="/demo" element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <DemoPage />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               } />
               <Route path="/app" element={
                 <ProtectedRoute>
@@ -230,24 +229,24 @@ export default function App() {
                 </ProtectedRoute>
               } />
               <Route path="/dashboard" element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <DashboardPage />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               } />
               <Route path="/tables" element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <DataTablesPage />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               } />
               <Route path="/reports" element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <ReportsPage />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               } />
               <Route path="/connections" element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <ConnectionsPage />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               } />
               <Route path="/settings" element={
                 <ProtectedRoute>

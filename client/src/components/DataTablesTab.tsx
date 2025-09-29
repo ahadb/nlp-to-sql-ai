@@ -6,7 +6,6 @@ import {
   EyeIcon,
   PencilIcon,
   TrashIcon,
-  CheckIcon,
   XMarkIcon,
   ChevronUpIcon,
   ChevronDownIcon,
@@ -16,15 +15,15 @@ import { api } from '../services/api';
 import TableInsightsCards from './TableInsightsCards';
 import { mockTableInsights, type TableInsight } from '../data/mockTableInsights';
 
-interface TableData {
-  id: string;
-  name: string;
-  rows: number;
-  columns: number;
-  size: string;
-  lastUpdated: string;
-  status: 'active' | 'processing' | 'error';
-}
+// interface TableData {
+//   id: string;
+//   name: string;
+//   rows: number;
+//   columns: number;
+//   size: string;
+//   lastUpdated: string;
+//   status: 'active' | 'processing' | 'error';
+// }
 
 interface DataTablesTabProps {
   onOpenAIChat?: (templateMessage?: string, templates?: any[], tableName?: string) => void;
@@ -41,7 +40,7 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isLoading, setIsLoading] = useState(false);
-  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
+  //const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
   const [aiInsightsLoading, setAiInsightsLoading] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(true);
   const [apiInsights, setApiInsights] = useState<{
@@ -249,166 +248,166 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
   }, [activeTab]);
 
   // Get AI-generated insights for current table
-  const getTableInsights = (tableName: string, rowCount: number) => {
-    const insights = {
-      sales: [
-        `${rowCount} sales records analyzed`,
-        `Revenue growth trend detected`,
-        `Top customer segment identified`,
-        `3 high-value customers need attention`
-      ],
-      support: [
-        `${rowCount} support tickets analyzed`,
-        `Average resolution time: 2.3 hours`,
-        `Customer satisfaction: 89%`,
-        `5 critical tickets require immediate action`
-      ],
-      customers: [
-        `${rowCount} customer profiles analyzed`,
-        `Customer lifetime value: $2,847 avg`,
-        `Retention rate: 87% (above industry avg)`,
-        `12 customers ready for upselling`
-      ],
-      default: [
-        `${rowCount} records analyzed`,
-        `Data quality score: 94%`,
-        `Key patterns identified`,
-        `Business opportunities detected`
-      ]
-    };
+  // const getTableInsights = (tableName: string, rowCount: number) => {
+  //   const insights = {
+  //     sales: [
+  //       `${rowCount} sales records analyzed`,
+  //       `Revenue growth trend detected`,
+  //       `Top customer segment identified`,
+  //       `3 high-value customers need attention`
+  //     ],
+  //     support: [
+  //       `${rowCount} support tickets analyzed`,
+  //       `Average resolution time: 2.3 hours`,
+  //       `Customer satisfaction: 89%`,
+  //       `5 critical tickets require immediate action`
+  //     ],
+  //     customers: [
+  //       `${rowCount} customer profiles analyzed`,
+  //       `Customer lifetime value: $2,847 avg`,
+  //       `Retention rate: 87% (above industry avg)`,
+  //       `12 customers ready for upselling`
+  //     ],
+  //     default: [
+  //       `${rowCount} records analyzed`,
+  //       `Data quality score: 94%`,
+  //       `Key patterns identified`,
+  //       `Business opportunities detected`
+  //     ]
+  //   };
 
-    const tableKey = tableName.toLowerCase().includes('sales') ? 'sales' :
-                    tableName.toLowerCase().includes('support') ? 'support' :
-                    tableName.toLowerCase().includes('customer') ? 'customers' : 'default';
+  //   const tableKey = tableName.toLowerCase().includes('sales') ? 'sales' :
+  //                   tableName.toLowerCase().includes('support') ? 'support' :
+  //                   tableName.toLowerCase().includes('customer') ? 'customers' : 'default';
     
-    return insights[tableKey as keyof typeof insights];
-  };
+  //   return insights[tableKey as keyof typeof insights];
+  // };
 
   // Get smart query suggestions based on current context
-  const getSmartSuggestions = (tableName: string, selectedCount: number) => {
-    const baseQueries = {
-      sales: [
-        "Analyze revenue trends by month",
-        "Find top performing products",
-        "Identify at-risk customers",
-        "Calculate customer lifetime value"
-      ],
-      support: [
-        "Show ticket resolution patterns", 
-        "Find common support issues",
-        "Analyze customer satisfaction trends",
-        "Identify support bottlenecks"
-      ],
-      customers: [
-        "Segment customers by behavior",
-        "Find churn risk indicators", 
-        "Analyze customer demographics",
-        "Identify expansion opportunities"
-      ],
-      default: [
-        "Summarize key findings",
-        "Find data anomalies",
-        "Identify trends and patterns",
-        "Generate business insights"
-      ]
-    };
+  // const getSmartSuggestions = (tableName: string, selectedCount: number) => {
+  //   const baseQueries = {
+  //     sales: [
+  //       "Analyze revenue trends by month",
+  //       "Find top performing products",
+  //       "Identify at-risk customers",
+  //       "Calculate customer lifetime value"
+  //     ],
+  //     support: [
+  //       "Show ticket resolution patterns", 
+  //       "Find common support issues",
+  //       "Analyze customer satisfaction trends",
+  //       "Identify support bottlenecks"
+  //     ],
+  //     customers: [
+  //       "Segment customers by behavior",
+  //       "Find churn risk indicators", 
+  //       "Analyze customer demographics",
+  //       "Identify expansion opportunities"
+  //     ],
+  //     default: [
+  //       "Summarize key findings",
+  //       "Find data anomalies",
+  //       "Identify trends and patterns",
+  //       "Generate business insights"
+  //     ]
+  //   };
 
-    const tableKey = tableName.toLowerCase().includes('sales') ? 'sales' :
-                    tableName.toLowerCase().includes('support') ? 'support' :
-                    tableName.toLowerCase().includes('customer') ? 'customers' : 'default';
+  //   const tableKey = tableName.toLowerCase().includes('sales') ? 'sales' :
+  //                   tableName.toLowerCase().includes('support') ? 'support' :
+  //                   tableName.toLowerCase().includes('customer') ? 'customers' : 'default';
     
-    let suggestions = baseQueries[tableKey as keyof typeof baseQueries];
+  //   let suggestions = baseQueries[tableKey as keyof typeof baseQueries];
     
-    // Add context-aware suggestions based on selection
-    if (selectedCount > 0) {
-      suggestions = [
-        `Analyze these ${selectedCount} selected records`,
-        `Compare selected vs unselected data`,
-        ...suggestions.slice(0, 2)
-      ];
-    }
+  //   // Add context-aware suggestions based on selection
+  //   if (selectedCount > 0) {
+  //     suggestions = [
+  //       `Analyze these ${selectedCount} selected records`,
+  //       `Compare selected vs unselected data`,
+  //       ...suggestions.slice(0, 2)
+  //     ];
+  //   }
     
-    return suggestions;
-  };
+  //   return suggestions;
+  // };
 
   // Get available AI query templates for current table
-  const getAITemplates = (tableName: string) => {
-    const lowerName = tableName.toLowerCase();
+  // const getAITemplates = (tableName: string) => {
+  //   const lowerName = tableName.toLowerCase();
     
-    if (lowerName.includes('sales')) {
-      return [
-        { category: "Revenue Analysis", queries: [
-          "Show top 10 customers by revenue",
-          "Calculate monthly revenue trends",
-          "Find highest value transactions",
-          "Identify revenue growth opportunities"
-        ]},
-        { category: "Customer Intelligence", queries: [
-          "Analyze customer lifetime value",
-          "Find customers at risk of churning",
-          "Segment customers by purchase behavior",
-          "Identify upselling opportunities"
-        ]},
-        { category: "Product Performance", queries: [
-          "Show best performing products",
-          "Analyze product profitability",
-          "Find slow-moving inventory",
-          "Identify cross-sell opportunities"
-        ]}
-      ];
-    } else if (lowerName.includes('billing')) {
-      return [
-        { category: "Financial Analysis", queries: [
-          "Show outstanding invoices over 30 days",
-          "Calculate average payment time",
-          "Find customers with payment delays",
-          "Analyze payment patterns by customer"
-        ]},
-        { category: "Collections", queries: [
-          "Identify high-risk accounts",
-          "Show overdue amounts by customer",
-          "Find customers with credit issues",
-          "Analyze collection success rates"
-        ]}
-      ];
-    } else if (lowerName.includes('support')) {
-      return [
-        { category: "Performance Analysis", queries: [
-          "Show tickets with longest resolution time",
-          "Calculate average response time",
-          "Find most common support issues",
-          "Analyze agent performance metrics"
-        ]},
-        { category: "Customer Satisfaction", queries: [
-          "Show customer satisfaction trends",
-          "Find tickets with low ratings",
-          "Analyze escalation patterns",
-          "Identify improvement opportunities"
-        ]},
-        { category: "Operations", queries: [
-          "Show critical unresolved tickets",
-          "Find support bottlenecks",
-          "Analyze ticket volume trends",
-          "Identify training needs"
-        ]}
-      ];
-    } else {
-      return [
-        { category: "Data Analysis", queries: [
-          "Summarize key findings",
-          "Find data anomalies",
-          "Identify trends and patterns",
-          "Generate business insights"
-        ]},
-        { category: "Quality Assessment", queries: [
-          "Analyze data completeness",
-          "Find duplicate records",
-          "Check data consistency",
-          "Identify data quality issues"
-        ]}
-      ];
-    }
-  };
+  //   if (lowerName.includes('sales')) {
+  //     return [
+  //       { category: "Revenue Analysis", queries: [
+  //         "Show top 10 customers by revenue",
+  //         "Calculate monthly revenue trends",
+  //         "Find highest value transactions",
+  //         "Identify revenue growth opportunities"
+  //       ]},
+  //       { category: "Customer Intelligence", queries: [
+  //         "Analyze customer lifetime value",
+  //         "Find customers at risk of churning",
+  //         "Segment customers by purchase behavior",
+  //         "Identify upselling opportunities"
+  //       ]},
+  //       { category: "Product Performance", queries: [
+  //         "Show best performing products",
+  //         "Analyze product profitability",
+  //         "Find slow-moving inventory",
+  //         "Identify cross-sell opportunities"
+  //       ]}
+  //     ];
+  //   } else if (lowerName.includes('billing')) {
+  //     return [
+  //       { category: "Financial Analysis", queries: [
+  //         "Show outstanding invoices over 30 days",
+  //         "Calculate average payment time",
+  //         "Find customers with payment delays",
+  //         "Analyze payment patterns by customer"
+  //       ]},
+  //       { category: "Collections", queries: [
+  //         "Identify high-risk accounts",
+  //         "Show overdue amounts by customer",
+  //         "Find customers with credit issues",
+  //         "Analyze collection success rates"
+  //       ]}
+  //     ];
+  //   } else if (lowerName.includes('support')) {
+  //     return [
+  //       { category: "Performance Analysis", queries: [
+  //         "Show tickets with longest resolution time",
+  //         "Calculate average response time",
+  //         "Find most common support issues",
+  //         "Analyze agent performance metrics"
+  //       ]},
+  //       { category: "Customer Satisfaction", queries: [
+  //         "Show customer satisfaction trends",
+  //         "Find tickets with low ratings",
+  //         "Analyze escalation patterns",
+  //         "Identify improvement opportunities"
+  //       ]},
+  //       { category: "Operations", queries: [
+  //         "Show critical unresolved tickets",
+  //         "Find support bottlenecks",
+  //         "Analyze ticket volume trends",
+  //         "Identify training needs"
+  //       ]}
+  //     ];
+  //   } else {
+  //     return [
+  //       { category: "Data Analysis", queries: [
+  //         "Summarize key findings",
+  //         "Find data anomalies",
+  //         "Identify trends and patterns",
+  //         "Generate business insights"
+  //       ]},
+  //       { category: "Quality Assessment", queries: [
+  //         "Analyze data completeness",
+  //         "Find duplicate records",
+  //         "Check data consistency",
+  //         "Identify data quality issues"
+  //       ]}
+  //     ];
+  //   }
+  // };
 
   // Get current table data
   const getCurrentTable = () => {
@@ -416,36 +415,36 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
   };
 
   // Get AI-powered insights metrics
-  const getTableMetrics = (tableName: string, rowCount: number) => {
-    const lowerName = tableName.toLowerCase();
+  // const getTableMetrics = (tableName: string, rowCount: number) => {
+  //   const lowerName = tableName.toLowerCase();
     
-    if (lowerName.includes('sales')) {
-      return [
-        { label: "Insights", value: "6", color: "text-blue-400" },
-        { label: "Patterns", value: "3", color: "text-purple-400" },
-        { label: "Templates", value: "12", color: "text-cyan-400" }
-      ];
-    } else if (lowerName.includes('billing')) {
-      return [
-        { label: "Insights", value: "4", color: "text-blue-400" },
-        { label: "Patterns", value: "2", color: "text-purple-400" },
-        { label: "Templates", value: "8", color: "text-cyan-400" }
-      ];
-    } else if (lowerName.includes('support')) {
-      return [
-        { label: "Insights", value: "5", color: "text-blue-400" },
-        { label: "Patterns", value: "2", color: "text-purple-400" },
-        { label: "Templates", value: "10", color: "text-cyan-400" }
-      ];
-    } else {
-      // Default metrics for unknown tables
-      return [
-        { label: "Insights", value: "8", color: "text-blue-400" },
-        { label: "Patterns", value: "4", color: "text-purple-400" },
-        { label: "Templates", value: "15", color: "text-cyan-400" }
-      ];
-    }
-  };
+  //   if (lowerName.includes('sales')) {
+  //     return [
+  //       { label: "Insights", value: "6", color: "text-blue-400" },
+  //       { label: "Patterns", value: "3", color: "text-purple-400" },
+  //       { label: "Templates", value: "12", color: "text-cyan-400" }
+  //     ];
+  //   } else if (lowerName.includes('billing')) {
+  //     return [
+  //       { label: "Insights", value: "4", color: "text-blue-400" },
+  //       { label: "Patterns", value: "2", color: "text-purple-400" },
+  //       { label: "Templates", value: "8", color: "text-cyan-400" }
+  //     ];
+  //   } else if (lowerName.includes('support')) {
+  //     return [
+  //       { label: "Insights", value: "5", color: "text-blue-400" },
+  //       { label: "Patterns", value: "2", color: "text-purple-400" },
+  //       { label: "Templates", value: "10", color: "text-cyan-400" }
+  //     ];
+  //   } else {
+  //     // Default metrics for unknown tables
+  //     return [
+  //       { label: "Insights", value: "8", color: "text-blue-400" },
+  //       { label: "Patterns", value: "4", color: "text-purple-400" },
+  //       { label: "Templates", value: "15", color: "text-cyan-400" }
+  //     ];
+  //   }
+  // };
 
   // Dynamic table renderer
   const renderDynamicTable = () => {
@@ -717,265 +716,265 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
     );
   };
 
-  const renderCustomersTable = () => (
-    <table className="w-full">
-      <thead className="bg-[#262626] border-b border-gray-600/30">
-        <tr>
-          <th className="px-4 py-3 text-left">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAll}
-              className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-              style={{
-                backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-              }}
-            />
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('name')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200"
-            >
-              Customer {getSortIcon('name')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('email')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200"
-            >
-              Email {getSortIcon('email')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('revenue')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200 ml-auto"
-            >
-              Revenue {getSortIcon('revenue')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('orders')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200 ml-auto"
-            >
-              Orders {getSortIcon('orders')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('status')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200"
-            >
-              Status {getSortIcon('status')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-            <button 
-              onClick={() => handleSort('joinDate')} 
-              className="flex items-center hover:text-gray-300 transition-colors duration-200"
-            >
-              Join Date {getSortIcon('joinDate')}
-            </button>
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-700/30">
-        {getCurrentTableData().map((row: any, index: number) => (
-          <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
-            <td className="px-4 py-3">
-              <input
-                type="checkbox"
-                checked={selectedRows.has(index)}
-                onChange={() => handleRowSelect(index)}
-                className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-                style={{
-                  backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-                }}
-              />
-            </td>
-            <td className="px-4 py-3 text-sm text-white font-medium">{row.name}</td>
-            <td className="px-4 py-3 text-sm text-gray-300">{row.email}</td>
-            <td className="px-4 py-3 text-sm text-green-400 text-right font-medium">{row.revenue}</td>
-            <td className="px-4 py-3 text-sm text-white text-right">{row.orders}</td>
-            <td className="px-4 py-3">
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
-                row.status === 'Active' 
-                  ? 'bg-green-500/20 text-green-300' 
-                  : 'bg-amber-500/20 text-amber-300'
-              }`}>
-                {row.status}
-              </span>
-            </td>
-            <td className="px-4 py-3 text-sm text-gray-300">{row.joinDate}</td>
-            <td className="px-4 py-3">
-              <div className="flex items-center space-x-1">
-                <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
-                  <EyeIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
-                  <PencilIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
-                  <TrashIcon className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  // const renderCustomersTable = () => (
+  //   <table className="w-full">
+  //     <thead className="bg-[#262626] border-b border-gray-600/30">
+  //       <tr>
+  //         <th className="px-4 py-3 text-left">
+  //           <input
+  //             type="checkbox"
+  //             checked={selectAll}
+  //             onChange={handleSelectAll}
+  //             className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //             style={{
+  //               backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //             }}
+  //           />
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('name')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200"
+  //           >
+  //             Customer {getSortIcon('name')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('email')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200"
+  //           >
+  //             Email {getSortIcon('email')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('revenue')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200 ml-auto"
+  //           >
+  //             Revenue {getSortIcon('revenue')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('orders')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200 ml-auto"
+  //           >
+  //             Orders {getSortIcon('orders')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('status')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200"
+  //           >
+  //             Status {getSortIcon('status')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //           <button 
+  //             onClick={() => handleSort('joinDate')} 
+  //             className="flex items-center hover:text-gray-300 transition-colors duration-200"
+  //           >
+  //             Join Date {getSortIcon('joinDate')}
+  //           </button>
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody className="divide-y divide-gray-700/30">
+  //       {getCurrentTableData().map((row: any, index: number) => (
+  //         <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
+  //           <td className="px-4 py-3">
+  //             <input
+  //               type="checkbox"
+  //               checked={selectedRows.has(index)}
+  //               onChange={() => handleRowSelect(index)}
+  //               className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //               style={{
+  //                 backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //               }}
+  //             />
+  //           </td>
+  //           <td className="px-4 py-3 text-sm text-white font-medium">{row.name}</td>
+  //           <td className="px-4 py-3 text-sm text-gray-300">{row.email}</td>
+  //           <td className="px-4 py-3 text-sm text-green-400 text-right font-medium">{row.revenue}</td>
+  //           <td className="px-4 py-3 text-sm text-white text-right">{row.orders}</td>
+  //           <td className="px-4 py-3">
+  //             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
+  //               row.status === 'Active' 
+  //                 ? 'bg-green-500/20 text-green-300' 
+  //                 : 'bg-amber-500/20 text-amber-300'
+  //             }`}>
+  //               {row.status}
+  //             </span>
+  //           </td>
+  //           <td className="px-4 py-3 text-sm text-gray-300">{row.joinDate}</td>
+  //           <td className="px-4 py-3">
+  //             <div className="flex items-center space-x-1">
+  //               <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
+  //                 <EyeIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
+  //                 <PencilIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
+  //                 <TrashIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //             </div>
+  //           </td>
+  //         </tr>
+  //       ))}
+  //     </tbody>
+  //   </table>
+  // );
 
-  const renderOrdersTable = () => (
-    <table className="w-full">
-      <thead className="bg-[#262626] border-b border-gray-600/30">
-        <tr>
-          <th className="px-4 py-3 text-left">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAll}
-              className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-              style={{
-                backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-              }}
-            />
-          </th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Order ID</th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Customer</th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Product</th>
-          <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Value</th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-700/30">
-        {getCurrentTableData().map((row: any, index: number) => (
-          <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
-            <td className="px-4 py-3">
-              <input
-                type="checkbox"
-                checked={selectedRows.has(index)}
-                onChange={() => handleRowSelect(index)}
-                className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-                style={{
-                  backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-                }}
-              />
-            </td>
-            <td className="px-4 py-3 text-sm text-white font-medium">{row.orderId}</td>
-            <td className="px-4 py-3 text-sm text-white">{row.customer}</td>
-            <td className="px-4 py-3 text-sm text-gray-300">{row.product}</td>
-            <td className="px-4 py-3 text-sm text-green-400 text-right font-medium">{row.value}</td>
-            <td className="px-4 py-3 text-sm text-gray-300">{row.date}</td>
-            <td className="px-4 py-3">
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
-                row.status === 'Completed' 
-                  ? 'bg-green-500/20 text-green-300' 
-                  : 'bg-amber-500/20 text-amber-300'
-              }`}>
-                {row.status}
-              </span>
-            </td>
-            <td className="px-4 py-3">
-              <div className="flex items-center space-x-1">
-                <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
-                  <EyeIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
-                  <PencilIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
-                  <TrashIcon className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  // const renderOrdersTable = () => (
+  //   <table className="w-full">
+  //     <thead className="bg-[#262626] border-b border-gray-600/30">
+  //       <tr>
+  //         <th className="px-4 py-3 text-left">
+  //           <input
+  //             type="checkbox"
+  //             checked={selectAll}
+  //             onChange={handleSelectAll}
+  //             className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //             style={{
+  //               backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //             }}
+  //           />
+  //         </th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Order ID</th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Customer</th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Product</th>
+  //         <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">Value</th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody className="divide-y divide-gray-700/30">
+  //       {getCurrentTableData().map((row: any, index: number) => (
+  //         <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
+  //           <td className="px-4 py-3">
+  //             <input
+  //               type="checkbox"
+  //               checked={selectedRows.has(index)}
+  //               onChange={() => handleRowSelect(index)}
+  //               className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //               style={{
+  //                 backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //               }}
+  //             />
+  //           </td>
+  //           <td className="px-4 py-3 text-sm text-white font-medium">{row.orderId}</td>
+  //           <td className="px-4 py-3 text-sm text-white">{row.customer}</td>
+  //           <td className="px-4 py-3 text-sm text-gray-300">{row.product}</td>
+  //           <td className="px-4 py-3 text-sm text-green-400 text-right font-medium">{row.value}</td>
+  //           <td className="px-4 py-3 text-sm text-gray-300">{row.date}</td>
+  //           <td className="px-4 py-3">
+  //             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
+  //               row.status === 'Completed' 
+  //                 ? 'bg-green-500/20 text-green-300' 
+  //                 : 'bg-amber-500/20 text-amber-300'
+  //             }`}>
+  //               {row.status}
+  //             </span>
+  //           </td>
+  //           <td className="px-4 py-3">
+  //             <div className="flex items-center space-x-1">
+  //               <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
+  //                 <EyeIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
+  //                 <PencilIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
+  //                 <TrashIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //             </div>
+  //           </td>
+  //         </tr>
+  //       ))}
+  //     </tbody>
+  //   </table>
+  // );
 
-  const renderGenericTable = () => (
-    <table className="w-full">
-      <thead className="bg-[#262626] border-b border-gray-600/30">
-        <tr>
-          <th className="px-4 py-3 text-left">
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAll}
-              className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-              style={{
-                backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-              }}
-            />
-          </th>
-          {Object.keys(getCurrentTableData()[0] || {}).filter(key => key !== 'id').map((key) => (
-            <th key={key} className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-              {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-            </th>
-          ))}
-          <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-700/30">
-        {getCurrentTableData().map((row: any, index: number) => (
-          <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
-            <td className="px-4 py-3">
-              <input
-                type="checkbox"
-                checked={selectedRows.has(index)}
-                onChange={() => handleRowSelect(index)}
-                className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
-                style={{
-                  backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
-                }}
-              />
-            </td>
-            {Object.entries(row).filter(([key]) => key !== 'id').map(([key, value]) => (
-              <td key={key} className={`px-4 py-3 text-sm ${
-                key === 'revenue' || key === 'value' ? 'text-green-400 text-right font-medium' :
-                key === 'status' ? '' :
-                key === 'name' || key === 'orderId' ? 'text-white font-medium' :
-                'text-gray-300'
-              }`}>
-                {key === 'status' ? (
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
-                    value === 'Active' || value === 'Completed' 
-                      ? 'bg-green-500/20 text-green-300' 
-                      : 'bg-amber-500/20 text-amber-300'
-                  }`}>
-                    {value as string}
-                  </span>
-                ) : (
-                  value as string
-                )}
-              </td>
-            ))}
-            <td className="px-4 py-3">
-              <div className="flex items-center space-x-1">
-                <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
-                  <EyeIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
-                  <PencilIcon className="h-3.5 w-3.5" />
-                </button>
-                <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
-                  <TrashIcon className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  // const renderGenericTable = () => (
+  //   <table className="w-full">
+  //     <thead className="bg-[#262626] border-b border-gray-600/30">
+  //       <tr>
+  //         <th className="px-4 py-3 text-left">
+  //           <input
+  //             type="checkbox"
+  //             checked={selectAll}
+  //             onChange={handleSelectAll}
+  //             className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //             style={{
+  //               backgroundImage: selectAll ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //             }}
+  //           />
+  //         </th>
+  //         {Object.keys(getCurrentTableData()[0] || {}).filter(key => key !== 'id').map((key) => (
+  //           <th key={key} className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+  //             {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+  //           </th>
+  //         ))}
+  //         <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Actions</th>
+  //       </tr>
+  //     </thead>
+  //     <tbody className="divide-y divide-gray-700/30">
+  //       {getCurrentTableData().map((row: any, index: number) => (
+  //         <tr key={row.id} className="hover:bg-gray-800/30 transition-colors duration-200">
+  //           <td className="px-4 py-3">
+  //             <input
+  //               type="checkbox"
+  //               checked={selectedRows.has(index)}
+  //               onChange={() => handleRowSelect(index)}
+  //               className="appearance-none w-4 h-4 bg-[#262626] border border-gray-500 rounded-sm checked:bg-blue-600 checked:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+  //               style={{
+  //                 backgroundImage: selectedRows.has(index) ? 'url("data:image/svg+xml,%3csvg viewBox=\'0 0 16 16\' fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cpath d=\'m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z\'/%3e%3c/svg%3e")' : 'none'
+  //               }}
+  //             />
+  //           </td>
+  //           {Object.entries(row).filter(([key]) => key !== 'id').map(([key, value]) => (
+  //             <td key={key} className={`px-4 py-3 text-sm ${
+  //               key === 'revenue' || key === 'value' ? 'text-green-400 text-right font-medium' :
+  //               key === 'status' ? '' :
+  //               key === 'name' || key === 'orderId' ? 'text-white font-medium' :
+  //               'text-gray-300'
+  //             }`}>
+  //               {key === 'status' ? (
+  //                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${
+  //                   value === 'Active' || value === 'Completed' 
+  //                     ? 'bg-green-500/20 text-green-300' 
+  //                     : 'bg-amber-500/20 text-amber-300'
+  //                 }`}>
+  //                   {value as string}
+  //                 </span>
+  //               ) : (
+  //                 value as string
+  //               )}
+  //             </td>
+  //           ))}
+  //           <td className="px-4 py-3">
+  //             <div className="flex items-center space-x-1">
+  //               <button className="p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-all duration-200">
+  //                 <EyeIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded transition-all duration-200">
+  //                 <PencilIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //               <button className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-all duration-200">
+  //                 <TrashIcon className="h-3.5 w-3.5" />
+  //               </button>
+  //             </div>
+  //           </td>
+  //         </tr>
+  //       ))}
+  //     </tbody>
+  //   </table>
+  // );
 
   return (
     <div className="h-full flex flex-col">
@@ -992,8 +991,8 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
         <div className="mb-6">
           <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Demo: This tab is AI enabled</h3>
-              <p className="text-gray-300 text-sm">Experience AI-powered insights and analysis in the cards below. Click on any template to start a conversation with our AI assistant and explore your data through natural language queries. All insights are generated using advanced AI algorithms to provide meaningful business intelligence.</p>
+              <h3 className="text-lg font-semibold text-white mb-2">This Tab is AI Enabled</h3>
+              <p className="text-gray-300 text-sm">Experience AI-powered insights and analysis in the cards below. Click on any template to start a conversation with our AI assistant and explore your data through natural language queries. All insights are generated using LLMs to provide meaningful business intelligence. Some features are disabled on this tab.</p>
             </div>
           </div>
         </div>

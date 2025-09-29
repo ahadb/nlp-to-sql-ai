@@ -4,7 +4,7 @@ import {
   DialogPanel,
   TransitionChild,
 } from "@headlessui/react";
-import { XMarkIcon, ArrowRightOnRectangleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, ArrowRightOnRectangleIcon, } from "@heroicons/react/24/outline";
 import { navigation, classNames } from "./navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ export default function MobileSidebar({
   setSidebarOpen,
 }: MobileSidebarProps) {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
 
   const handleSignOut = async () => {
     try {

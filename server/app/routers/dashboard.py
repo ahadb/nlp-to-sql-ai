@@ -29,19 +29,11 @@ async def get_dashboard_overview(current_user: CurrentUser = Depends(get_current
     Get dashboard overview with key business metrics
     """
     try:
-        from ..database import get_connection
+        from ..services.hybrid_service import hybrid_service
         
-        # Get connection to query PostgreSQL
-        conn = get_connection()
-        cursor = conn.cursor()
-        
-        # Calculate total records across all user tables
-        cursor.execute("""
-            SELECT COUNT(*) as table_count
-            FROM information_schema.tables 
-            WHERE table_schema NOT IN ('information_schema', 'pg_catalog', 'pg_toast', 'public')
-        """)
-        active_sources = cursor.fetchone()[0] or 0
+        # Get schemas from Supabase via hybrid service
+        schemas_data = await hybrid_service.get_schemas()
+        active_sources = len(schemas_data)
         
         # Mock data for now - in production, calculate from actual user data
         stats = DashboardStats(
@@ -82,9 +74,6 @@ async def get_dashboard_overview(current_user: CurrentUser = Depends(get_current
                 "description": "New customers this quarter"
             }
         ]
-        
-        cursor.close()
-        conn.close()
         
         return DashboardResponse(
             status="success",

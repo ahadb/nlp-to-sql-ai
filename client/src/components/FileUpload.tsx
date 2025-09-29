@@ -7,7 +7,7 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { api } from "../services/api";
-import StepTitle from "./StepTitle";
+
 import { useApp } from "../contexts/AppContext";
 
 interface FileUploadProps {
@@ -18,19 +18,19 @@ interface FileUploadProps {
 
 export default function FileUpload({
   onFileUpload,
-  isSelected = false,
+
   onSelect,
 }: FileUploadProps) {
   const { setCurrentSchema } = useApp();
-  const [isDragOver, setIsDragOver] = useState(false);
+  //const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [fileType, setFileType] = useState<"sql" | "csv" | null>(null);
+  const [fileType] = useState<"sql" | "csv" | null>(null);
   const [uploadStatus, setUploadStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
-  const [activeTab, setActiveTab] = useState<"upload" | "integrations">("upload");
+  const [activeTab] = useState<"upload" | "integrations">("upload");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const uploadMultipleFiles = async (files: File[]) => {
@@ -96,20 +96,20 @@ export default function FileUpload({
     return data;
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    // Disabled in demo - will be enabled in production
-  };
+  // const handleDragOver = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   // Disabled in demo - will be enabled in production
+  // };
 
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    // Disabled in demo - will be enabled in production
-  };
+  // const handleDragLeave = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   // Disabled in demo - will be enabled in production
+  // };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    // Disabled in demo - will be enabled in production
-  };
+  // const handleDrop = (e: React.DragEvent) => {
+  //   e.preventDefault();
+  //   // Disabled in demo - will be enabled in production
+  // };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -138,9 +138,9 @@ export default function FileUpload({
     }
   };
 
-  const handleClick = () => {
-    fileInputRef.current?.click();
-  };
+  // const handleClick = () => {
+  //   fileInputRef.current?.click();
+  // };
 
   return (
     <div className="w-full bg-[#1a1a1a] border border-gray-600/30 rounded-xl p-6 hover:border-gray-500/50 transition-all duration-200">
@@ -172,7 +172,7 @@ export default function FileUpload({
           <>
             {selectedFiles.length === 0 ? (
               <div
-                className="relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 bg-gray-800/30 border-gray-600/50"
+                className="relative border-2 border-dashed rounded-lg p-6 text-center transition-all duration-200 bg-gray-800/30 border-gray-600/50 opacity-50 cursor-not-allowed"
               >
             <div className="space-y-3">
               <div className="mx-auto w-fit">
@@ -184,14 +184,6 @@ export default function FileUpload({
               <p className="text-xs text-gray-500">
                 Use "Load Data" button above for sample data
               </p>
-              <div className="mt-3 p-3 bg-indigo-500/10 border border-indigo-400/30 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <ExclamationTriangleIcon className="h-5 w-5 text-orange-600" />
-                  <p className="text-sm text-indigo-300">
-                    Drag & drop disabled in demo - will be enabled in production
-                  </p>
-                </div>
-              </div>
             </div>
             <input
               ref={fileInputRef}

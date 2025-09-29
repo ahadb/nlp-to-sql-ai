@@ -44,8 +44,8 @@ async def get_table_insights(
     Get AI insights for a specific table
     """
     try:
-        # Simulate AI processing delay (1-3 seconds)
-        processing_time = 1.5 + (hash(table_name) % 20) / 10  # 1.5-3.5 seconds
+        # Simulate AI processing delay (3-5 seconds)
+        processing_time = 3.0 + (hash(table_name) % 20) / 10  # 3.0-5.0 seconds
         await asyncio.sleep(processing_time)
         
         # For now, return mock data
@@ -70,8 +70,8 @@ async def refresh_table_insights(
     Refresh AI insights for a specific table
     """
     try:
-        # Simulate AI processing delay (2-4 seconds for refresh)
-        processing_time = 2.0 + (hash(table_name) % 20) / 10  # 2.0-4.0 seconds
+        # Simulate AI processing delay (4-6 seconds for refresh)
+        processing_time = 4.0 + (hash(table_name) % 20) / 10  # 4.0-6.0 seconds
         await asyncio.sleep(processing_time)
         
         # For now, return the same mock data

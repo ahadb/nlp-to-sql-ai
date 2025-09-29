@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ChartBarIcon, XMarkIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 interface LayoutProps {
   leftChildren: ReactNode | null;
@@ -14,7 +14,7 @@ export default function Layout({
   rightChildren, 
   isDrawerOpen = false,
   setIsDrawerOpen,
-  drawerTriggerLabel = "Results"
+
 }: LayoutProps) {
   return (
     <>

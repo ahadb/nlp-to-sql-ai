@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircleStackIcon } from "@heroicons/react/24/outline";
 import { LoginForm } from "./";
-import SignupForm from "./SignupForm";
 import { useAuth } from "../contexts/AuthContext";
 
 interface AuthPageProps {
@@ -11,7 +9,7 @@ interface AuthPageProps {
 
 export default function AuthPage({ mode }: AuthPageProps) {
   const navigate = useNavigate();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [, setMousePosition] = useState({ x: 0, y: 0 });
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -29,32 +27,32 @@ export default function AuthPage({ mode }: AuthPageProps) {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const handleAuth = async (email: string, password: string) => {
+  const handleAuth = async () => {
     // This is now handled by the LoginForm component using useAuth
     // Navigate to demo page after successful authentication
     navigate("/demo");
   };
 
-  const handleSignup = async (userData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    company: string;
-    region: string;
-  }) => {
-    setIsLoading(true);
+  // const handleSignup = async (userData: {
+  //   firstName: string;
+  //   lastName: string;
+  //   email: string;
+  //   password: string;
+  //   confirmPassword: string;
+  //   company: string;
+  //   region: string;
+  // }) => {
+  //   setIsLoading(true);
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  //   // Simulate API call delay
+  //   await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    setIsAuthenticated(true);
-    setIsLoading(false);
+  //   setIsAuthenticated(true);
+  //   setIsLoading(false);
 
-    // Navigate to app after successful signup
-    navigate("/app");
-  };
+  //   // Navigate to app after successful signup
+  //   navigate("/app");
+  // };
 
   return (
     <div className="h-screen w-screen bg-gray-900 text-white overflow-hidden relative">
@@ -165,7 +163,21 @@ export default function AuthPage({ mode }: AuthPageProps) {
                   </p>
                 </div>
 
-                <LoginForm onLogin={handleAuth} isSignup={mode === "signup"} />
+                <LoginForm onLogin={handleAuth} isSignup={mode === "signup"} disabled={mode === "signup"} />
+
+                {/* Signup disabled message */}
+                {mode === "signup" && (
+                  <div className="mt-4 p-3 bg-orange-500/10 border border-orange-400/30 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      <p className="text-orange-400 text-sm">
+                        Sign up is currently disabled for demo purposes. Please use the login page to access the demo.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {/* Toggle between login/signup */}
                 <div className="mt-6 text-center">
@@ -196,12 +208,12 @@ export default function AuthPage({ mode }: AuthPageProps) {
       </div>
 
       {/* Custom Styles */}
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes grid-move {
           0% { transform: translate(0, 0); }
           100% { transform: translate(50px, 50px); }
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 }

@@ -92,7 +92,7 @@ const Dashboard: React.FC<DashboardCardsProps> = ({ hasData = true }) => {
       setError(null);
       
       // Add delay to simulate AI processing time
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
       
       const data: InsightsResponse = await api.getDashboardInsights();
       console.log('✅ API response received:', data);
@@ -261,7 +261,9 @@ const Dashboard: React.FC<DashboardCardsProps> = ({ hasData = true }) => {
                 <p className="text-sm text-slate-500 line-clamp-2">{insight.description}</p>
               </div>
               <div className="flex items-center space-x-1">
-                <span className="text-emerald-400 text-sm">{insight.change}</span>
+                <span className={`text-sm ${insight.change.startsWith('+') ? 'text-green-400' : insight.change.startsWith('-') ? 'text-red-400' : 'text-gray-400'}`}>
+                  {insight.change}
+                </span>
               </div>
             </div>
             
@@ -299,7 +301,9 @@ const Dashboard: React.FC<DashboardCardsProps> = ({ hasData = true }) => {
                 <p className="text-sm text-slate-500 line-clamp-2">{pattern.description}</p>
               </div>
               <div className="flex items-center space-x-1">
-                <span className="text-blue-400 text-sm">{pattern.change}</span>
+                <span className={`text-sm ${pattern.change.startsWith('+') ? 'text-green-400' : pattern.change.startsWith('-') ? 'text-red-400' : 'text-gray-400'}`}>
+                  {pattern.change}
+                </span>
               </div>
             </div>
             

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { XMarkIcon, PaperAirplaneIcon, SparklesIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 import { api, type ChatResponse } from '../services/api';
 import ChatMessage from './chat/ChatMessage';
 import TemplateSelector from './chat/TemplateSelector';
@@ -37,7 +37,7 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTem
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatHistoryItem[]>([]);
-  const [showTemplates, setShowTemplates] = useState(true);
+  const [showTemplates,] = useState(true);
   const [usedTemplates, setUsedTemplates] = useState<Set<string>>(new Set());
   const [showDemoMode, setShowDemoMode] = useState(true);
   const [isDemoModeExpanded, setIsDemoModeExpanded] = useState(true);
@@ -211,15 +211,15 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTem
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {!hasData ? (
-            <div className="text-center py-8 bg-[#282828] rounded-lg mx-2">
-              <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="py-8 px-6 bg-[#282828] rounded-lg mx-2">
+              <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center mb-4">
                 <span className="text-white text-2xl font-bold">AI</span>
               </div>
               <h3 className="text-white font-medium mb-2">Load Data First</h3>
               <p className="text-gray-400 text-sm mb-4">
                 Please load your data first to unlock AI features. Once you have data loaded, I can help you:
               </p>
-              <div className="text-left text-sm text-gray-400 space-y-1">
+              <div className="text-sm text-gray-400 space-y-1">
                 <div>• Generate SQL queries from natural language</div>
                 <div>• Analyze your business data</div>
                 <div>• Provide insights and recommendations</div>
@@ -227,15 +227,15 @@ const AIChatDrawer: React.FC<AIChatDrawerProps> = ({ isOpen, onClose, initialTem
               </div>
             </div>
           ) : chatHistory.length === 0 && !showTemplates ? (
-            <div className="text-center py-8 bg-[#282828] rounded-lg mx-2">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="py-8 px-6 bg-[#282828] rounded-lg mx-2">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-4">
                 <span className="text-white text-2xl font-bold">AI</span>
               </div>
               <h3 className="text-white font-medium mb-2">Welcome to AI Assistant</h3>
               <p className="text-gray-400 text-sm mb-4">
                 Ask me anything about your data. I can help you:
               </p>
-              <div className="text-left text-sm text-gray-400 space-y-1">
+              <div className="text-sm text-gray-400 space-y-1">
                 <div>• Generate SQL queries from natural language</div>
                 <div>• Analyze your business data</div>
                 <div>• Provide insights and recommendations</div>

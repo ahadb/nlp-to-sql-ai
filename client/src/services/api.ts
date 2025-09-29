@@ -1,7 +1,5 @@
 import { authService } from './auth';
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+import { API_URLS, API_CONFIG, buildApiUrlWithParams } from '../config/api';
 
 export interface UploadResponse {
   message: string;
@@ -42,6 +40,7 @@ export interface InsightsResponse {
   status: string;
   insights: InsightData[];
   patterns: InsightData[];
+  message: string;
 }
 
 export interface ChatMessage {
@@ -81,7 +80,7 @@ export const api = {
       description: `Uploaded ${isCSV ? 'CSV' : 'SQL'} file: ${file.name}`
     };
 
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/upload`, {
+    const response = await authService.authenticatedFetch(API_URLS.UPLOAD, {
       method: "POST",
       body: JSON.stringify(requestBody),
     });
@@ -190,7 +189,7 @@ export const api = {
   },
 
   async getDataSources(): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/upload/schemas`, {
+    const response = await authService.authenticatedFetch(API_URLS.UPLOAD_SCHEMAS, {
       method: "GET",
     });
 
@@ -203,7 +202,7 @@ export const api = {
   },
 
   async getTables(): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/tables`, {
+    const response = await authService.authenticatedFetch(API_URLS.TABLES, {
       method: "GET",
     });
 
@@ -216,7 +215,7 @@ export const api = {
   },
 
   async getCurrentDatabase(): Promise<DatabaseResponse> {
-    const response = await fetch(`${API_BASE_URL}/current-database`, {
+    const response = await fetch(API_URLS.CURRENT_DATABASE, {
       method: "GET",
     });
 
@@ -229,7 +228,7 @@ export const api = {
   },
 
   async getSchemaDetails(): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/debug/schema-details`, {
+    const response = await fetch(API_URLS.DEBUG_SCHEMA_DETAILS, {
       method: "GET",
     });
 
@@ -242,7 +241,7 @@ export const api = {
   },
 
   async getTableData(tableName: string, schemaName: string, limit: number = 5): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/tables/${tableName}/data?schema=${schemaName}&limit=${limit}`, {
+    const response = await authService.authenticatedFetch(buildApiUrlWithParams(API_CONFIG.ENDPOINTS.TABLES_DATA + `/${tableName}/data`, { schema: schemaName, limit }), {
       method: "GET",
     });
 
@@ -256,7 +255,7 @@ export const api = {
 
   // Dashboard API methods
   async getDashboard(): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/dashboard`, {
+    const response = await authService.authenticatedFetch(API_URLS.DASHBOARD, {
       method: "GET",
     });
 
@@ -270,7 +269,7 @@ export const api = {
 
   // Reports API methods
   async getReports(): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/reports`, {
+    const response = await authService.authenticatedFetch(API_URLS.REPORTS, {
       method: "GET",
     });
 
@@ -284,7 +283,7 @@ export const api = {
 
   // Data Insights API methods
   async getDataInsights(tableName: string): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/data/insights/${tableName}`, {
+    const response = await authService.authenticatedFetch(`${API_URLS.DATA_INSIGHTS}/${tableName}`, {
       method: "GET",
     });
 
@@ -298,7 +297,7 @@ export const api = {
 
   // Connections API methods
   async getConnections(): Promise<any> {
-    const response = await authService.authenticatedFetch(`${API_BASE_URL}/connections`, {
+    const response = await authService.authenticatedFetch(API_URLS.CONNECTIONS, {
       method: "GET",
     });
 
@@ -312,7 +311,7 @@ export const api = {
 
   async getDashboardInsights(): Promise<InsightsResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/insights/dashboard/all`, {
+      const response = await fetch(API_URLS.INSIGHTS_DASHBOARD, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -333,7 +332,7 @@ export const api = {
 
   // Sample data functions
   async loadSampleData(): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/upload/sample-data`, {
+    const response = await fetch(API_URLS.UPLOAD_SAMPLE_DATA, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -350,7 +349,7 @@ export const api = {
 
   // Chat functions
   async sendChatMessage(message: string, schemaId: string = "all"): Promise<ChatResponse> {
-    const response = await fetch(`${API_BASE_URL}/chat/message`, {
+    const response = await fetch(API_URLS.CHAT_MESSAGE, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -370,7 +369,7 @@ export const api = {
   },
 
   async getChatHistory(userId: string = "default"): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/chat/history/${userId}`);
+    const response = await fetch(`${API_URLS.CHAT_HISTORY}/${userId}`);
     if (!response.ok) {
       throw new Error('Failed to get chat history');
     }
@@ -378,7 +377,7 @@ export const api = {
   },
 
   async getDataContext(schemaId: string): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/chat/context/${schemaId}`);
+    const response = await fetch(`${API_URLS.CHAT_CONTEXT}/${schemaId}`);
     if (!response.ok) {
       throw new Error('Failed to get data context');
     }

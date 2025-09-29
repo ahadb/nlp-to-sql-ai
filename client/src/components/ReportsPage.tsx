@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Sidebar, MobileSidebar, TopBar, Layout, AIChatDrawer } from "./index";
 import {
   ChartBarIcon,
@@ -39,8 +39,9 @@ const ReportsPage: React.FC = () => {
   const [sortField, setSortField] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isActionsOpen, setIsActionsOpen] = useState(false);
-  const [dataSources, setDataSources] = useState<any[]>([]);
+  const [, setDataSources] = useState<any[]>([]);
   const [hasData, setHasData] = useState(false);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   // Fetch data sources to determine if we have data
   useEffect(() => {
@@ -69,6 +70,23 @@ const ReportsPage: React.FC = () => {
 
     fetchDataSources();
   }, []);
+
+  // Handle click outside to close actions dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionsRef.current && !actionsRef.current.contains(event.target as Node)) {
+        setIsActionsOpen(false);
+      }
+    };
+
+    if (isActionsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isActionsOpen]);
 
   // Dynamic executive metrics based on data availability
   console.log('Rendering metrics with hasData:', hasData);
@@ -318,10 +336,10 @@ const ReportsPage: React.FC = () => {
                   <p className="text-gray-400">Generate insights and manage automated reports</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="relative">
+                  <div className="relative" ref={actionsRef}>
                     <button 
                       onClick={() => setIsActionsOpen(!isActionsOpen)}
-                      className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200"
+                      className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200 cursor-pointer"
                     >
                       <EllipsisVerticalIcon className="h-4 w-4" />
                       <span>Actions</span>
@@ -350,7 +368,7 @@ const ReportsPage: React.FC = () => {
                   </div>
                   <button 
                     onClick={() => setIsDrawerOpen(true)}
-                    className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2"
+                    className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2 cursor-pointer"
                   >
                     <SparklesIcon className="h-4 w-4 text-orange-400 group-hover:scale-110 transition-transform duration-200" />
                     <span className="font-medium text-sm">Ask AI</span>
@@ -362,8 +380,8 @@ const ReportsPage: React.FC = () => {
               <div className="mb-6">
                 <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
                   <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">Demo: AI not enabled on this page</h3>
-                    <p className="text-gray-300 text-sm">This page showcases the reporting interface. In production, we can customize this further with AI-powered report generation, automated insights, and intelligent data visualization based on your specific business needs.</p>
+                    <h3 className="text-lg font-semibold text-white mb-2">AI Not Enabled on this Tab</h3>
+                    <p className="text-gray-300 text-sm">This page showcases the reporting interface. In the full version, we can customize this further with AI-powered report generation, automated insights, and intelligent data visualization based on your specific business needs. Most features are disabled.</p>
                   </div>
                 </div>
               </div>
@@ -981,7 +999,11 @@ const ReportsPage: React.FC = () => {
             </div>
           </div>
         }
-        rightChildren={<AIChatDrawer />}
+        rightChildren={<AIChatDrawer 
+          isOpen={isDrawerOpen} 
+          onClose={() => setIsDrawerOpen(false)} 
+          hasData={hasData}
+        />}
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
         drawerTriggerLabel="Ask AI"

@@ -2,24 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   CircleStackIcon,
-  BoltIcon,
-  ShieldCheckIcon,
   ChartBarIcon,
   CpuChipIcon,
   GlobeAltIcon,
-  CheckIcon,
-  ArrowRightIcon,
-  ClockIcon,
-  UserGroupIcon,
   DocumentTextIcon,
-  PlayIcon,
   CloudArrowUpIcon,
   ChatBubbleLeftEllipsisIcon,
 } from '@heroicons/react/24/outline';
 
-import Example from './Example';
 import Example1 from './Example1';
-import Example2 from '../Example2';
 import Start from './Start';
 
 
@@ -107,10 +98,10 @@ const MarketingLandingPage: React.FC = () => {
       </section> */}
 
       {/* How It Works */}
-      <section className="relative isolate overflow-hidden bg-gray-800 py-24 text-center after:pointer-events-none after:absolute after:inset-0 after:inset-ring after:inset-ring-white/10">
+      <section className="relative isolate overflow-hidden py-12 text-center after:pointer-events-none after:absolute after:inset-0 after:inset-ring after:inset-ring-white/10" style={{backgroundColor: '#121212'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-300 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-indigo-400 mb-4">
               AI-Powered 3-Step Workflow
             </h2>
               <p className="text-xl text-gray-300">
@@ -121,7 +112,7 @@ const MarketingLandingPage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
-                <CloudArrowUpIcon className="h-16 w-16 text-gray-400" />
+                <CloudArrowUpIcon className="h-16 w-16 text-indigo-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-4">Upload Your Data</h3>
               <p className="text-gray-300">
@@ -131,7 +122,7 @@ const MarketingLandingPage: React.FC = () => {
             
             <div className="text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
-                <ChatBubbleLeftEllipsisIcon className="h-16 w-16 text-gray-400" />
+                <ChatBubbleLeftEllipsisIcon className="h-16 w-16 text-indigo-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-4">Ask Questions</h3>
               <p className="text-gray-300">
@@ -141,7 +132,7 @@ const MarketingLandingPage: React.FC = () => {
             
             <div className="text-center">
               <div className="flex items-center justify-center mx-auto mb-6">
-                <ChartBarIcon className="h-16 w-16 text-gray-400" />
+                <ChartBarIcon className="h-16 w-16 text-indigo-400" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-4">Get Insights</h3>
               <p className="text-gray-300">
@@ -167,10 +158,10 @@ const MarketingLandingPage: React.FC = () => {
       </section>
 
       {/* Key Features */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-12 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-300 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-indigo-400 mb-4">
               Enterprise-Grade Features
             </h2>
             <p className="text-xl text-gray-300">
@@ -180,37 +171,37 @@ const MarketingLandingPage: React.FC = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="p-6">
-              <ChatBubbleLeftEllipsisIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <ChatBubbleLeftEllipsisIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">AI Chat Assistant</h3>
               <p className="text-gray-300">Ask questions in natural language and get instant insights. Your intelligent data companion understands business context.</p>
             </div>
             
             <div className="p-6">
-              <ChartBarIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <ChartBarIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Interactive Dashboards</h3>
               <p className="text-gray-300">Real-time business metrics with sparklines, trend analysis, and key performance indicators at a glance.</p>
             </div>
             
             <div className="p-6">
-              <CircleStackIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <CircleStackIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Smart Data Tables</h3>
               <p className="text-gray-300">Browse your data with intelligent filtering, sorting, and search. Handle thousands of records effortlessly.</p>
             </div>
             
             <div className="p-6">
-              <DocumentTextIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <DocumentTextIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Automated Reports</h3>
               <p className="text-gray-300">Generate professional reports with charts and visualizations. Export to Excel, PDF, or share with your team.</p>
             </div>
             
             <div className="p-6">
-              <GlobeAltIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <GlobeAltIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Data Connections</h3>
               <p className="text-gray-300">Connect to multiple data sources including CSV uploads, databases, and future integrations with Google Sheets and APIs.</p>
             </div>
             
             <div className="p-6">
-              <CpuChipIcon className="h-8 w-8 text-gray-400 mb-4" />
+              <CpuChipIcon className="h-8 w-8 text-indigo-400 mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">Schema Intelligence</h3>
               <p className="text-gray-300">AI automatically understands your data structure, relationships, and creates optimized queries without manual configuration.</p>
             </div>

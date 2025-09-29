@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+import { API_URLS } from '../config/api';
 
 export interface User {
   id: string;
@@ -65,7 +65,7 @@ class AuthService {
   }
 
   async signUp(request: SignUpRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(API_URLS.AUTH_SIGNUP, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ class AuthService {
   }
 
   async signIn(request: SignInRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+    const response = await fetch(API_URLS.AUTH_SIGNIN, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ class AuthService {
   async signOut(): Promise<void> {
     try {
       if (this.token) {
-        await fetch(`${API_BASE_URL}/auth/signout`, {
+        await fetch(API_URLS.AUTH_SIGNOUT, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${this.token}`,
@@ -134,7 +134,7 @@ class AuthService {
       throw new Error('No authentication token');
     }
 
-    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    const response = await fetch(API_URLS.AUTH_ME, {
       headers: {
         'Authorization': `Bearer ${this.token}`,
       },
@@ -162,7 +162,7 @@ class AuthService {
       throw new Error('No authentication token');
     }
 
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    const response = await fetch(API_URLS.AUTH_REFRESH, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -251,6 +251,3 @@ class AuthService {
 
 // Export a singleton instance
 export const authService = new AuthService();
-
-// Export types
-export type { User, AuthResponse, SignUpRequest, SignInRequest };

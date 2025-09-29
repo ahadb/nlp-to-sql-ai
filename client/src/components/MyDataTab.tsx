@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CircleStackIcon,
   DocumentIcon,
   EyeIcon,
   TrashIcon,
   ArrowDownTrayIcon,
-  MagnifyingGlassIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ClockIcon as ProcessingIcon,
-  CloudArrowUpIcon,
   ChartBarIcon,
   EnvelopeIcon,
   LightBulbIcon,
@@ -39,17 +38,19 @@ interface MyDataTabProps {
 }
 
 const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasData, setHasData: propSetHasData }) => {
+  const navigate = useNavigate();
   const [activeInsightTab, setActiveInsightTab] = useState<number>(0);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
-  const [showDemoPanel, setShowDemoPanel] = useState(true);
+  // const [showDemoPanel, setShowDemoPanel] = useState(true);
   const [tables, setTables] = useState<any[]>([]);
   const [reorderedTables, setReorderedTables] = useState<any[]>([]);
   const [tableData, setTableData] = useState<Record<string, any[]>>({});
   const [hasData, setHasData] = useState(propHasData || false);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   
   // Check if data exists on component mount
   const checkForExistingData = async () => {
@@ -167,6 +168,23 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
     }
   }, [tables]);
 
+  // Handle click outside to close actions dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionsRef.current && !actionsRef.current.contains(event.target as Node)) {
+        setIsActionsOpen(false);
+      }
+    };
+
+    if (isActionsOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isActionsOpen]);
+
   // Handle tab changes and fetch corresponding table data
   const handleTabChange = async (tabIndex: number) => {
     setActiveInsightTab(tabIndex);
@@ -180,44 +198,44 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
     }
   };
 
-  const handleFileUpload = async (file: File) => {
-    console.log('📁 Handling file upload:', file.name);
+  // const handleFileUpload = async (file: File) => {
+  //   console.log('📁 Handling file upload:', file.name);
     
-    try {
-      // Use the existing API method that handles file content and JSON conversion
-      const result = await api.uploadSchema(file);
-      console.log('✅ File uploaded successfully:', result);
+  //   try {
+  //     // Use the existing API method that handles file content and JSON conversion
+  //     const result = await api.uploadSchema(file);
+  //     console.log('✅ File uploaded successfully:', result);
       
-      return result;
-    } catch (error) {
-      console.error('❌ Upload error:', error);
-      throw error;
-    }
-  };
+  //     return result;
+  //   } catch (error) {
+  //     console.error('❌ Upload error:', error);
+  //     throw error;
+  //   }
+  // };
 
-  const handleLoadSampleData = async () => {
-    console.log('🚀 Loading sample data...');
+  // const handleLoadSampleData = async () => {
+  //   console.log('🚀 Loading sample data...');
     
-    try {
-      // Call the backend endpoint to load sample data
-      console.log('📁 Loading sample data from backend...');
+  //   try {
+  //     // Call the backend endpoint to load sample data
+  //     console.log('📁 Loading sample data from backend...');
       
-      const response = await api.loadSampleData();
-      console.log('✅ Sample data loaded:', response);
+  //     const response = await api.loadSampleData();
+  //     console.log('✅ Sample data loaded:', response);
       
-      // Set data loaded state
-      setHasData(true);
-      propSetHasData?.(true);
+  //     // Set data loaded state
+  //     setHasData(true);
+  //     propSetHasData?.(true);
       
-      // Refresh data sources and tables to show the new data
-      await fetchDataSources();
-      await fetchTables();
+  //     // Refresh data sources and tables to show the new data
+  //     await fetchDataSources();
+  //     await fetchTables();
       
-      console.log('✅ Sample data loaded successfully');
-    } catch (error) {
-      console.error('❌ Error loading sample data:', error);
-    }
-  };
+  //     console.log('✅ Sample data loaded successfully');
+  //   } catch (error) {
+  //     console.error('❌ Error loading sample data:', error);
+  //   }
+  // };
 
   // Smart column mapping for SMB-focused insights
   const getSmartColumns = (tableName: string, data: any[]) => {
@@ -525,79 +543,79 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
   };
   
   // Calculate demo stats based on uploaded data
-  const calculateDemoStats = () => {
-    const hasData = dataSources.length > 0;
+  // const calculateDemoStats = () => {
+  //   const hasData = dataSources.length > 0;
     
-    if (!hasData) {
-      return {
-        totalRecords: 0,
-        queryVolume: 0,
-        revenue: 0,
-        dataQuality: 0,
-        growthPercentage: "0%",
-        qualityGrowth: "0%",
-        sparklinePoints: "0,20 14,20 28,20 42,20 56,20 70,20 84,20 100,20" // Flat line
-      };
-    }
+  //   if (!hasData) {
+  //     return {
+  //       totalRecords: 0,
+  //       queryVolume: 0,
+  //       revenue: 0,
+  //       dataQuality: 0,
+  //       growthPercentage: "0%",
+  //       qualityGrowth: "0%",
+  //       sparklinePoints: "0,20 14,20 28,20 42,20 56,20 70,20 84,20 100,20" // Flat line
+  //     };
+  //   }
     
-    // Simulate realistic stats based on actual data
-    const actualRows = dataSources.reduce((sum, source) => sum + source.rows, 0);
-    const demoMultiplier = actualRows < 10 ? 50 : actualRows < 100 ? 25 : 10;
+  //   // Simulate realistic stats based on actual data
+  //   const actualRows = dataSources.reduce((sum, source) => sum + source.rows, 0);
+  //   const demoMultiplier = actualRows < 10 ? 50 : actualRows < 100 ? 25 : 10;
     
-    // Extract revenue from sales data if available
-    const salesTable = tables.find(table => 
-      table.table_name.toLowerCase().includes('sales') || 
-      table.display_name?.toLowerCase().includes('sales')
-    );
+  //   // Extract revenue from sales data if available
+  //   const salesTable = tables.find(table => 
+  //     table.table_name.toLowerCase().includes('sales') || 
+  //     table.display_name?.toLowerCase().includes('sales')
+  //   );
     
-    let baseRevenue = 0;
-    if (salesTable && tableData[salesTable.table_name]) {
-      const salesData = tableData[salesTable.table_name];
-      // Try to find revenue in the data
-      const revenueCol = Object.keys(salesData[0] || {}).find(col => 
-        ['revenue', 'amount', 'total', 'price', 'value'].some(keyword => 
-          col.toLowerCase().includes(keyword)
-        )
-      );
+  //   let baseRevenue = 0;
+  //   if (salesTable && tableData[salesTable.table_name]) {
+  //     const salesData = tableData[salesTable.table_name];
+  //     // Try to find revenue in the data
+  //     const revenueCol = Object.keys(salesData[0] || {}).find(col => 
+  //       ['revenue', 'amount', 'total', 'price', 'value'].some(keyword => 
+  //         col.toLowerCase().includes(keyword)
+  //       )
+  //     );
       
-      if (revenueCol) {
-        baseRevenue = salesData.reduce((sum, row) => {
-          const value = parseFloat(row[revenueCol]?.toString().replace(/[$,]/g, '') || '0');
-          return sum + value;
-        }, 0);
-      }
-    }
+  //     if (revenueCol) {
+  //       baseRevenue = salesData.reduce((sum, row) => {
+  //         const value = parseFloat(row[revenueCol]?.toString().replace(/[$,]/g, '') || '0');
+  //         return sum + value;
+  //       }, 0);
+  //     }
+  //   }
     
-    // Calculate data quality based on actual data completeness
-    let totalCells = 0;
-    let nonEmptyCells = 0;
+  //   // Calculate data quality based on actual data completeness
+  //   let totalCells = 0;
+  //   let nonEmptyCells = 0;
     
-    Object.values(tableData).forEach(data => {
-      data.forEach(row => {
-        Object.values(row).forEach(value => {
-          totalCells++;
-          if (value !== null && value !== undefined && value !== '') {
-            nonEmptyCells++;
-          }
-        });
-      });
-    });
+  //   Object.values(tableData).forEach(data => {
+  //     data.forEach(row => {
+  //       Object.values(row).forEach(value => {
+  //         totalCells++;
+  //         if (value !== null && value !== undefined && value !== '') {
+  //           nonEmptyCells++;
+  //         }
+  //       });
+  //     });
+  //   });
     
-    const actualQuality = totalCells > 0 ? (nonEmptyCells / totalCells) * 100 : 95;
-    const simulatedQuality = Math.max(95, Math.min(99.5, actualQuality + Math.random() * 3));
+  //   const actualQuality = totalCells > 0 ? (nonEmptyCells / totalCells) * 100 : 95;
+  //   const simulatedQuality = Math.max(95, Math.min(99.5, actualQuality + Math.random() * 3));
     
-    return {
-      totalRecords: actualRows * demoMultiplier,
-      queryVolume: Math.floor(tables.length * 15 + Math.random() * 20),
-      revenue: Math.floor(baseRevenue * (demoMultiplier / 2)),
-      dataQuality: simulatedQuality,
-      growthPercentage: ["+18%", "+12%", "+24%", "+15%"][Math.floor(Math.random() * 4)],
-      qualityGrowth: ["+2.1%", "+1.8%", "+3.2%", "+2.7%"][Math.floor(Math.random() * 4)],
-      sparklinePoints: "0,20 14,18 28,15 42,12 56,8 70,6 84,4 100,2" // Upward trend
-    };
-  };
+  //   return {
+  //     totalRecords: actualRows * demoMultiplier,
+  //     queryVolume: Math.floor(tables.length * 15 + Math.random() * 20),
+  //     revenue: Math.floor(baseRevenue * (demoMultiplier / 2)),
+  //     dataQuality: simulatedQuality,
+  //     growthPercentage: ["+18%", "+12%", "+24%", "+15%"][Math.floor(Math.random() * 4)],
+  //     qualityGrowth: ["+2.1%", "+1.8%", "+3.2%", "+2.7%"][Math.floor(Math.random() * 4)],
+  //     sparklinePoints: "0,20 14,18 28,15 42,12 56,8 70,6 84,4 100,2" // Upward trend
+  //   };
+  // };
 
-  const demoStats = calculateDemoStats();
+  //const demoStats = calculateDemoStats();
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -652,10 +670,10 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
             <p className="text-gray-400">Manage and explore your business data</p>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="relative">
+            <div className="relative" ref={actionsRef}>
               <button 
                 onClick={() => setIsActionsOpen(!isActionsOpen)}
-                className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200"
+                className="flex items-center space-x-2 px-4 py-2 border border-gray-600/50 text-gray-300 hover:text-white hover:border-gray-500 text-sm rounded-lg transition-colors duration-200 cursor-pointer"
               >
                 <EllipsisVerticalIcon className="h-4 w-4" />
                 <span>Actions</span>
@@ -697,10 +715,10 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
           <div className="bg-indigo-500/10 border border-indigo-400/30 rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-2">Load sample data to see AI insights in the cards below and converse with AI using templates</h3>
-                <p className="text-gray-300 text-sm">Only dashboard and data tables pages are AI enabled. In production, we'll customize this with your data and enable AI across all tabs - feel free to check all tabs to explore the interface</p>
+                <h3 className="text-lg font-semibold text-white mb-2">Sample Data Loaded: This Tab is AI Enabled</h3>
+                <p className="text-gray-300 text-sm">Explore freely, but focus on the AI features: Dashboard insights cards, AI chat templates, and the Data Tables page for the AI experience </p>
               </div>
-              <div className="ml-6">
+              {/* <div className="ml-6">
                 <button 
                   onClick={handleLoadSampleData}
                   className="px-6 py-3 bg-indigo-500/20 border border-indigo-400 text-indigo-300 hover:bg-indigo-500/30 hover:text-indigo-200 hover:border-indigo-300 rounded-lg font-medium text-sm transition-all duration-200 relative overflow-hidden group"
@@ -716,7 +734,7 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
                     <span>Load Data</span>
                   </span>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -725,6 +743,20 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
        
         {/* Query Volume */}
         <DashboardCards hasData={hasData} />
+        
+        {/* Customization Note */}
+        <div className="mt-4 mb-6">
+          <div className="flex items-start space-x-2">
+            <div className="flex-shrink-0 mt-0.5">
+              <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <p className="text-gray-400 text-sm text-left">
+              The cards above are AI generated (with our preloaded data) and can be customized to your specific needs and workflows
+            </p>
+          </div>
+        </div>
       
      
       {/* Upload Area - Restricted to Sample Files */}
@@ -741,6 +773,20 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
             await fetchTables();
           }}
         />
+        
+        {/* Demo Warning */}
+        <div className="mt-4">
+          <div className="flex items-start space-x-2">
+            <div className="flex-shrink-0 mt-0.5">
+              <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <p className="text-gray-400 text-sm text-left">
+              Drag and drop & integrations disabled in demo - this will be enabled with your data and tools in the full version
+            </p>
+          </div>
+        </div>
       </div>
      
       {/* Quick Insights - Tabbed Interface */}
@@ -787,7 +833,10 @@ const MyDataTab: React.FC<MyDataTabProps> = ({ onOpenAIChat, hasData: propHasDat
             {renderDynamicTable()}
             
             <div className="mt-4 flex justify-end">
-              <button className="text-sm text-blue-400 hover:text-blue-300 font-medium">
+              <button 
+                onClick={() => navigate('/tables')}
+                className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+              >
                 View All Data →
               </button>
             </div>

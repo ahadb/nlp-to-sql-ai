@@ -3,7 +3,6 @@ import { chatTemplates, type ChatTemplate } from '../../data/chatTemplates';
 import { 
   ChartBarIcon, 
   CurrencyDollarIcon,
-  ChatBubbleLeftRightIcon,
   CreditCardIcon, 
   UserGroupIcon,
   ChevronDownIcon,
@@ -25,7 +24,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onSelectTemplate, 
   isVisible, 
   isLoading = false, 
-  usedTemplates = new Set(),
+
   showDemoMode = true,
   isDemoModeExpanded = true,
   onToggleDemoMode,
@@ -51,65 +50,57 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   };
 
   return (
-    <div className="p-4 border-b border-gray-600/30 bg-#202020">
+    <div className="p-3 border-b border-gray-600/30 bg-#202020">
       {showDemoMode && (
-        <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 mb-3">
-          <p className="text-sm text-blue-300">
-            <strong>Demo Mode:</strong> For this demo, you have access to these templates and 3-5 chat interactions. 
-            Click on any template below to see real AI analysis of your data.
+        <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-2 mb-2">
+          <p className="text-xs text-blue-300">
+            <strong>Demo Mode:</strong> Click any template below to see real AI analysis of your data.
           </p>
         </div>
       )}
       
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-400">Quick Analysis Templates</h3>
-        {showDemoMode && onToggleDemoMode && (
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xs font-medium text-gray-400">Quick Analysis Templates</h3>
+        {onToggleDemoMode && (
           <button
             onClick={onToggleDemoMode}
-            className="p-1 text-gray-400 hover:text-gray-300 transition-colors"
+            className="flex items-center space-x-1 text-gray-400 hover:text-gray-300 transition-colors"
           >
+            <span className="text-xs">
+              {isDemoModeExpanded ? 'Collapse' : 'Expand'}
+            </span>
             {isDemoModeExpanded ? (
-              <ChevronUpIcon className="h-4 w-4" />
+              <ChevronUpIcon className="h-3 w-3" />
             ) : (
-              <ChevronDownIcon className="h-4 w-4" />
+              <ChevronDownIcon className="h-3 w-3" />
             )}
           </button>
         )}
       </div>
       
-      {(!showDemoMode || isDemoModeExpanded) && (
-        <div className="grid grid-cols-1 gap-2">
+      {isDemoModeExpanded && (
+        <div className="grid grid-cols-1 gap-1.5">
         {(customTemplates || chatTemplates).map((template) => {
           const IconComponent = getIcon(template.id);
-          const isUsed = usedTemplates.has(template.id);
           return (
             <button
               key={template.id}
               onClick={() => onSelectTemplate(template)}
-              disabled={isLoading || isUsed}
-              className={`flex items-start space-x-3 p-3 text-left rounded-lg transition-colors group disabled:cursor-not-allowed ${
-                isUsed 
-                  ? 'bg-gray-800/20 opacity-50 cursor-not-allowed' 
-                  : 'bg-gray-800/30 hover:bg-gray-700/50'
-              }`}
+              disabled={isLoading}
+              className="flex items-center space-x-2 py-2 px-2.5 text-left rounded-md transition-colors group disabled:cursor-not-allowed bg-gray-800/30 hover:bg-gray-700/50"
             >
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
-                  <IconComponent className="h-4 w-4 text-blue-400" />
+                <div className="w-6 h-6 bg-blue-500/20 rounded-md flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
+                  <IconComponent className="h-3 w-3 text-blue-400" />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center space-x-2">
-                  <h4 className="text-sm font-medium text-white group-hover:text-blue-300 transition-colors">
+                <div className="flex items-center space-x-1.5">
+                  <h4 className="text-xs font-medium text-white group-hover:text-blue-300 transition-colors">
                     {template.title}
                   </h4>
-                  {isUsed && (
-                    <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
-                      Used
-                    </span>
-                  )}
                 </div>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-gray-400 mt-0.5 leading-tight">
                   {template.description}
                 </p>
               </div>

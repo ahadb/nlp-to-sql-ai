@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navigation, classNames } from "./navigation";
-import { CircleStackIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useAuth } from "../contexts/AuthContext";
 
 interface SidebarProps {
@@ -8,10 +8,10 @@ interface SidebarProps {
   setActiveTab?: (tab: string) => void;
 }
 
-export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
+export default function Sidebar({ }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
 
   const handleSignOut = async () => {
     try {

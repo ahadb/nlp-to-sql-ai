@@ -24,7 +24,7 @@ MOCK_DASHBOARD_INSIGHTS: Dict[str, Any] = {
         {
             "title": "Customer Satisfaction",
             "metric": "4.5/5",
-            "change": "↗️",
+            "change": "+2%",
             "description": "Average satisfaction rating from support tickets resolved.",
             "trend": "up",
             "data_points": [
@@ -54,7 +54,7 @@ MOCK_DASHBOARD_INSIGHTS: Dict[str, Any] = {
         {
             "title": "High Satisfaction",
             "metric": "90%",
-            "change": "↗️",
+            "change": "+12%",
             "description": "Customer satisfaction remains high across support tickets",
             "trend": "stable",
             "data_points": [

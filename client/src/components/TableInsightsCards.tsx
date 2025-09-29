@@ -78,11 +78,11 @@ const TableInsightsCards: React.FC<TableInsightsCardsProps> = ({
   const getChangeIcon = (changeType: 'positive' | 'negative' | 'neutral') => {
     switch (changeType) {
       case 'positive':
-        return '↗';
+        return <span className="text-green-400">↗</span>;
       case 'negative':
-        return '↘';
+        return <span className="text-red-400">↘</span>;
       default:
-        return '→';
+        return <span className="text-gray-400">→</span>;
     }
   };
 
@@ -104,7 +104,12 @@ const TableInsightsCards: React.FC<TableInsightsCardsProps> = ({
           <div className="flex items-center space-x-2 mb-1">
             <span className="text-lg font-semibold text-white">{hasData ? item.value : '0'}</span>
             <span className={`text-xs font-medium px-2 py-1 rounded-full ${hasData ? getChangeColor(item.changeType) : 'bg-gray-500/20 text-gray-500'}`}>
-              {hasData ? `${getChangeIcon(item.changeType)} ${item.change}` : '--'}
+              {hasData ? (
+                <span className="flex items-center space-x-1">
+                  {getChangeIcon(item.changeType)}
+                  <span>{item.change}</span>
+                </span>
+              ) : '--'}
             </span>
           </div>
         </div>
