@@ -5,7 +5,13 @@ class EnvironmentConfig:
     """Simple environment configuration loader"""
     
     def __init__(self):
-        self.environment = os.getenv("ENVIRONMENT", "dev")
+        # Check if we're in Railway (Railway sets RAILWAY_ENVIRONMENT)
+        if (os.getenv("RAILWAY_ENVIRONMENT") or 
+            os.getenv("RAILWAY_PROJECT_ID") or 
+            os.getenv("SUPABASE_URL")):  # If Supabase vars exist, we're in prod
+            self.environment = "prod"
+        else:
+            self.environment = os.getenv("ENVIRONMENT", "dev")
         self.load_environment_file()
     
     def load_environment_file(self):
