@@ -16,4 +16,5 @@ dependencies = [
     "python-multipart>=0.0.6",
     "pydantic>=2.5.0",
     "pandas>=2.1.0",
+    "supabase==2.18.1"
 ]
