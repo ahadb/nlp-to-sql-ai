@@ -1167,7 +1167,7 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
                       onOpenAIChat(undefined, currentTemplates, schemaId);
                     }
                   }}
-                  className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2"
+                  className="border border-orange-400 text-orange-400 px-4 py-2 rounded-lg hover:border-orange-300 hover:text-orange-300 hover:bg-orange-500/10 transition-all duration-200 group flex items-center space-x-2 cursor-pointer"
                 >
                   <SparklesIcon className="h-4 w-4 text-orange-400 group-hover:scale-110 transition-transform duration-200" />
                   <span className="font-medium text-sm">Ask AI</span>
