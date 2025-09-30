@@ -36,7 +36,7 @@ const DemoPage: React.FC = () => {
                       // Navigate to dashboard
                       navigate('/dashboard');
                     }}
-                    className="inline-flex items-center px-10 py-5 border border-indigo-400 text-indigo-400 font-semibold rounded-lg hover:border-indigo-300 hover:text-indigo-300 hover:bg-indigo-500/10 transition-all duration-200 whitespace-nowrap"
+                    className="inline-flex items-center px-10 py-5 border border-indigo-400 text-indigo-400 font-semibold rounded-lg hover:border-indigo-300 hover:text-indigo-300 hover:bg-indigo-500/10 transition-all duration-200 whitespace-nowrap cursor-pointer"
                   >
                     Continue to Dashboard
                     <ArrowRightIcon className="ml-2 h-5 w-5" />
