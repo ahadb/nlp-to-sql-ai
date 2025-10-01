@@ -1209,7 +1209,7 @@ const DataTablesTab: React.FC<DataTablesTabProps> = ({ onOpenAIChat }) => {
       )}
 
       {/* Table Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar-dark">
         <div className="border border-gray-600/30">
           {renderDynamicTable()}
         </div>

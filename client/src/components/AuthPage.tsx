@@ -74,75 +74,48 @@ export default function AuthPage({ mode }: AuthPageProps) {
       {/* Side-by-Side Layout */}
       <div className="flex h-full w-full relative z-10 justify-center">
         <div className="flex w-full max-w-7xl">
-          {/* Left Section - App Description & Features */}
+          {/* Left Section - Demo Credentials */}
           <div className="w-2/5 flex flex-col justify-center px-8 py-12">
             <div className="w-full max-w-lg">
               {/* Logo and Title */}
-              <div className="mb-12">
-                <div className="flex items-center mb-8">
-                  
+              <div className="mb-8">
+                <div className="flex items-center mb-4">
                   <h1 className="text-2xl font-bold text-white">
                     DataMind AI
                   </h1>
                 </div>
-              </div>
-
-              {/* Features Section */}
-              <div className="space-y-8">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      Ask questions in natural language
-                    </h3>
-                    <p className="text-gray-300 leading-relaxed">
-                      No technical knowledge required - simply ask business questions and get instant insights from your data.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      Interactive dashboards and reports
-                    </h3>
-                    <p className="text-gray-300 leading-relaxed">
-                      Upload your data and explore it through beautiful dashboards, tables, and automated reports.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mr-4 mt-0.5">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      AI-powered business intelligence
-                    </h3>
-                    <p className="text-gray-300 leading-relaxed">
-                      Join business teams who make faster decisions with AI-driven data insights and analytics.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Info Box */}
-              <div className="mt-12 p-4 border border-blue-500/30 rounded-lg bg-blue-500/10">
-                <p className="text-blue-300 text-sm">
-                  <span className="font-medium">Pro tip:</span> DataMind AI automatically understands your data structure and relationships, so you can focus on asking the right business questions.
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Transform your business data into intelligent insights with natural language queries. Ask questions, get answers, make better decisions.
                 </p>
+              </div>
+
+              {/* Demo Credentials Box */}
+              <div className="bg-gray-800/50 border border-gray-600/50 rounded-xl p-6 backdrop-blur-sm">
+                <div className="flex items-center mb-4">
+                 
+                  <h2 className="text-lg font-semibold text-white">Demo Credentials</h2>
+                </div>
+                
+                <p className="text-gray-400 text-sm mb-4">
+                  Use these credentials to explore the full AI-powered analytics experience
+                </p>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-400 block mb-1">Email</label>
+                    <div className="bg-gray-700/50 border border-gray-600/50 rounded-lg px-3 py-2">
+                      <code className="text-indigo-300 text-sm">addybokhari@gmail.com</code>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-gray-400 block mb-1">Password</label>
+                    <div className="bg-gray-700/50 border border-gray-600/50 rounded-lg px-3 py-2">
+                      <code className="text-indigo-300 text-sm">demo!_user#</code>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
