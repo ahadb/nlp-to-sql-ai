@@ -4,8 +4,10 @@ import {
   DialogPanel,
   TransitionChild,
 } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, ArrowRightOnRectangleIcon, } from "@heroicons/react/24/outline";
 import { navigation, classNames } from "./navigation";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface MobileSidebarProps {
   sidebarOpen: boolean;
@@ -16,6 +18,18 @@ export default function MobileSidebar({
   sidebarOpen,
   setSidebarOpen,
 }: MobileSidebarProps) {
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      setSidebarOpen(false); // Close sidebar first
+      await signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  };
   return (
     <Dialog
       open={sidebarOpen}
@@ -75,6 +89,18 @@ export default function MobileSidebar({
                   </li>
                 ))}
               </ul>
+
+              {/* Logout - Mobile */}
+              <div className="mt-auto border-t border-gray-700 pt-4">
+                {/* Logout Button */}
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-x-3 rounded-md p-2 text-sm font-semibold text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
+                >
+                  <ArrowRightOnRectangleIcon className="h-6 w-6" />
+                  Sign Out
+                </button>
+              </div>
             </nav>
           </div>
         </DialogPanel>

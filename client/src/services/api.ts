@@ -1,5 +1,5 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+import { authService } from './auth';
+import { API_URLS, API_CONFIG, buildApiUrlWithParams } from '../config/api';
 
 export interface UploadResponse {
   message: string;
@@ -27,21 +27,63 @@ export interface DatabaseResponse {
   };
 }
 
+export interface InsightData {
+  title: string;
+  metric: string;
+  change: string;
+  description: string;
+  trend: 'up' | 'down' | 'stable';
+  data_points: number[];
+}
+
+export interface InsightsResponse {
+  status: string;
+  insights: InsightData[];
+  patterns: InsightData[];
+  message: string;
+}
+
+export interface ChatMessage {
+  message: string;
+  schema_id?: string;
+  user_id?: string;
+}
+
+export interface ChatResponse {
+  status: string;
+  message: string;
+  sql_query?: string;
+  query_results?: {
+    columns: string[];
+    data: any[];
+    row_count: number;
+    error?: string;
+  };
+  response_type?: string;
+  context?: any;
+  timestamp: string;
+}
+
 export const api = {
-  async uploadSchema(
-    file: File
-    // database: string = "example"
-  ): Promise<UploadResponse> {
-    const formData = new FormData();
-    formData.append("file", file);
+  async uploadSchema(file: File): Promise<UploadResponse> {
+    // Read file content
+    const fileContent = await file.text();
+    
+    // Determine schema type
+    const isCSV = file.name.endsWith('.csv');
+    const schemaType = isCSV ? 'CSV_FILE' : 'SQL_SCHEMA';
+    
+    // Prepare request body for your backend
+    const requestBody = {
+      file_name: file.name,
+      file_content: fileContent,
+      schema_type: schemaType,
+      description: `Uploaded ${isCSV ? 'CSV' : 'SQL'} file: ${file.name}`
+    };
 
-    // Use AWS upload endpoint from environment variable
-    const awsUploadUrl = import.meta.env.VITE_AWS_UPLOAD_URL;
-    console.log("awsUploadUrl", awsUploadUrl);
-
-    const response = await fetch(awsUploadUrl, {
+    const response = await authService.authenticatedFetch(API_URLS.UPLOAD, {
       method: "POST",
-      body: formData,
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -49,7 +91,13 @@ export const api = {
       throw new Error(errorData.detail || "Upload failed");
     }
 
-    return response.json();
+    const backendResponse = await response.json();
+    
+    // Transform backend response to match expected format
+    return {
+      message: backendResponse.message,
+      schema: backendResponse.schema_id || 'unknown'
+    };
   },
 
   async generateSQL(
@@ -141,8 +189,34 @@ export const api = {
     };
   },
 
+  async getDataSources(): Promise<any> {
+    const response = await authService.authenticatedFetch(API_URLS.UPLOAD_SCHEMAS, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get data sources");
+    }
+
+    return response.json();
+  },
+
+  async getTables(): Promise<any> {
+    const response = await authService.authenticatedFetch(API_URLS.TABLES, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get tables");
+    }
+
+    return response.json();
+  },
+
   async getCurrentDatabase(): Promise<DatabaseResponse> {
-    const response = await fetch(`${API_BASE_URL}/current-database`, {
+    const response = await fetch(API_URLS.CURRENT_DATABASE, {
       method: "GET",
     });
 
@@ -155,7 +229,7 @@ export const api = {
   },
 
   async getSchemaDetails(): Promise<any> {
-    const response = await fetch(`${API_BASE_URL}/debug/schema-details`, {
+    const response = await fetch(API_URLS.DEBUG_SCHEMA_DETAILS, {
       method: "GET",
     });
 
@@ -166,4 +240,148 @@ export const api = {
 
     return response.json();
   },
+
+  async getTableData(tableName: string, schemaName: string, limit: number = 5): Promise<any> {
+    const response = await authService.authenticatedFetch(buildApiUrlWithParams(API_CONFIG.ENDPOINTS.TABLES_DATA + `/${tableName}/data`, { schema: schemaName, limit }), {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get table data");
+    }
+
+    return response.json();
+  },
+
+  // Dashboard API methods
+  async getDashboard(): Promise<any> {
+    const response = await authService.authenticatedFetch(API_URLS.DASHBOARD, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get dashboard data");
+    }
+
+    return response.json();
+  },
+
+  // Reports API methods
+  async getReports(): Promise<any> {
+    const response = await authService.authenticatedFetch(API_URLS.REPORTS, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get reports");
+    }
+
+    return response.json();
+  },
+
+  // Data Insights API methods
+  async getDataInsights(tableName: string): Promise<any> {
+    const response = await authService.authenticatedFetch(`${API_URLS.DATA_INSIGHTS}/${tableName}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get data insights");
+    }
+
+    return response.json();
+  },
+
+  // Connections API methods
+  async getConnections(): Promise<any> {
+    const response = await authService.authenticatedFetch(API_URLS.CONNECTIONS, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to get connections");
+    }
+
+    return response.json();
+  },
+
+  async getDashboardInsights(): Promise<InsightsResponse> {
+    try {
+      const response = await fetch(API_URLS.INSIGHTS_DASHBOARD, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: InsightsResponse = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching dashboard insights:', error);
+      throw error;
+    }
+  },
+
+  // Sample data functions
+  async loadSampleData(): Promise<any> {
+    const response = await fetch(API_URLS.UPLOAD_SAMPLE_DATA, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Failed to load sample data");
+    }
+    
+    return response.json();
+  },
+
+  // Chat functions
+  async sendChatMessage(message: string, schemaId: string = "all"): Promise<ChatResponse> {
+    const response = await fetch(API_URLS.CHAT_MESSAGE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message,
+        schema_id: schemaId,
+        user_id: 'default'
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to send chat message');
+    }
+    
+    return response.json();
+  },
+
+  async getChatHistory(userId: string = "default"): Promise<any> {
+    const response = await fetch(`${API_URLS.CHAT_HISTORY}/${userId}`);
+    if (!response.ok) {
+      throw new Error('Failed to get chat history');
+    }
+    return response.json();
+  },
+
+  async getDataContext(schemaId: string): Promise<any> {
+    const response = await fetch(`${API_URLS.CHAT_CONTEXT}/${schemaId}`);
+    if (!response.ok) {
+      throw new Error('Failed to get data context');
+    }
+    return response.json();
+  }
 };

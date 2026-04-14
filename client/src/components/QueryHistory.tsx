@@ -71,7 +71,7 @@ const QueryHistory: React.FC<QueryHistoryProps> = ({
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-white mb-3">Recent Queries</h3>
+      <h3 className="text-sm font-medium text-white mb-3 ml-2">Recent Queries</h3>
 
       {queries.length === 0 ? (
         <p className="text-sm text-gray-500 italic">No recent queries</p>
@@ -83,8 +83,8 @@ const QueryHistory: React.FC<QueryHistoryProps> = ({
             return (
               <div
                 key={query.id}
-                className={`rounded-lg border border-gray-600 transition-colors hover:bg-gray-700 ${
-                  onQuerySelect ? "hover:border-blue-400" : ""
+                className={`rounded-lg border border-gray-600/50 transition-all duration-200 hover:bg-cyan-500/10 hover:border-cyan-500/50 ${
+                  onQuerySelect ? "cursor-pointer" : ""
                 }`}
               >
                 {/* Header - Always visible */}
@@ -122,8 +122,8 @@ const QueryHistory: React.FC<QueryHistoryProps> = ({
 
                 {/* Collapsible content */}
                 {isExpanded && (
-                  <div className="px-3 pb-3 border-t border-gray-600">
-                    <div className="mt-3 text-xs text-gray-300 font-mono bg-gray-800 p-2 rounded">
+                  <div className="px-3 pb-3 border-t border-cyan-500/20">
+                    <div className="mt-3 text-xs text-gray-300 font-mono bg-gray-800/50 border border-gray-700/50 p-2 rounded-lg">
                       {query.sql}
                     </div>
 

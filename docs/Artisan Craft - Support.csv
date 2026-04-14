@@ -1,0 +1,101 @@
+ticket_id,customer_name,customer_email,subject,category,priority,status,assigned_agent,created_date,resolved_date,response_time_hours,satisfaction_rating,issue_description,issue_type,days_open
+1,Sarah Johnson,sarah@techstart.com,Login Issues,Technical,High,Resolved,Mike Chen,2024-12-15,2024-12-15,2.5,5,Unable to access dashboard after password reset,Bug/Incident,0
+2,Michael Rodriguez,mike@globalsol.com,Billing Discrepancy,Billing,Medium,Resolved,Lisa Wang,2024-12-14,2024-12-16,48,4,Charged twice for December subscription,Billing/Finance,2
+3,Emily Davis,emily@innovlabs.co,Feature Request,Product,Low,Open,John Smith,2024-12-18,,24,,"Need export functionality for reports",Feature Request,6
+4,David Wilson,david@futuresys.net,System Downtime,Technical,Critical,Resolved,Sarah Lee,2024-12-12,2024-12-12,1.2,5,Complete system outage for 30 minutes,Bug/Incident,0
+5,Jennifer Brown,jen@alphacorp.com,Data Export Issue,Technical,Medium,In Progress,Tom Wilson,2024-12-17,,18,,"CSV export not including all columns",Bug/Incident,7
+6,Robert Taylor,robert@betasol.com,Account Setup,Onboarding,Medium,Resolved,Amy Zhang,2024-12-13,2024-12-14,24,5,Help setting up multi-user access,Setup/Onboarding,1
+7,Lisa Anderson,lisa@gammainc.com,Integration Problem,Technical,High,Resolved,Mark Davis,2024-12-16,2024-12-17,12,4,API connection failing with Salesforce,Bug/Incident,1
+8,Christopher Moore,chris@deltaent.com,Password Reset,Technical,Low,Resolved,Rachel Kim,2024-12-19,2024-12-19,0.5,5,Cannot receive password reset email,Bug/Incident,0
+9,Amanda Thompson,amanda@epsilontech.io,Performance Issue,Technical,Medium,Open,David Lee,2024-12-18,,6,,"Dashboard loading slowly, timeout errors",Bug/Incident,6
+10,Matthew Garcia,matt@zetadyn.com,Training Request,Support,Low,Resolved,Jennifer Wu,2024-12-11,2024-12-13,36,5,Need training session for new team members,Training/Support,2
+11,Ashley Martinez,ashley@thetanet.com,Data Synchronization,Technical,High,In Progress,Steve Johnson,2024-12-17,,30,,"Customer data not syncing from CRM",Bug/Incident,7
+12,Joshua Hernandez,josh@lambdacorp.ca,Invoice Question,Billing,Low,Resolved,Maria Gonzalez,2024-12-14,2024-12-15,18,4,Need clarification on usage charges,Billing/Finance,1
+13,Stephanie Lopez,steph@musol.com,Mobile App Bug,Technical,Medium,Open,Alex Thompson,2024-12-19,,3,,"Mobile app crashing on iOS devices",Bug/Incident,5
+14,Andrew Gonzalez,andrew@nuind.com,Feature Enhancement,Product,Low,Open,Nicole Brown,2024-12-16,,48,,"Request for dark mode interface",Feature Request,8
+15,Samantha Wilson,sam@xitech.com,Security Concern,Security,Critical,Resolved,Kevin Martinez,2024-12-10,2024-12-10,3,5,Suspicious login attempts detected,Security/Compliance,0
+16,Daniel Miller,daniel@omicronsys.com,Report Generation,Technical,Medium,Resolved,Laura Davis,2024-12-15,2024-12-16,20,4,Custom reports not generating correctly,Bug/Incident,1
+17,Michelle Davis,michelle@pivent.com,User Management,Technical,Medium,In Progress,Michael Kim,2024-12-18,,12,,"Cannot add new users to account",Bug/Incident,6
+18,Kevin Anderson,kevin@rhoanalytics.com,API Documentation,Support,Low,Resolved,Patricia Lee,2024-12-12,2024-12-13,24,5,Need updated API documentation,Training/Support,1
+19,Jessica Thomas,jessica@sigmacorp.com,Subscription Upgrade,Billing,Medium,Resolved,Robert Zhang,2024-12-11,2024-12-12,18,5,Want to upgrade to Enterprise plan,Billing/Finance,1
+20,Ryan Jackson,ryan@tausys.com,Database Connection,Technical,High,Resolved,Susan Johnson,2024-12-14,2024-12-15,8,4,Cannot connect external database,Bug/Incident,1
+21,Nicole White,nicole@upsilontech.io,SSO Configuration,Technical,High,In Progress,James Wilson,2024-12-17,,36,,"Single Sign-On not working with Google",Bug/Incident,7
+22,Brandon Harris,brandon@phinetworks.com,Email Notifications,Technical,Low,Resolved,Emily Rodriguez,2024-12-13,2024-12-14,12,5,Not receiving alert notifications,Bug/Incident,1
+23,Megan Clark,megan@chisol.com,Chart Display Issue,Technical,Medium,Open,Carlos Martinez,2024-12-18,,18,,"Charts not displaying data correctly",Bug/Incident,6
+24,Tyler Lewis,tyler@psiind.com,Account Permissions,Technical,Medium,Resolved,Diana Kim,2024-12-12,2024-12-13,24,4,Need admin permissions for team lead,Setup/Onboarding,1
+25,Kayla Robinson,kayla@omegacorp.com,Data Import Error,Technical,High,Resolved,Eric Lee,2024-12-16,2024-12-17,6,5,CSV import failing with large files,Bug/Incident,1
+26,Connor Walker,connor@apexsol.com,Refund Request,Billing,Medium,In Progress,Olivia Chen,2024-12-17,,42,,"Request refund for unused subscription",Billing/Finance,7
+27,Morgan Young,morgan@vertextech.io,Browser Compatibility,Technical,Low,Open,Nathan Davis,2024-12-19,,8,,"Issues with Safari browser compatibility",Bug/Incident,5
+28,Austin Allen,austin@zenithcorp.com,Workflow Automation,Product,Medium,Open,Grace Wang,2024-12-15,,72,,"Need automated report scheduling feature",Feature Request,9
+29,Sydney King,sydney@pinnaclesys.com,Account Migration,Technical,High,Resolved,Benjamin Lee,2024-12-11,2024-12-12,18,5,Help migrating from old system,Setup/Onboarding,1
+30,Jordan Wright,jordan@summitind.com,Analytics Question,Support,Low,Resolved,Isabella Martinez,2024-12-14,2024-12-15,20,4,How to interpret conversion metrics,Training/Support,1
+31,Cameron Lopez,cameron@peaksol.com.au,Time Zone Issue,Technical,Medium,Resolved,Alexander Kim,2024-12-13,2024-12-14,16,5,Reports showing incorrect timestamps,Bug/Incident,1
+32,Taylor Hill,taylor@cresttech.com.au,Custom Field Request,Product,Low,Open,Sophia Johnson,2024-12-18,,36,,"Need additional custom fields for customers",Feature Request,6
+33,Quinn Green,quinn@ridgecorp.com,Compliance Audit,Security,High,In Progress,Lucas Brown,2024-12-16,,48,,"Need audit trail for compliance review",Security/Compliance,8
+34,Avery Adams,avery@valleysys.co.uk,Webhook Configuration,Technical,Medium,Open,Chloe Wilson,2024-12-17,,30,,"Webhooks not triggering correctly",Bug/Incident,7
+35,Riley Baker,riley@canyonsol.co.uk,Dashboard Customization,Product,Low,Resolved,Ethan Davis,2024-12-12,2024-12-14,36,4,Want to customize dashboard layout,Feature Request,2
+36,Parker Gonzalez,parker@mesaind.com,Two-Factor Auth,Security,Medium,Resolved,Ava Rodriguez,2024-12-15,2024-12-15,4,5,Enable 2FA for all team members,Security/Compliance,0
+37,River Nelson,river@plateaucorp.com,Session Timeout,Technical,Low,Open,Noah Martinez,2024-12-19,,12,,"Sessions timing out too quickly",Bug/Incident,5
+38,Sage Carter,sage@basintech.io,Backup Restoration,Technical,Critical,Resolved,Emma Kim,2024-12-09,2024-12-10,18,5,Need to restore data from backup,Bug/Incident,1
+39,Phoenix Mitchell,phoenix@deltasys.com,License Expansion,Billing,Medium,Resolved,Liam Chen,2024-12-13,2024-12-14,24,5,Need additional user licenses,Billing/Finance,1
+40,Rowan Perez,rowan@coastsol.com,Load Balancing,Technical,High,In Progress,Mia Davis,2024-12-16,,54,,"System performance issues during peak hours",Bug/Incident,8
+41,Sage Roberts,sage@harborcorp.com,Notification Settings,Technical,Low,Resolved,Jackson Wilson,2024-12-14,2024-12-15,8,4,Cannot modify notification preferences,Bug/Incident,1
+42,River Turner,river@bayind.com,Data Retention Policy,Compliance,Medium,Open,Aria Johnson,2024-12-17,,36,,"Questions about data retention requirements",Security/Compliance,7
+43,Storm Phillips,storm@inlettech.io,Third-party Integration,Technical,High,In Progress,Owen Martinez,2024-12-15,,48,,"Integration with QuickBooks not working",Bug/Incident,9
+44,Ocean Campbell,ocean@shoresys.com,User Interface Bug,Technical,Medium,Resolved,Zoe Lee,2024-12-12,2024-12-13,20,4,Button alignment issues on mobile,Bug/Incident,1
+45,Marina Parker,marina@reefsol.com,Training Materials,Support,Low,Resolved,Caleb Kim,2024-12-11,2024-12-12,12,5,Request for video tutorials,Training/Support,1
+46,Brooks Evans,brooks@tidecorp.com,System Maintenance,Technical,Medium,Resolved,Luna Rodriguez,2024-12-16,2024-12-17,24,4,Scheduled maintenance window coordination,Setup/Onboarding,1
+47,Coral Edwards,coral@waveind.com,Duplicate Records,Technical,Medium,Open,Asher Davis,2024-12-18,,24,,"Finding duplicate customer records in system",Bug/Incident,6
+48,Marina Collins,marina@currenttech.io,Currency Conversion,Product,Low,Open,Nova Wilson,2024-12-17,,48,,"Need multi-currency support for international clients",Feature Request,7
+49,River Stewart,river@flowsys.com,Audit Log Access,Security,Medium,Resolved,Atlas Johnson,2024-12-13,2024-12-14,22,5,Need access to system audit logs,Security/Compliance,1
+50,Delta Sanchez,delta@streamsol.com,Performance Optimization,Technical,High,In Progress,Iris Martinez,2024-12-18,,18,,"Query performance degrading with large datasets",Bug/Incident,6
+51,Blake Thompson,blake@techforge.com,Password Policy,Security,Medium,Resolved,Mike Chen,2024-12-11,2024-12-12,15,4,Need to enforce stronger password requirements,Security/Compliance,1
+52,Jordan Kim,jordan@cloudnine.co,File Upload Limit,Technical,Low,Open,Lisa Wang,2024-12-20,,12,,"Cannot upload files larger than 10MB",Bug/Incident,4
+53,Casey Miller,casey@innovate.net,Email Integration,Technical,Medium,In Progress,John Smith,2024-12-16,,36,,"Email notifications not syncing with Outlook",Bug/Incident,8
+54,Alex Turner,alex@datapoint.io,Custom Dashboard,Product,High,Open,Sarah Lee,2024-12-14,,60,,"Need industry-specific dashboard templates",Feature Request,10
+55,Riley Chen,riley@nexustech.com,API Rate Limits,Technical,Medium,Resolved,Tom Wilson,2024-12-15,2024-12-16,28,4,API calls being throttled unexpectedly,Bug/Incident,1
+56,Morgan Davis,morgan@synergyai.co,Font Display Issue,Technical,Low,Resolved,Amy Zhang,2024-12-19,2024-12-20,8,5,Custom fonts not loading on reports,Bug/Incident,1
+57,Jamie Rodriguez,jamie@quantumsys.net,Data Archiving,Product,Medium,Open,Mark Davis,2024-12-17,,48,,"Need automated data archiving feature",Feature Request,7
+58,Taylor Brooks,taylor@fusiontech.io,Mobile Responsiveness,Technical,Medium,In Progress,Rachel Kim,2024-12-13,,72,,"Mobile interface elements overlapping on tablets",Bug/Incident,11
+59,Sam Wilson,sam@vertexsys.com,Scheduled Reports,Product,Low,Open,David Lee,2024-12-18,,24,,"Want to schedule automated weekly reports",Feature Request,6
+60,Drew Martinez,drew@catalysthq.co,Single Sign-On,Technical,High,Resolved,Jennifer Wu,2024-12-10,2024-12-11,20,5,SSO setup with Azure Active Directory,Setup/Onboarding,1
+61,Cameron White,cameron@alphatech.net,Export Formatting,Technical,Medium,Open,Steve Johnson,2024-12-16,,32,,"Excel export losing number formatting",Bug/Incident,8
+62,Avery Jackson,avery@digitalhub.io,User Onboarding,Support,Low,Resolved,Maria Gonzalez,2024-12-12,2024-12-13,16,5,New employee training on platform usage,Training/Support,1
+63,Peyton Lee,peyton@cloudsphere.com,Load Testing,Technical,High,In Progress,Alex Thompson,2024-12-15,,56,,"System slow during concurrent user testing",Bug/Incident,9
+64,Sage Anderson,sage@techstream.co,Backup Schedule,Technical,Medium,Resolved,Nicole Brown,2024-12-14,2024-12-15,22,4,Need to modify automated backup timing,Setup/Onboarding,1
+65,River Park,river@dataflow.net,Field Validation,Technical,Low,Open,Kevin Martinez,2024-12-19,,16,,"Form validation not working for phone numbers",Bug/Incident,5
+66,Quinn Foster,quinn@nexuspoint.io,Role Permissions,Technical,Medium,In Progress,Laura Davis,2024-12-17,,40,,"Cannot assign granular permissions to user roles",Bug/Incident,7
+67,Blake Moore,blake@zenithtech.com,Chart Legends,Technical,Low,Resolved,Michael Kim,2024-12-18,2024-12-19,12,4,Chart legends not displaying properly,Bug/Incident,1
+68,Jordan Powell,jordan@quantumleap.co,Database Migration,Technical,Critical,Resolved,Patricia Lee,2024-12-08,2024-12-09,24,5,Assistance with database migration to new server,Setup/Onboarding,1
+69,Casey Torres,casey@innovatech.net,Search Functionality,Product,Medium,Open,Robert Zhang,2024-12-16,,44,,"Global search not finding recent records",Feature Request,8
+70,Riley Young,riley@fusionpoint.io,Theme Customization,Product,Low,Open,Susan Johnson,2024-12-20,,8,,"Want to match company branding colors",Feature Request,4
+71,Morgan Scott,morgan@alphawave.com,Connection Timeout,Technical,High,In Progress,James Wilson,2024-12-15,,52,,"Database connections timing out during reports",Bug/Incident,9
+72,Taylor Green,taylor@techhorizon.co,Bulk Import,Technical,Medium,Resolved,Emily Rodriguez,2024-12-13,2024-12-14,30,4,Need to import 10000+ customer records,Setup/Onboarding,1
+73,Alex Reed,alex@cloudtech.net,Print Formatting,Technical,Low,Open,Carlos Martinez,2024-12-19,,14,,"Printed reports have formatting issues",Bug/Incident,5
+74,Sam Cooper,sam@digitalsphere.io,Widget Configuration,Product,Medium,Open,Diana Kim,2024-12-17,,38,,"Cannot rearrange dashboard widgets",Feature Request,7
+75,Drew Bailey,drew@quantumtech.com,Memory Usage,Technical,High,Resolved,Eric Lee,2024-12-11,2024-12-12,18,5,Application consuming excessive memory,Bug/Incident,1
+76,Cameron Phillips,cameron@nexusflow.co,Calendar Integration,Product,Medium,In Progress,Olivia Chen,2024-12-16,,42,,"Integration with Google Calendar for scheduling",Feature Request,8
+77,Avery Kelly,avery@alphadigital.net,Error Logging,Technical,Medium,Open,Nathan Davis,2024-12-18,,26,,"Error messages not detailed enough for debugging",Bug/Incident,6
+78,Peyton Hughes,peyton@techvault.io,Data Recovery,Technical,Critical,Resolved,Grace Wang,2024-12-09,2024-12-10,16,5,Accidentally deleted important customer data,Bug/Incident,1
+79,Sage Butler,sage@cloudnexus.com,Multi-language,Product,Low,Open,Benjamin Lee,2024-12-20,,6,,"Request for Spanish language interface",Feature Request,4
+80,River Wood,river@fusiondata.co,Keyboard Shortcuts,Product,Low,Resolved,Isabella Martinez,2024-12-17,2024-12-18,14,4,Need keyboard shortcuts for common actions,Feature Request,1
+81,Quinn Ross,quinn@digitalhorizon.net,Server Monitoring,Technical,Medium,In Progress,Alexander Kim,2024-12-14,,66,,"Need alerts for server performance issues",Setup/Onboarding,10
+82,Blake Price,blake@techstream.io,Color Accessibility,Product,Medium,Open,Sophia Johnson,2024-12-18,,28,,"Interface not accessible for colorblind users",Feature Request,6
+83,Jordan Ward,jordan@quantumsphere.com,Workflow Templates,Product,High,Open,Lucas Brown,2024-12-13,,84,,"Pre-built templates for common business workflows",Feature Request,11
+84,Casey Morgan,casey@alphaflow.co,Session Management,Technical,Medium,Resolved,Chloe Wilson,2024-12-15,2024-12-16,26,4,Multiple sessions causing data conflicts,Bug/Incident,1
+85,Riley Watson,riley@nexustech.net,Image Compression,Technical,Low,Open,Ethan Davis,2024-12-19,,18,,"Uploaded images taking too much storage space",Bug/Incident,5
+86,Morgan Brooks,morgan@cloudpoint.io,Notification Sounds,Product,Low,Resolved,Ava Rodriguez,2024-12-16,2024-12-17,10,5,Option to customize notification sounds,Feature Request,1
+87,Taylor Cook,taylor@techfusion.com,Geographic Filters,Product,Medium,Open,Noah Martinez,2024-12-17,,34,,"Need filtering by geographic regions",Feature Request,7
+88,Alex Rivera,alex@digitalnexus.co,Code Review,Technical,High,Resolved,Emma Kim,2024-12-12,2024-12-13,20,5,Security audit of custom integrations,Security/Compliance,1
+89,Sam Peterson,sam@quantumflow.net,Batch Processing,Technical,Medium,In Progress,Liam Chen,2024-12-16,,46,,"Batch operations failing for large datasets",Bug/Incident,8
+90,Drew Collins,drew@alphatech.io,Documentation Update,Support,Low,Resolved,Mia Davis,2024-12-14,2024-12-15,12,4,User manual needs updating for new features,Training/Support,1
+91,Cameron Stewart,cameron@techhub.com,Cross-browser Testing,Technical,Medium,Open,Jackson Wilson,2024-12-18,,30,,"Features not working consistently across browsers",Bug/Incident,6
+92,Avery Sanders,avery@cloudsphere.net,Inventory Tracking,Product,High,In Progress,Aria Johnson,2024-12-15,,58,,"Need real-time inventory management module",Feature Request,9
+93,Peyton Gray,peyton@fusiontech.co,Log Rotation,Technical,Low,Resolved,Owen Martinez,2024-12-17,2024-12-18,16,4,System logs consuming too much disk space,Setup/Onboarding,1
+94,Sage Rodriguez,sage@digitalpoint.io,Payment Processing,Technical,Critical,Resolved,Zoe Lee,2024-12-10,2024-12-11,14,5,Credit card payments failing intermittently,Bug/Incident,1
+95,River Cox,river@quantumtech.net,Team Collaboration,Product,Medium,Open,Caleb Kim,2024-12-19,,22,,"Real-time collaboration features for teams",Feature Request,5
+96,Quinn Ward,quinn@alphadigital.com,Version Control,Product,High,Open,Luna Rodriguez,2024-12-14,,72,,"Track changes and version history for documents",Feature Request,10
+97,Blake Turner,blake@techflow.co,Performance Analytics,Product,Medium,In Progress,Asher Davis,2024-12-16,,50,,"Built-in performance monitoring dashboard",Feature Request,8
+98,Jordan Parker,jordan@cloudhorizon.net,Email Templates,Product,Low,Open,Nova Wilson,2024-12-20,,10,,"Customizable email notification templates",Feature Request,4
+99,Casey Murphy,casey@digitech.io,Data Visualization,Product,High,Open,Atlas Johnson,2024-12-13,,78,,"Advanced charting options for complex data",Feature Request,11
+100,Riley Adams,riley@fusionpoint.com,Maintenance Mode,Technical,Medium,Resolved,Iris Martinez,2024-12-15,2024-12-16,32,4,Need graceful maintenance mode for updates,Setup/Onboarding,1
